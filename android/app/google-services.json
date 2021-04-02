@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "52868518271",
+    "project_id": "searchtoplay-b4ab1",
+    "storage_bucket": "searchtoplay-b4ab1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52868518271:android:cecbc5fafa39396ed78a4a",
+        "android_client_info": {
+          "package_name": "com.example.searchtoplay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "52868518271-tatmi9bn4ctfngs9i4gia9352rs8ecvo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNUYnCI-hYFf7tlmLE5bxolGoKizzAk58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "52868518271-tatmi9bn4ctfngs9i4gia9352rs8ecvo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
