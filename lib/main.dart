@@ -1,8 +1,11 @@
-import 'package:SearchToPlay/secciones/login.dart';
-import 'package:SearchToPlay/secciones/registro.dart';
+import 'package:SearchToPlay/secciones/root.dart';
+import 'package:SearchToPlay/servicios/userservice.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -46,7 +49,7 @@ class MyApp extends StatelessWidget {
           )
         )
       ),
-      home: RegistroPage(),
+      home: new RootPage(us: new UserService()),
     );
   }
 }

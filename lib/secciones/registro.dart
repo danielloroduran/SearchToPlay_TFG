@@ -1,3 +1,8 @@
+import 'package:SearchToPlay/secciones/tab.dart';
+import 'package:SearchToPlay/servicios/firebaseservice.dart';
+import 'package:SearchToPlay/servicios/userservice.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -5,18 +10,23 @@ import 'package:hexcolor/hexcolor.dart';
 
 class RegistroPage extends StatefulWidget{
 
+  final UserService us;
+
+  RegistroPage(this.us);
   _RegistroPageState createState() => _RegistroPageState();
 }
 
 class _RegistroPageState extends State<RegistroPage>{
 
+  User _user;
   bool _estaCargando;
   bool _passwordVisible;
-  bool _validateUsuario, _validateEmail, _validatePassword;
+  bool _validateUsuario, _validateEmail, _validatePassword, _validateSecondPassword;
   String _falloUsuario, _falloEmail, _falloPassword;
   TextEditingController _usuarioController;
   TextEditingController _emailController;
   TextEditingController _passwordController;
+  TextEditingController _secondPasswordController;
 
   void initState(){
     super.initState();
@@ -24,10 +34,12 @@ class _RegistroPageState extends State<RegistroPage>{
     _validateUsuario = false;
     _validateEmail = false;
     _validatePassword = false;
+    _validateSecondPassword = false;
     _passwordVisible = false;
     _usuarioController = new TextEditingController();
     _emailController = new TextEditingController();
     _passwordController = new TextEditingController();
+    _secondPasswordController = new TextEditingController();
     _emailController.text = "";
     _falloUsuario = "";
     _falloPassword = "";
@@ -40,7 +52,7 @@ class _RegistroPageState extends State<RegistroPage>{
       body: ListView(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.fromLTRB(25, 20, 25, 10),
+            padding: EdgeInsets.fromLTRB(25, 60, 25, 10),
             child: TextField(
               controller: _usuarioController,
               decoration: InputDecoration(
@@ -64,7 +76,7 @@ class _RegistroPageState extends State<RegistroPage>{
             ),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(25, 0, 25, 10),
+            padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
             child: TextField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
@@ -89,7 +101,7 @@ class _RegistroPageState extends State<RegistroPage>{
             ),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(25, 0, 25, 10),
+            padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
             child: TextField(
               controller: _passwordController,
               decoration: InputDecoration(
@@ -123,9 +135,20 @@ class _RegistroPageState extends State<RegistroPage>{
             ),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(25, 0, 25, 10),
+            padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
             child: TextField(
-              controller: _passwordController,
+              controller: _secondPasswordController,
+              onChanged: (text){
+                if(_passwordController.text.isNotEmpty && text != _passwordController.text){
+                  setState(() {
+                    _validateSecondPassword = true;
+                  });
+                }else{
+                  setState(() {
+                    _validateSecondPassword = false;
+                  });
+                }
+              },
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.lock),
                 hintText: "REPETIR CONTRASEÑA",
@@ -149,7 +172,7 @@ class _RegistroPageState extends State<RegistroPage>{
                   ),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                errorText: _validatePassword == true ? _falloPassword : null,
+                errorText: _validateSecondPassword == true ? "Las contraseñas no coinciden" : null,
               ),
               obscureText: _passwordVisible == true ? false : true,
             ),
@@ -192,8 +215,14 @@ class _RegistroPageState extends State<RegistroPage>{
                 child: Container(
                   child: SignInButton(
                     Buttons.Google, 
-                    onPressed: (){
-
+                    text: "Iniciar sesión con Google",
+                    onPressed: () async{
+                      await widget.us.signInGoogle().then((value) => {
+                        setState((){
+                          _user = value;
+                        }),
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)))
+                      });
                     },
                   )
                 )
@@ -219,7 +248,7 @@ class _RegistroPageState extends State<RegistroPage>{
                     ),
                   ),
                   onPressed: (){
-
+                    Navigator.pop(context);
                   },
                 )
               ],
@@ -266,7 +295,7 @@ class _RegistroPageState extends State<RegistroPage>{
     setState(() {
       _estaCargando = true;
     });
-    Pattern patron = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    Pattern patron = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~+]).{8,}$';
     RegExp regex = new RegExp(patron);
 
     if(_passwordController.text.isEmpty && _usuarioController.text.isEmpty){
@@ -284,7 +313,7 @@ class _RegistroPageState extends State<RegistroPage>{
         _validatePassword = false;
         _falloPassword = "";
         _estaCargando = false;
-      });  
+      });
     }else if(_passwordController.text.isEmpty){
       setState(() {
         _validateUsuario = false;
@@ -293,7 +322,7 @@ class _RegistroPageState extends State<RegistroPage>{
         _falloPassword = "Este campo no puede estar en blanco";
         _estaCargando = false;
       });
-    }else if(!regex.hasMatch(_passwordController.text) ||  _passwordController.text.length < 6){
+    }else if(!regex.hasMatch(_passwordController.text) ||  _passwordController.text.length < 5){
       setState(() {
         _validateUsuario = false;
         _falloUsuario = "";
@@ -309,9 +338,81 @@ class _RegistroPageState extends State<RegistroPage>{
         _falloPassword = "";
         _estaCargando = true;
       });
-    //_registrarse();
+    _registrarse();
     }
-
-
   }
+
+  void _registrarse() async{
+
+    try{
+      _user = await widget.us.createUser(_emailController.text, _passwordController.text);
+      if(_user != null){
+        _user.updateProfile(displayName: _usuarioController.text);
+        FirebaseService fs = new FirebaseService(_user.uid);
+        Map<String, dynamic> userMap = {"email" : _user.email};
+        fs.addUser(userMap);
+        _user.sendEmailVerification();
+        _dialogoEmail();
+      }
+
+    }catch(e){
+      print(e);
+      switch(e.code){
+        case "error-invalid-email":
+        case "ERROR-INVALID-EMAIL":
+          setState(() {
+            _validateEmail = true;
+            _falloEmail = "Email no válido";
+          });
+          break;
+        default:
+          setState((){
+            _validateEmail = false;
+            _falloEmail = "";
+          });
+      }
+    }
+  }
+
+  void _dialogoEmail(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: new Text("Email de verificación enviado",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).textTheme.headline6.color,
+            ),
+          ),
+          content: new Text("Se ha enviado un email para que verifique su correo electrónico y poder acceder a la aplicación",
+            style: TextStyle(
+              color: Theme.of(context).textTheme.headline6.color,              
+            )
+          ),
+          actions: <Widget>[
+            new Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                new TextButton(
+                  child: new Text("Aceptar",
+                    style: TextStyle(
+                      color: HexColor('#4fc522'),
+                    )
+                  ),
+                  onPressed: (){
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  
+
 }
