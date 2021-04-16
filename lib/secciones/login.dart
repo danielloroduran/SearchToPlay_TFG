@@ -68,6 +68,7 @@ class _LoginPageState extends State<LoginPage>{
                         ),
                         borderRadius: BorderRadius.circular(20)
                       ),
+                      focusColor: Colors.white,
                       errorBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.red,
@@ -93,6 +94,7 @@ class _LoginPageState extends State<LoginPage>{
                           });
                         },
                       ),
+                      focusColor: Colors.white,
                       border: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.black,
@@ -156,7 +158,7 @@ class _LoginPageState extends State<LoginPage>{
                                 _user = value;
                               })
                             });
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
                            }
                         ),
                       ),
@@ -241,26 +243,26 @@ class _LoginPageState extends State<LoginPage>{
       try{
         _user = await widget.us.signInEmail(_emailController.text, _passwordController.text);
         if(_user != null && _user.emailVerified){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
         }else{
           _dialogoEmail();
         }
         //FirebaseUser user = (await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text)).user;
       }catch(e){
-        switch(e.code){
-          case "ERROR_INVALID_EMAIL":
+        switch(e.message.code){
+          case "invalid-email":
           setState(() {
             _falloEmail = "Email incorrecto";
             _validateEmail = true;
           });
           break;
-          case "ERROR_USER_NOT_FOUND":
+          case "user-not-found":
           setState(() {
             _falloEmail = "Email no encontrado";
             _validateEmail = true;
           });
           break;
-          case "ERROR_WRONG_PASSWORD":
+          case "wrong-password":
           setState(() {
             _falloPassword = "Contraseña incorrecta";
             _validatePassword = true;

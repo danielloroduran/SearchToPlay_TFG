@@ -1,9 +1,10 @@
+import 'package:SearchToPlay/modelos/genero.dart';
 import 'package:SearchToPlay/modelos/imagen.dart';
 import 'package:SearchToPlay/modelos/juego.dart';
+import 'package:SearchToPlay/modelos/plataforma.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:igdb_client/igdb_client.dart';
-import 'dart:convert';
 import 'package:date_utils/date_utils.dart';
 
 
@@ -61,12 +62,17 @@ class IGDBService {
   }
 
   // Recuperar juegos por título
-  void recuperarTitulo(String titulo) async {
+  Future<List<Juego>> recuperarTitulo(String titulo) async {
     await _comprobarToken();
-    var gamesResponse = await _client.games(new IGDBRequestParameters(
-        search: titulo, fields: ['name', 'summary'], 
-        limit: 100));
-    _printResponse(gamesResponse);
+    IGDBResponse gamesResponse = await _client.games(new IGDBRequestParameters(
+        search: titulo, fields: ['name', 'summary', 'aggregated_rating', 'genres', 'platforms', 'release_dates', 'screenshots', 'videos', 'cover', 'artworks'], 
+        limit: 100,
+    ));
+    if(gamesResponse.isSuccess()){
+      return gamesResponse.data.map((e) => Juego.fromMap(e)).toList();
+    }else{
+      return [];
+    }
   }
 
   Future<List<Juego>> recuperarTop() async{
@@ -75,7 +81,7 @@ class IGDBService {
       fields: ['name', 'summary', 'aggregated_rating', 'genres', 'platforms', 'release_dates', 'screenshots', 'videos', 'cover'],
       filters: 'aggregated_rating != null & aggregated_rating_count > 10', 
       order: 'aggregated_rating desc',
-      limit: 20,
+      limit: 50,
     ));
     if(gamesResponse.isSuccess()){
       return gamesResponse.data.map((e) => Juego.fromMap(e)).toList();
@@ -109,6 +115,31 @@ class IGDBService {
     return res[0];
   }
 
+  Future<List<Plataforma>> recuperarPlataformas() async{
+    await _comprobarToken();
+    IGDBResponse plataformasResponse = await _client.platforms(new IGDBRequestParameters(
+      fields: ['name', 'abbreviation'],
+      order: 'name asc',
+      limit: 190
+    ));
+    if(plataformasResponse.isSuccess()){
+      return plataformasResponse.data.map((e) => Plataforma.fromMap(e)).toList();
+    }
+  }
+
+  Future<List<Genero>> recuperarGeneros() async{
+    await _comprobarToken();
+    IGDBResponse generosResponse = await _client.genres(new IGDBRequestParameters(
+      fields: ['name'],
+      order: 'name asc',
+      limit: 50
+    ));
+    if(generosResponse.isSuccess()){
+      return generosResponse.data.map((e) => Genero.fromMap(e)).toList();
+    }
+  }
+  
+
   void recuperarID() async{
     await _comprobarToken();
     var gameIdResponse = await _client.games(new IGDBRequestParameters(
@@ -116,6 +147,7 @@ class IGDBService {
     ));
     _printResponse(gameIdResponse);
   }
+  
   
   void recuperarVideo() async{
     await _comprobarToken();

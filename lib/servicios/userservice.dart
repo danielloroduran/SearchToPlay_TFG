@@ -7,30 +7,34 @@ class UserService{
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   Future<User> signInEmail(String email, String password) async{
-    return (await _fa.signInWithEmailAndPassword(email: email, password: password)).user;
+    UserCredential userCredential = await _fa.signInWithEmailAndPassword(email: email, password: password).catchError((error){
+      throw Exception(error);
+    });
+    return userCredential.user;
   }
 
   Future signInGoogle() async{
-    try{
-      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
-      if(googleUser != null){
-        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
-        final GoogleAuthCredential credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-          accessToken: googleAuth.accessToken,
-        );
-        User user = (await _fa.signInWithCredential(credential)).user;
-        return user;
-      }
-    }catch(e){
-      print(e);
+    if(googleUser != null){
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
+      );
+      User user = (await _fa.signInWithCredential(credential)).user;
+      return user;
     }
+
   }
 
   Future<User> createUser(String email, String password) async{
-    return (await _fa.createUserWithEmailAndPassword(email: email, password: password)).user;
+    UserCredential userCredential = await _fa.createUserWithEmailAndPassword(email: email, password: password).catchError((error){
+      throw Exception(error);
+    });
+    return userCredential.user;
   }
 
   Future<User> getCurrentUser() async{
@@ -41,20 +45,6 @@ class UserService{
   void newPassword(String email) async{
     await _fa.sendPasswordResetEmail(email: email);
   }
-
-  void _changePassword(String password) async{
-    User user = await getCurrentUser();
-    user.updatePassword(password);
-  }
-
-  /*Future<void> updateUser(String email, String nombre) async{
-    User user = await getCurrentUser();
-    UserUpdateInfo userUpdate = new UserUpdateInfo();
-    userUpdate.displayName = nombre;
-    return await user.updateEmail(email);
-    //user.reload();
-
-  }*/
 
   void cerrarSesion(){
     googleSignIn.signOut();

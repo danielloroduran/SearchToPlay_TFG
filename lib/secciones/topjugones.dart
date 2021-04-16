@@ -1,7 +1,15 @@
+import 'package:SearchToPlay/servicios/firebaseservice.dart';
+import 'package:SearchToPlay/servicios/igdb.dart';
+import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:flutter/material.dart';
 
 class TopJugonesPage extends StatefulWidget{
 
+  final UserService us;
+  final FirebaseService fs;
+  final IGDBService igdbservice;
+
+  TopJugonesPage(this.us, this.fs, this.igdbservice);
   @override
   _TopJugonesPageState createState() => new _TopJugonesPageState();
 }
@@ -43,6 +51,7 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
           )
         ],
       ),
+      body: Container(child: Text("El Top Jugones"))
     );
   }
 }

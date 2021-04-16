@@ -64,8 +64,8 @@ class _RegistroPageState extends State<RegistroPage>{
                   ),
                   borderRadius: BorderRadius.circular(20),
                 ),
+                focusColor: Colors.white,
                 errorText: _validateUsuario == true ? _falloUsuario : null,
-                enabled: true,
                 errorBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Colors.red,
@@ -89,7 +89,7 @@ class _RegistroPageState extends State<RegistroPage>{
                   ),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                enabled: true,
+                focusColor: Colors.white,
                 errorText: _validateEmail == true ? _falloEmail : null,
                 errorBorder: OutlineInputBorder(
                   borderSide: BorderSide(
@@ -121,6 +121,7 @@ class _RegistroPageState extends State<RegistroPage>{
                   ),
                   borderRadius: BorderRadius.circular(20),
                 ),
+                focusColor: Colors.white,
                 errorBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Colors.red
@@ -160,6 +161,7 @@ class _RegistroPageState extends State<RegistroPage>{
                     });
                   },
                 ),
+                focusColor: Colors.white,
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Colors.black,
@@ -356,13 +358,17 @@ class _RegistroPageState extends State<RegistroPage>{
       }
 
     }catch(e){
-      print(e);
-      switch(e.code){
-        case "error-invalid-email":
-        case "ERROR-INVALID-EMAIL":
+      switch(e.message.code){
+        case "invalid-email":
           setState(() {
             _validateEmail = true;
             _falloEmail = "Email no válido";
+          });
+          break;
+        case "email-already-in-use":
+          setState(() {
+            _validateEmail = true;
+            _falloEmail = "Este email ya está en uso";
           });
           break;
         default:

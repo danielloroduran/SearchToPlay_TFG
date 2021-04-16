@@ -23,7 +23,7 @@ class Juego{
     return new Juego(
       id: map['id'],
       nombre: map['name'],
-      descripcion: map['description'],
+      descripcion: map['summary'],
       criticRating: map['aggregated_rating'],
       generos: genresListFromMapList(map['genres']),
       plataformas: platformsListFromMapList(map['platforms']),

@@ -25,7 +25,6 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin{
   FirebaseService _fs;
   IGDBService _igdbService;
   TabController _tabController;
-  String titulo = "Inicio";
 
   @override
   void initState(){
@@ -43,9 +42,16 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin{
   Widget build(BuildContext context){
     return Scaffold(
       bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).brightness == Brightness.dark ? HexColor("#1a1a1a") : HexColor("#f5f2f2"),
+          border: Border(
+            top: BorderSide(color: Colors.grey),
+          )
+        ),
         child: new TabBar(
-          //labelColor: Colors.blue,
-          //unselectedLabelColor: Colors.red,
+          indicatorColor: Colors.transparent,
+          labelColor: HexColor('#4fc522'),
+          unselectedLabelColor: HexColor("#858585"),
           tabs: <Widget>[
             new Tab(
               icon: Icon(Icons.home),
@@ -62,13 +68,14 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin{
           ],
           controller: _tabController,
         ),
-        color: HexColor('#4fc522'),
+        //color: Theme.of(context).brightness == Brightness.dark ? HexColor("#1a1a1a") : HexColor("#f5f2f2"),
+        //color: HexColor('#4fc522'),
       ),
       body: new TabBarView(
         
         physics: NeverScrollableScrollPhysics(),
         controller: _tabController,
-        children: <Widget>[InicioPage(widget.user, widget.us, _fs, _igdbService), BusquedaPage(), BusquedaAvPage(), TopJugonesPage()],
+        children: <Widget>[InicioPage(widget.us, _fs, _igdbService), BusquedaPage(widget.us, _fs, _igdbService), BusquedaAvPage(widget.us, _fs, _igdbService), TopJugonesPage(widget.us, _fs, _igdbService)],
       ),
     );
   }
