@@ -1,5 +1,7 @@
+import 'package:igdb_client/igdb_client.dart';
+
 class Imagen {
-  String url;
+  final String url;
   final String imageId;
   final int width;
   final int height;
@@ -17,9 +19,10 @@ class Imagen {
     }
 
     return new Imagen(
-        imageId: map['image_id'],
-        width: map['width'],
-        height: map['height']
+      url: map['url'],
+      imageId: map['image_id'],
+      width: map['width'],
+      height: map['height']
     );
   }
 
@@ -30,11 +33,4 @@ class Imagen {
 
     return maps.map((map) => fromMap(map)).toList();
   }
-
-  static String getImageUrl(String imageId, {bool isRetina=false, bool alphaChannel=false}) {
-    //String sizeStr = isRetina ? '${size.name}_2x' : '${size.name}';
-    String fileExtension = alphaChannel ? 'png' : 'jpg';
-   return 'https://images.igdb.com/igdb/image/upload/t_cover_big/${imageId}.$fileExtension';
-  }
-
 }

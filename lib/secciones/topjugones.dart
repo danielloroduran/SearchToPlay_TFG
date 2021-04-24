@@ -33,7 +33,7 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
             color: Theme.of(context).textTheme.headline6.color
           ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).backgroundColor,
         leading: IconButton(
               tooltip: "Perfil",
               icon: Icon(Icons.person_rounded),

@@ -1,7 +1,10 @@
 import 'package:SearchToPlay/modelos/juego.dart';
+import 'package:SearchToPlay/secciones/perfil.dart';
+import 'package:SearchToPlay/secciones/verjuego.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class InicioPage extends StatefulWidget{
@@ -43,12 +46,12 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
           color: Theme.of(context).textTheme.headline6.color
         ),
           ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).backgroundColor,
         leading: IconButton(
               tooltip: "Perfil",
               icon: Icon(Icons.person_rounded),
               onPressed: (){
-
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us)));            
               },
             ),
         actions: [
@@ -61,8 +64,9 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
           )
         ],
       ),
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: Container(
+        color: Theme.of(context).backgroundColor,
         padding: EdgeInsets.only(left: 27, top: 30),
         child: Column(
           children: <Widget>[
@@ -100,78 +104,69 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
             ),
           ],
         )
-      )
-      
+      ),      
     );
   }
 
   Widget _juegosMes(){
     return new Container(
-      height: 210,
-          child: _listJuegosMes == null ? Center(child: CircularProgressIndicator()) : ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: _listJuegosMes.length,
-            itemBuilder: (context, index){
-
-              return _juegoCard(_listJuegosMes[index]);
-            }
-
-        
+      height: MediaQuery.of(context).size.height / 3.6,
+      child: _listJuegosMes == null ? Center(child: CircularProgressIndicator()) : ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: _listJuegosMes.length,
+        itemBuilder: (context, index){
+          return _juegoCard(_listJuegosMes[index]);
+        }   
       ),
     );
   }
 
   Widget _juegosTop(){
     return new Container(
-      height: 210,
-          child: _listJuegosTop == null ? Center(child: CircularProgressIndicator()) : ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: _listJuegosTop.length,
-            itemBuilder: (context, index){
-
-              return _juegoCard(_listJuegosTop[index]);
-            }
-
-        
+      height: MediaQuery.of(context).size.height / 3.6,
+      child: _listJuegosTop == null ? Center(child: CircularProgressIndicator()) : ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: _listJuegosTop.length,
+        itemBuilder: (context, index){
+          return _juegoCard(_listJuegosTop[index]);
+        }  
       ),
     );
   }
 
   Widget _juegoCard(Juego juego){
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
-      width: 150,
-      height: 200,
-      child: InkWell(
-        child: Ink(
-          child: juego.coverId == null ? Container(
+    return Hero(
+      tag: juego.id.toString(),
+        child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10),
+        width: 150,
+        height: 200,
+        child: GestureDetector(
+          child: juego.cover == null ? Container(
             alignment: Alignment.center,
             child: Text(juego.nombre +"\n [Imagen no disponible]", textAlign: TextAlign.center,)
           ) : null,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            image: juego.cover == null ? null : DecorationImage(
-              image: NetworkImage(juego.cover.url),
-              fit: BoxFit.fitHeight
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).brightness == Brightness.light ? Colors.grey.withOpacity(0.5) : Colors.grey.withOpacity(0.1),
-                spreadRadius: 3,
-                blurRadius: 7,
-                offset: Offset(6, 4),
-              )
-            ]
-          ),
+          onTap: (){
+            Navigator.push(context, CupertinoPageRoute(builder: (context) => VerJuegoPage(juego, widget.fs, widget.igdbservice)));
+          },
         ),
-        customBorder: RoundedRectangleBorder(
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-        ),
-        onTap: (){
-
-        },
+          image: juego.cover == null ? null : DecorationImage(
+            image: NetworkImage(widget.igdbservice.getURLCoverFromGame(juego)),
+            fit: BoxFit.fitHeight
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).brightness == Brightness.light ? Colors.grey.withOpacity(0.5) : Colors.grey.withOpacity(0.1),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: Offset(6, 4),
+            )
+          ]
+        ),    
       ),
     );
   }
@@ -184,14 +179,6 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
         _listJuegosTop = tempJuegos;
       });
     }
-    for(int i = 0; i < _listJuegosTop.length;i++){
-      if(_listJuegosTop[i].coverId != null){
-        _listJuegosTop[i].cover = await widget.igdbservice.recuperarCovers(_listJuegosTop[i].coverId);
-        _listJuegosTop[i].cover.url = 'https://images.igdb.com/igdb/image/upload/t_cover_big/'+_listJuegosTop[i].cover.imageId+'.jpg';
-      }
-      setState((){});        
-    }  
-
   }
 
   void _getJuegosMes() async{
@@ -201,13 +188,6 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
         _listJuegosMes = tempJuegos;
       });
     }
-    for(int i = 0; i < _listJuegosMes.length;i++){
-      if(_listJuegosMes[i].coverId != null){
-        _listJuegosMes[i].cover = await widget.igdbservice.recuperarCovers(_listJuegosMes[i].coverId);
-        _listJuegosMes[i].cover.url = 'https://images.igdb.com/igdb/image/upload/t_cover_big/'+_listJuegosMes[i].cover.imageId+'.jpg';        
-      }
-      setState((){});
-    }  
   }
 
 }

@@ -1,3 +1,4 @@
+import 'package:SearchToPlay/modelos/fechalanzamiento.dart';
 import 'package:SearchToPlay/modelos/genero.dart';
 import 'package:SearchToPlay/modelos/imagen.dart';
 import 'package:SearchToPlay/modelos/juego.dart';
@@ -61,11 +62,11 @@ class IGDBService {
     _accessToken = _accessTokenSnapshot['accessToken'];
   }
 
-  // Recuperar juegos por título
   Future<List<Juego>> recuperarTitulo(String titulo) async {
     await _comprobarToken();
     IGDBResponse gamesResponse = await _client.games(new IGDBRequestParameters(
-        search: titulo, fields: ['name', 'summary', 'aggregated_rating', 'genres', 'platforms', 'release_dates', 'screenshots', 'videos', 'cover', 'artworks'], 
+        search: titulo, 
+        fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'platforms.*', 'release_dates.*', 'release_dates.platform.*', 'screenshots', 'videos', 'cover.*'], 
         limit: 100,
     ));
     if(gamesResponse.isSuccess()){
@@ -78,41 +79,35 @@ class IGDBService {
   Future<List<Juego>> recuperarTop() async{
     await _comprobarToken();
     IGDBResponse gamesResponse = await _client.games(new IGDBRequestParameters(
-      fields: ['name', 'summary', 'aggregated_rating', 'genres', 'platforms', 'release_dates', 'screenshots', 'videos', 'cover'],
+      fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'platforms.*', 'release_dates.*', 'release_dates.platform.*', 'screenshots', 'videos', 'cover.*'],
       filters: 'aggregated_rating != null & aggregated_rating_count > 10', 
       order: 'aggregated_rating desc',
       limit: 50,
     ));
     if(gamesResponse.isSuccess()){
       return gamesResponse.data.map((e) => Juego.fromMap(e)).toList();
+    }else{
+      return [];
     }
-    //_printResponse(gamesResponse);
   }
 
   Future<List<Juego>> recuperarMes() async {
     await _comprobarToken();
     int mesActual = DateTime.now().month;
     int anioActual = DateTime.now().year;
-    int tiempoPrimerDia = DateTime(anioActual, mesActual, 1, 0, 0).millisecondsSinceEpoch~/1000;
-    int tiempoUltimoDia = DateTime(anioActual, mesActual, Utils.lastDayOfMonth(DateTime(anioActual, mesActual)).day, 23, 59).millisecondsSinceEpoch~/1000;
+    //int tiempoPrimerDia = DateTime(anioActual, mesActual, 1, 0, 0).millisecondsSinceEpoch~/1000;
+    //int tiempoUltimoDia = DateTime(anioActual, mesActual, Utils.lastDayOfMonth(DateTime(anioActual, mesActual)).day, 23, 59).millisecondsSinceEpoch~/1000;
     IGDBResponse gamesResponse = await _client.games(new IGDBRequestParameters(
-      fields: ['name', 'summary', 'aggregated_rating', 'genres', 'platforms', 'release_dates', 'screenshots', 'videos', 'cover'],
-      filters: 'first_release_date > '+tiempoPrimerDia.toString()+' & first_release_date < '+tiempoUltimoDia.toString(), 
-      order: 'first_release_date asc',
-      limit: 100,
+      fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'platforms.*', 'release_dates.*', 'release_dates.platform.*', 'screenshots', 'videos', 'cover.*'],
+      filters: 'release_dates.m = '+mesActual.toString()+' & release_dates.y = '+anioActual.toString(), 
+      order: 'release_dates.date asc',
+      limit: 150,
     ));
     if(gamesResponse.isSuccess()){
       return gamesResponse.data.map((e) => Juego.fromMap(e)).toList();
-    }    
-  }
-
-  Future<Imagen> recuperarCovers(int id) async{
-    await _comprobarToken();
-    IGDBResponse coversResponse = await _client.covers(new IGDBRequestParameters(
-      ids: [id]
-    ));
-    List<Imagen> res = coversResponse.data.map((e) => Imagen.fromMap(e)).toList();
-    return res[0];
+    }else{
+      return [];
+    }
   }
 
   Future<List<Plataforma>> recuperarPlataformas() async{
@@ -124,6 +119,8 @@ class IGDBService {
     ));
     if(plataformasResponse.isSuccess()){
       return plataformasResponse.data.map((e) => Plataforma.fromMap(e)).toList();
+    }else{
+      return [];
     }
   }
 
@@ -136,9 +133,89 @@ class IGDBService {
     ));
     if(generosResponse.isSuccess()){
       return generosResponse.data.map((e) => Genero.fromMap(e)).toList();
+    }else{
+      return [];
     }
   }
-  
+
+  Future<List<FechaLanzamiento>> recuperarFecha(String id) async{
+    await _comprobarToken();
+    IGDBResponse fechasResponse = await _client.releaseDates(new IGDBRequestParameters(
+      fields: ['date', 'y', 'm', 'human', 'region', 'platform.*'],
+      filters: 'game = '+id+' & (region = 1 | region = 8);'
+    ));
+    if(fechasResponse.isSuccess()){
+      return fechasResponse.data.map((e) => FechaLanzamiento.fromMap(e)).toList();
+    }else{
+      return [];
+    }
+  }
+
+  Future<List<Juego>> recuperarAvanzado(String orden, int generoId, int plataformaId, int anio, int nota, int mes) async{
+    await _comprobarToken();
+    String order;
+    IGDBResponse busquedaResponse;
+    switch (orden) {
+      case 'Fecha (asc)':
+        order = 'first_release_date asc';
+        break;
+      case 'Fecha (desc)':
+        order = 'first_release_date desc';
+        break;
+      case 'Nombre (asc)':
+        order = 'name asc';
+        break;
+      case 'Nombre (desc)':
+        order = 'name desc';
+        break;
+      case 'Nota crítica (asc)':
+        order = 'aggregated_rating asc';
+        break;
+      case 'Nota crítica (desc)':
+        order = 'aggregated_rating desc';
+        break;
+    }
+
+    if(mes == 0){
+      if(generoId == 0){
+        busquedaResponse = await _client.games(new IGDBRequestParameters(
+          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'platforms.*', 'release_dates.*', 'screenshots', 'videos', 'cover.*'],
+          order: order,
+          filters: "release_dates.platform = ("+plataformaId.toString()+") & release_dates.y =" + anio.toString() + " & (aggregated_rating >=" + nota.toString() + " | aggregated_rating = null) & (aggregated_rating_count > 5 | aggregated_rating_count = null);",
+          limit: 50,
+        ));
+      }else{
+        busquedaResponse = await _client.games(new IGDBRequestParameters(
+          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'platforms.*', 'release_dates.*', 'screenshots', 'videos', 'cover.*'],
+          order: order,
+          filters: "genres = ("+generoId.toString()+ ") & release_dates.platform = ("+plataformaId.toString()+") & release_dates.y =" + anio.toString() + " & (aggregated_rating >=" + nota.toString() + " | aggregated_rating = null) & (aggregated_rating_count > 5 | aggregated_rating_count = null);",
+          limit: 50,
+        ));
+      }
+    }else{
+      if(generoId == 0){
+        busquedaResponse = await _client.games(new IGDBRequestParameters(
+          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'platforms.*', 'release_dates.*', 'screenshots', 'videos', 'cover.*'],
+          order: order,
+          filters: "release_dates.platform = ("+plataformaId.toString()+") & release_dates.m ="+ mes.toString() +" & release_dates.y =" + anio.toString() + " & (aggregated_rating >=" + nota.toString() + " | aggregated_rating = null) & (aggregated_rating_count > 5 | aggregated_rating_count = null);",
+          limit: 50,
+        )); 
+      }else{
+        busquedaResponse = await _client.games(new IGDBRequestParameters(
+          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'platforms.*', 'release_dates.*', 'screenshots', 'videos', 'cover.*'],
+          order: order,
+          filters: "genres = ("+generoId.toString()+ ") & release_dates.platform = ("+plataformaId.toString()+") & release_dates.m ="+ mes.toString() +" & release_dates.y =" + anio.toString() + " & (aggregated_rating >=" + nota.toString() + " | aggregated_rating = null) & (aggregated_rating_count > 5 | aggregated_rating_count = null);",
+          limit: 50,
+        )); 
+      }     
+    }
+
+    if(busquedaResponse.isSuccess()){
+      return busquedaResponse.data.map((e) => Juego.fromMap(e)).toList();
+    }else{
+      return [];
+    }
+  }
 
   void recuperarID() async{
     await _comprobarToken();
@@ -160,5 +237,17 @@ class IGDBService {
   void _printResponse(IGDBResponse resp) {
     print(resp.toMap().length);
     print(IGDBHelpers.getPrettyStringFromMap(resp.toMap()));
+  }
+
+  String getURLCoverFromGame(Juego juego){
+    return getImageURL(juego.cover);
+  }
+
+  String getImageURL(Imagen imagen){
+    if(imagen == null || imagen.imageId == null){
+      return null;
+    }
+
+    return IGDBHelpers.getImageUrl(imagen.imageId, IGDBImageSizes.HD720P);
   }
 }

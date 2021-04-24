@@ -1,7 +1,10 @@
 import 'package:SearchToPlay/modelos/juego.dart';
+import 'package:SearchToPlay/secciones/verjuego.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 
 class BusquedaPage extends StatefulWidget{
@@ -49,7 +52,7 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
               color: Theme.of(context).textTheme.headline6.color
             ),
           ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).backgroundColor,
         leading: IconButton(
               tooltip: "Perfil",
               icon: Icon(Icons.person_rounded),
@@ -69,11 +72,12 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
       ),
 
       body: Container(
+        color: Theme.of(context).backgroundColor,
         padding: EdgeInsets.only(left: 30, top: 20, right: 30),
         child: Column(
           children: <Widget>[
             _barraBusqueda(context),
-            _resultadosBusqueda(context),
+            _sinResultados == false ? _resultadosBusqueda(context) : _avisoSinResultados(),
           ]
         )
       )
@@ -84,7 +88,13 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
     return Container(
       padding: EdgeInsets.only(bottom: 10),
       child: TextField(
+        autofocus: false,
         controller: _busquedaController,
+        textInputAction: TextInputAction.search,
+        onSubmitted: (value){
+          _comprobacion();
+          FocusScope.of(context).unfocus();
+        },
         decoration: InputDecoration(
           hintText: 'TÍTULO',
           suffixIcon: IconButton(
@@ -134,36 +144,69 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
   }
 
   Widget _juegoCard(Juego juego){
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      height: 150,
-      width: 200,
-      child: GestureDetector(
-        child: juego.coverId == null ? Container(
-          alignment: Alignment.center,
-          child: Text(juego.nombre +"\n[Imagen no disponible]", textAlign: TextAlign.center),
-        ) : null,
-        onTap: (){
-
-        },
-      ),
-      decoration: BoxDecoration(
-        image: juego.cover != null ? DecorationImage(
-          image: NetworkImage(juego.cover.url),
-          fit: BoxFit.fitHeight,
-        ) : null,
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).brightness == Brightness.light ? Colors.grey.withOpacity(0.5) : Colors.grey.withOpacity(0.1),
-            spreadRadius: 3,
-            blurRadius: 7,
-            offset: Offset(6, 4),
-          )
-        ]        
+    return Hero(
+      tag: juego.id.toString(),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        height: 150,
+        width: 200,
+        child: GestureDetector(
+          child: juego.cover == null ? Container(
+            alignment: Alignment.center,
+            child: Text(juego.nombre +"\n[Imagen no disponible]", textAlign: TextAlign.center),
+          ) : null,
+          onTap: (){
+            Navigator.push(context, CupertinoPageRoute(builder: (context) => VerJuegoPage(juego, widget.fs, widget.igdbservice)));
+          },
+        ),
+        decoration: BoxDecoration(
+          image: juego.cover != null ? DecorationImage(
+            image: NetworkImage(widget.igdbservice.getURLCoverFromGame(juego)),
+            fit: BoxFit.fitHeight,
+          ) : null,
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).brightness == Brightness.light ? Colors.grey.withOpacity(0.5) : Colors.grey.withOpacity(0.1),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: Offset(3, 4),
+            )
+          ]        
+        ),
       ),
     );
   }
+
+  Widget _avisoSinResultados(){
+    return Padding(
+      padding: const EdgeInsets.only(top:230.0),
+      child: Center(
+        child: Column(
+          children: [
+            Container(
+              child: Text("No se han encontrado resultados",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                )
+              )
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 20),
+              child: Text("😟",
+                style: TextStyle(
+                  fontSize: 30,
+                ),
+              )
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
 
   void _comprobacion(){
     if(_busquedaController.text == "" || _busquedaController.text == null){
@@ -173,6 +216,7 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
       });
     }else{
       setState(() {
+        _sinResultados = false;
         _estaCargando = true;
         _validateBusqueda = false;
         _falloBusqueda = "";
@@ -184,24 +228,25 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
   void _getBusqueda() async{
     try{
       List tempJuegos = await widget.igdbservice.recuperarTitulo(_busquedaController.text);
+
+      if(tempJuegos.isNotEmpty){
         if(this.mounted){
           setState(() {
             _listResultados = tempJuegos;
             _estaCargando = false;
           });
         }
-      
-      for(int i = 0; i < _listResultados.length;i++){
-        if(_listResultados[i].coverId != null){
-          _listResultados[i].cover = await widget.igdbservice.recuperarCovers(_listResultados[i].coverId);
-          _listResultados[i].cover.url = 'https://images.igdb.com/igdb/image/upload/t_cover_big/'+_listResultados[i].cover.imageId+'.jpg';        
-        }
-        setState(() {});
-      }  
+      }else{
+        setState((){
+          _sinResultados = true;
+        });
+      }
+ 
     }catch(e){
-
+      setState(() {
+        _estaCargando = false;
+      });
+      Fluttertoast.showToast(msg: "Se ha producido un error. Vuelva a intentarlo en unos instantes.");
     }
-
   }
-  
 }

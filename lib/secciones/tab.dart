@@ -49,6 +49,9 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin{
           )
         ),
         child: new TabBar(
+          onTap: (value){
+            FocusScope.of(context).unfocus();
+          },
           indicatorColor: Colors.transparent,
           labelColor: HexColor('#4fc522'),
           unselectedLabelColor: HexColor("#858585"),

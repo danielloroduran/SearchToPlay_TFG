@@ -1,5 +1,7 @@
 import 'package:SearchToPlay/modelos/fechalanzamiento.dart';
+import 'package:SearchToPlay/modelos/genero.dart';
 import 'package:SearchToPlay/modelos/imagen.dart';
+import 'package:SearchToPlay/modelos/plataforma.dart';
 import 'package:SearchToPlay/modelos/video.dart';
 import 'package:igdb_client/igdb_client.dart';
 
@@ -8,16 +10,15 @@ class Juego{
   final String nombre;
   final String descripcion;
   final double criticRating;
-  final List<IGDBGenres> generos;
-  final List<IGDBPlatforms> plataformas;
+  final List<Genero> generos;
+  final int category;
+  final List<Plataforma> plataformas;
   final List<FechaLanzamiento> fechaLanzamiento;
   final List<Imagen> capturas;
   final List<Video> videos;
-  final int coverId;
-  String coverURL;
-  Imagen cover;
+  final Imagen cover;
   
-  Juego({this.id, this.nombre, this.descripcion, this.criticRating, this.generos, this.plataformas, this.fechaLanzamiento, this.capturas, this.videos, this.cover, this.coverId, this.coverURL});
+  Juego({this.id, this.nombre, this.descripcion, this.criticRating, this.generos, this.category, this.plataformas, this.fechaLanzamiento, this.capturas, this.videos, this.cover});
 
   static Juego fromMap(Map map){
     return new Juego(
@@ -25,12 +26,13 @@ class Juego{
       nombre: map['name'],
       descripcion: map['summary'],
       criticRating: map['aggregated_rating'],
-      generos: genresListFromMapList(map['genres']),
-      plataformas: platformsListFromMapList(map['platforms']),
-      //fechaLanzamiento: map['release_dates'] is List ? ReleaseDate.listFromMapList(map['release_dates']) : null,
+      generos: Genero.listFromMapList(map['genres']),
+      category: map['category'],
+      plataformas: Plataforma.listFromMapList(map['platforms']),
+      fechaLanzamiento: map['release_dates'] is List ? FechaLanzamiento.listFromMapList(map['release_dates']) : null,
       //capturas: Imagen.listFromMapList(map['screenshots']),
       videos: Video.listFromMapList(map['videos']),
-      coverId: map['cover'],
+      cover: Imagen.fromMap(map['cover']),
     );
   }
 
@@ -39,21 +41,5 @@ class Juego{
       return new List<Juego>();
     }
     return maps.map((m) => fromMap(m)).toList();
-  }
-
-  static List<IGDBGenres> genresListFromMapList(List maps) {
-    if (maps == null) {
-      return new List<IGDBGenres>();
-    }
-
-    return maps.map((m) => IGDBGenres.fromInt(m)).toList();
-  }
-
-  static List<IGDBPlatforms> platformsListFromMapList(List maps) {
-    if (maps == null) {
-      return new List<IGDBPlatforms>();
-    }
-
-    return maps.map((m) => IGDBPlatforms.fromInt(m)).toList();
   }
 }

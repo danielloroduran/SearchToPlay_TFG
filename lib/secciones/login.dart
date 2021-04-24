@@ -25,6 +25,7 @@ class _LoginPageState extends State<LoginPage>{
   String _falloEmail, _falloPassword;
   bool _validateEmail, _validatePassword;
   bool _passwordVisible;
+  bool _estaCargando;
 
 
   void initState(){
@@ -34,6 +35,7 @@ class _LoginPageState extends State<LoginPage>{
     _validateEmail = false;
     _validatePassword = false;
     _passwordVisible = false;
+    _estaCargando = false;
     _falloEmail = "Email no válido";
     _falloPassword = "";
   }
@@ -43,6 +45,7 @@ class _LoginPageState extends State<LoginPage>{
       key: _formKey,
       child: Scaffold(
         body: new Container(
+          color: Theme.of(context).backgroundColor,
           child: Padding(
             padding: EdgeInsets.all(10),
             child: ListView(
@@ -55,7 +58,7 @@ class _LoginPageState extends State<LoginPage>{
                   )
                 ),
                 Container(
-                  padding: EdgeInsets.fromLTRB(25, 20, 25, 10),
+                  padding: EdgeInsets.fromLTRB(25, 20, 25, 15),
                   child: TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -80,7 +83,7 @@ class _LoginPageState extends State<LoginPage>{
                   )
                 ),
                 Container(
-                  padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
+                  padding: EdgeInsets.fromLTRB(25, 15, 25, 0),
                   child: TextField(
                     controller: _passwordController,
                     decoration: InputDecoration(
@@ -114,7 +117,7 @@ class _LoginPageState extends State<LoginPage>{
                 ),
                 Container(
                   padding: EdgeInsets.fromLTRB(25, 20, 25, 10),
-                  child: ConstrainedBox(
+                  child: _estaCargando == false ? ConstrainedBox(
                     constraints: BoxConstraints.tightFor(height: 55),
                     child: ElevatedButton(
                       child: Text("Iniciar Sesión",
@@ -132,7 +135,7 @@ class _LoginPageState extends State<LoginPage>{
                         _comprobacion();
                       },                      
                     ),
-                  )
+                  ) : Center(child: CircularProgressIndicator(),)
                 ),
                 Center(
                   child: Container(
@@ -227,6 +230,7 @@ class _LoginPageState extends State<LoginPage>{
       });
     }else{
       setState(() {
+        _estaCargando = true;
         _validateEmail = false;
         _validatePassword = false;
         _falloEmail = "";
@@ -243,29 +247,37 @@ class _LoginPageState extends State<LoginPage>{
       try{
         _user = await widget.us.signInEmail(_emailController.text, _passwordController.text);
         if(_user != null && _user.emailVerified){
+          setState(() {
+            _estaCargando = false;
+          });
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
         }else{
+          setState(() {
+            _estaCargando = false;
+          });
           _dialogoEmail();
         }
-        //FirebaseUser user = (await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text)).user;
       }catch(e){
         switch(e.message.code){
           case "invalid-email":
           setState(() {
             _falloEmail = "Email incorrecto";
             _validateEmail = true;
+            _estaCargando = false;
           });
           break;
           case "user-not-found":
           setState(() {
             _falloEmail = "Email no encontrado";
             _validateEmail = true;
+            _estaCargando = false;
           });
           break;
           case "wrong-password":
           setState(() {
             _falloPassword = "Contraseña incorrecta";
             _validatePassword = true;
+            _estaCargando = false;
           });
           break;
         }

@@ -47,248 +47,239 @@ class _RegistroPageState extends State<RegistroPage>{
   }
 
   Widget build(BuildContext context){
-    return Scaffold(
-      appBar: _getAppbar(context),
-      body: ListView(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB(25, 60, 25, 10),
-            child: TextField(
-              controller: _usuarioController,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.person),
-                hintText: "USUARIO",
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                focusColor: Colors.white,
-                errorText: _validateUsuario == true ? _falloUsuario : null,
-                errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.red,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                )
-              ),
-            ),
+    return new Scaffold(
+      appBar: new AppBar(
+        elevation: 0,
+        centerTitle: true,
+        title: new Text("Registro",
+        style: TextStyle(
+          fontFamily: 'OpenSans',
+          fontWeight: FontWeight.w500,
+          fontSize: 30,
+          color: Theme.of(context).textTheme.headline6.color
+        ),
           ),
-          Container(
-            padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
-            child: TextField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.email),
-                hintText: "EMAIL",
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                focusColor: Colors.white,
-                errorText: _validateEmail == true ? _falloEmail : null,
-                errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.red,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
-            child: TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock),
-                hintText: "CONTRASEÑA",
-                suffixIcon: IconButton(
-                  icon: Icon(_passwordVisible == false ? Icons.visibility : Icons.visibility_off),
-                  onPressed: (){
-                    setState((){
-                      _passwordVisible = !_passwordVisible;
-                    });
-                  },
-                ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                focusColor: Colors.white,
-                errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.red
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                errorText: _validatePassword == true ? _falloPassword : null,
-                helperText: "Más de 5 caracteres, con al menos número, una letra mayúscula, una minúscula y un caracter especial",
-                helperMaxLines: 2,
-              ),
-              obscureText: _passwordVisible == true ? false : true,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
-            child: TextField(
-              controller: _secondPasswordController,
-              onChanged: (text){
-                if(_passwordController.text.isNotEmpty && text != _passwordController.text){
-                  setState(() {
-                    _validateSecondPassword = true;
-                  });
-                }else{
-                  setState(() {
-                    _validateSecondPassword = false;
-                  });
-                }
-              },
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock),
-                hintText: "REPETIR CONTRASEÑA",
-                suffixIcon: IconButton(
-                  icon: Icon(_passwordVisible == false ? Icons.visibility : Icons.visibility_off),
-                  onPressed: (){
-                    setState((){
-                      _passwordVisible = !_passwordVisible;
-                    });
-                  },
-                ),
-                focusColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.red
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                errorText: _validateSecondPassword == true ? "Las contraseñas no coinciden" : null,
-              ),
-              obscureText: _passwordVisible == true ? false : true,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(25, 20, 25, 10),
-            child: ConstrainedBox(
-              constraints: BoxConstraints.tightFor(height: 55),
-              child: ElevatedButton(
-                child: _estaCargando == false ? Text("Registrarse",
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Theme.of(context).textTheme.subtitle2.color,
-                  ),
-                ) : CircularProgressIndicator.adaptive(),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  primary: HexColor('#4fc522')
-                ),
-                onPressed: (){
-                  _comprobacion();
-                },
-              )
-            ),
-          ),
-          Center(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(25, 10, 10, 10),
-              child: Text("o también puede",
-                style: Theme.of(context).textTheme.subtitle1
-              ),
-            )
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 15),
-            child: ConstrainedBox(
-              constraints: BoxConstraints.tightFor(height: 55),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Container(
-                  child: SignInButton(
-                    Buttons.Google, 
-                    text: "Iniciar sesión con Google",
-                    onPressed: () async{
-                      await widget.us.signInGoogle().then((value) => {
-                        setState((){
-                          _user = value;
-                        }),
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)))
-                      });
-                    },
-                  )
-                )
-              )
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 13),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Text("¿Ya tiene cuenta?",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Theme.of(context).textTheme.subtitle1.color,
-                  ),
-                ),
-                TextButton(
-                  child: Text("Inicia sesión",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: HexColor('#4fc522'),
-                    ),
-                  ),
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-            )
-          )
-        ],
-      )
-    );
-  }
-
-  Widget _getAppbar(BuildContext context){
-    return PreferredSize(
-      preferredSize: Size.fromHeight(50),
-      child: Container(
-        alignment: Alignment.bottomCenter,
-        color: Colors.transparent,
-        child: Row(
-          children: <Widget>[
-            IconButton(
+        backgroundColor: Theme.of(context).backgroundColor,
+        leading: IconButton(
               tooltip: "Volver atrás",
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back_ios),
               onPressed: (){
                 Navigator.pop(context);
               },
-            ),
-            SizedBox(width: 100),
-            Expanded(
-              child: Text("Registro",
-                style: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 30,
-                  color: Theme.of(context).textTheme.headline6.color
+          ),
+      ),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        color: Theme.of(context).backgroundColor,
+        child: ListView(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(25, 60, 25, 15),
+              child: TextField(
+                controller: _usuarioController,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.person),
+                  hintText: "USUARIO",
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.black
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  focusColor: Colors.white,
+                  errorText: _validateUsuario == true ? _falloUsuario : null,
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  )
                 ),
               ),
             ),
+            Container(
+              padding: EdgeInsets.fromLTRB(25, 15, 25, 15),
+              child: TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.email),
+                  hintText: "EMAIL",
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.black
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  focusColor: Colors.white,
+                  errorText: _validateEmail == true ? _falloEmail : null,
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(25, 15, 25, 15),
+              child: TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.lock),
+                  hintText: "CONTRASEÑA",
+                  suffixIcon: IconButton(
+                    icon: Icon(_passwordVisible == false ? Icons.visibility : Icons.visibility_off),
+                    onPressed: (){
+                      setState((){
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  focusColor: Colors.white,
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  errorText: _validatePassword == true ? _falloPassword : null,
+                  helperText: "Más de 5 caracteres, con al menos número, una letra mayúscula, una minúscula y un caracter especial",
+                  helperMaxLines: 2,
+                ),
+                obscureText: _passwordVisible == true ? false : true,
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(25, 15, 25, 10),
+              child: TextField(
+                controller: _secondPasswordController,
+                onChanged: (text){
+                  if(_passwordController.text.isNotEmpty && text != _passwordController.text){
+                    setState(() {
+                      _validateSecondPassword = true;
+                    });
+                  }else{
+                    setState(() {
+                      _validateSecondPassword = false;
+                    });
+                  }
+                },
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.lock),
+                  hintText: "REPETIR CONTRASEÑA",
+                  suffixIcon: IconButton(
+                    icon: Icon(_passwordVisible == false ? Icons.visibility : Icons.visibility_off),
+                    onPressed: (){
+                      setState((){
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
+                  focusColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  errorText: _validateSecondPassword == true ? "Las contraseñas no coinciden" : null,
+                ),
+                obscureText: _passwordVisible == true ? false : true,
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(25, 20, 25, 10),
+              child: _estaCargando == false ?ConstrainedBox(
+                constraints: BoxConstraints.tightFor(height: 55),
+                child: ElevatedButton(
+                  child:  Text("Registrarse",
+                    style: TextStyle(
+                      fontSize: 17,
+                      color: Theme.of(context).textTheme.subtitle2.color,
+                    ),
+                  ),
+                  onPressed: (){
+                    _comprobacion();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    primary: HexColor('#4fc522'),
+                  )
+                )
+              ) : Center(child: CircularProgressIndicator()),
+            ),
+            Center(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(25, 10, 10, 10),
+                child: Text("o también puede",
+                  style: Theme.of(context).textTheme.subtitle1
+                ),
+              )
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 15),
+              child: ConstrainedBox(
+                constraints: BoxConstraints.tightFor(height: 55),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Container(
+                    child: SignInButton(
+                      Buttons.Google, 
+                      text: "Iniciar sesión con Google",
+                      onPressed: () async{
+                        await widget.us.signInGoogle().then((value) => {
+                          setState((){
+                            _user = value;
+                          }),
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)))
+                        });
+                      },
+                    )
+                  )
+                )
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 13),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Text("¿Ya tiene cuenta?",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Theme.of(context).textTheme.subtitle1.color,
+                    ),
+                  ),
+                  TextButton(
+                    child: Text("Inicia sesión",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: HexColor('#4fc522'),
+                      ),
+                    ),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              )
+            )
           ],
-        )
+        ),
       )
     );
   }
@@ -300,12 +291,34 @@ class _RegistroPageState extends State<RegistroPage>{
     Pattern patron = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~+]).{8,}$';
     RegExp regex = new RegExp(patron);
 
-    if(_passwordController.text.isEmpty && _usuarioController.text.isEmpty){
+    if(_emailController.text.isEmpty && _passwordController.text.isEmpty && _usuarioController.text.isEmpty){
       setState(() {
+        _validateEmail = true;
+        _falloEmail = "Este campo no puede estar en blanco";
         _validateUsuario = true;
         _falloUsuario = "Este campo no puede estar en blanco";
         _validatePassword = true;
         _falloPassword = "Este campo no puede estar en blanco";
+        _estaCargando = false;
+      });
+    }else if(_emailController.text.isEmpty && _usuarioController.text.isEmpty){
+      setState(() {
+        _validateEmail = true;
+        _falloEmail = "Este campo no puede estar en blanco";
+        _validateUsuario = true;
+        _falloUsuario = "Este campo no puede estar en blanco";
+        _validatePassword = false;
+        _falloPassword = "";
+        _estaCargando = false;
+      });
+    }else if(_emailController.text.isEmpty && _passwordController.text.isEmpty){
+      setState(() {
+        _validateEmail = true;
+        _falloEmail = "Este campo no puede estar en blanco";
+        _validatePassword = true;
+        _falloPassword = "Este campo no puede estar en blanco";
+        _validateUsuario = false;
+        _falloUsuario = "";
         _estaCargando = false;
       });
     }else if(_usuarioController.text.isEmpty){
@@ -385,6 +398,7 @@ class _RegistroPageState extends State<RegistroPage>{
       context: context,
       builder: (BuildContext context){
         return AlertDialog(
+          backgroundColor: Theme.of(context).backgroundColor,
           title: new Text("Email de verificación enviado",
             style: TextStyle(
               fontWeight: FontWeight.w500,
