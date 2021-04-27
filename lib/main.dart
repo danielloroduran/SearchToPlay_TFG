@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         theme: ThemeData(
           accentColor: HexColor('#4fc522'),
+          buttonColor: HexColor('#4fc522'),
           brightness: Brightness.light,
           backgroundColor: Colors.white,
           primarySwatch: Colors.lightGreen,
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         ),
         darkTheme: ThemeData(
           accentColor: HexColor('#4fc522'),
+          buttonColor: HexColor('#4fc522'),
           brightness: Brightness.dark,
           primarySwatch: Colors.lightGreen,
           backgroundColor: Colors.black54,

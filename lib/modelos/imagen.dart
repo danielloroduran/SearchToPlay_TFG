@@ -1,5 +1,3 @@
-import 'package:igdb_client/igdb_client.dart';
-
 class Imagen {
   final String url;
   final String imageId;
@@ -28,7 +26,7 @@ class Imagen {
 
   static List<Imagen> listFromMapList(List<dynamic> maps) {
     if (maps == null) {
-      return new List<Imagen>();
+      return [];
     }
 
     return maps.map((map) => fromMap(map)).toList();

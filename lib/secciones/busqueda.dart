@@ -148,8 +148,8 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
       tag: juego.id.toString(),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        height: 150,
-        width: 200,
+         width: 150,
+        height: 200,
         child: GestureDetector(
           child: juego.cover == null ? Container(
             alignment: Alignment.center,

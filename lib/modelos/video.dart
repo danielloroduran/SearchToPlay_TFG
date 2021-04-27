@@ -13,7 +13,7 @@ class Video {
 
   static List<Video> listFromMapList(List<dynamic> maps) {
     if (maps == null) {
-      return new List<Video>();
+      return [];
     }
 
     return maps

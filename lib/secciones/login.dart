@@ -318,7 +318,7 @@ class _LoginPageState extends State<LoginPage>{
                 new TextButton(
                   child: new Text("Reenviar",
                     style: TextStyle(
-                      color: HexColor('#4fc522'),
+                      color: Theme.of(context).buttonColor,
                     )
                   ),
                   onPressed: (){
@@ -399,7 +399,7 @@ class _LoginPageState extends State<LoginPage>{
                         TextButton(
                           child: new Text("Enviar",
                             style: TextStyle(
-                              color: HexColor('#4fc522'),
+                              color: Theme.of(context).buttonColor,
                             )
                           ),
                           onPressed: (){

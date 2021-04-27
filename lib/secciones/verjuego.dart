@@ -3,14 +3,20 @@ import 'dart:ui';
 import 'package:SearchToPlay/modelos/fechalanzamiento.dart';
 import 'package:SearchToPlay/modelos/juego.dart';
 import 'package:SearchToPlay/modelos/plataforma.dart';
+import 'package:SearchToPlay/modelos/video.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:customtogglebuttons/customtogglebuttons.dart';
 import 'package:expand_widget/expand_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:like_button/like_button.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VerJuegoPage extends StatefulWidget{
 
@@ -21,23 +27,27 @@ class VerJuegoPage extends StatefulWidget{
   VerJuegoPage(this.juego, this.fs, this.igdbservice);
 
   @override
-  VerJuegoPageState createState() => new VerJuegoPageState();
+  _VerJuegoPageState createState() => new _VerJuegoPageState();
 
 }
 
-class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixin{
+class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixin{
 
   bool _meGusta, _finalizado, _puntuado;
   FechaLanzamiento _fechaSeleccionada;
   Plataforma _plataformaSeleccionada;
   List<FechaLanzamiento> _fechasLanzamiento;
   List<bool> _selecciones;
+  List<String> _capturas;
+  String _region;
 
   void initState(){
     super.initState();
     _meGusta = true;
     _finalizado = false;
     _puntuado = false;
+    _region = "";
+    _capturas = widget.igdbservice.getScreenshotFromGame(widget.juego);
     _getFechas();
   }
 
@@ -48,11 +58,13 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
         backgroundColor: Theme.of(context).backgroundColor,
         body: ListView(
           children: <Widget>[
-            _header(),
+            _header(context),
             _buttons(),
+            Divider(color: Colors.grey),
             _fechaLanzamiento(),
             _descripcion(context),
-            _media(context),
+            _mediaImagen(context),
+            _mediaVideo(context),
             //_similares();
           ],
         )
@@ -60,9 +72,9 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
     );
   }
 
-  Widget _header(){
+  Widget _header(BuildContext context){
     return new Container(
-      height: 330,
+      height: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.height - 450 : MediaQuery.of(context).size.height,
       child: new Stack(
         children: <Widget>[
           new Container(
@@ -85,6 +97,22 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
             alignment: FractionalOffset.center,
             heightFactor: 3.5,
             child: _contenido(),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: widget.juego.websites != null ?  Container(
+            child: IconButton(
+              tooltip: "Webs relacionadas con este juego",
+              icon: Icon(
+                Icons.add_circle,
+                color: Colors.black87,
+              ),
+              onPressed: (){
+                _mostrarWebs(context);
+              },
+              splashColor: Colors.black,
+            )
+          ) : Container(),
           ),
           _appBar(),
         ],
@@ -121,26 +149,29 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(widget.juego.nombre,
-                    maxLines: 2,
-                    softWrap: false,
-                    overflow: TextOverflow.fade,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontFamily: 'OpenSans',
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.normal
-                      ),
-                    ),
-                    /*Padding(
-                      padding: EdgeInsets.only(top: 12),
-                      child: Text("Nintendo",
+                    Container(
+                      alignment: Alignment.center,
+                      width: MediaQuery.of(context).size.width - 80,
+                      child: Text(widget.juego.nombre,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
                         style: TextStyle(
-                          color: Colors.black87.withOpacity(0.3)
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          fontFamily: 'OpenSans',
+                          fontWeight: FontWeight.w500,
+                          fontStyle: FontStyle.normal
                         ),
                       ),
-                    )*/
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 12),
+                      child: Text(widget.juego.companias[0],
+                        style: TextStyle(
+                          color: Colors.black54
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ],
@@ -174,22 +205,25 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
           Expanded(
             child: Container(),
           ),
-          _fechaSeleccionada != null && _fechaSeleccionada.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch ? Padding(
-            padding: EdgeInsets.only(bottom: 30),
-            child: IconButton(
-              tooltip: "Añadir al calendario",
-              icon: Icon(
-                Icons.calendar_today,
-                color: Colors.black,
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 500),
+            child: _fechaSeleccionada != null && _fechaSeleccionada.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch ? Padding(
+              padding: EdgeInsets.only(bottom: 30),
+              child: IconButton(
+                tooltip: "Añadir al calendario",
+                icon: Icon(
+                  Icons.calendar_today,
+                  color: Colors.black,
+                ),
+                onPressed: (){
+                  _anadirACalendario();
+                },
+                splashColor: Colors.black,
               ),
-              onPressed: (){
-                _anadirACalendario();
-              },
-              splashColor: Colors.black,
-            ),
-          ) : Container(),
+            ) : Container(),
+          ),
           Padding(
-            padding: EdgeInsets.only(right: 15, bottom: 30),
+            padding: EdgeInsets.only(bottom: 30, right: 15),
             child: IconButton(
               tooltip: "Compartir en redes sociales",
               icon: Icon(
@@ -201,7 +235,7 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
               },
               splashColor: Colors.black,
             )
-          )
+          ),
         ],
       )
     );
@@ -317,27 +351,23 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 17, bottom: 10),
+            padding: const EdgeInsets.only(left: 20, bottom: 15),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text("📅  ",
+                _fechaSeleccionada != null ? Text("📅  "+_fechaSeleccionada.legible + " " +  _region,
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'OpenSans',
                     color: Theme.of(context).textTheme.headline6.color,
                   ),
-                ),
-                _fechaSeleccionada != null ? Text(_fechaSeleccionada.legible,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'OpenSans',
-                    color: Theme.of(context).textTheme.headline6.color,
-                  ),
-                ) : Text(""),
+                ) : Text("📅  No disponible"),
               ],
             ),
           ),
-          _fechasLanzamiento != null ? ToggleButtons(
+          _fechasLanzamiento != null ? CustomToggleButtons(
+            borderColor: Colors.grey[850],
+            selectedBorderColor: HexColor('#4fc522'),
             children: _fechasLanzamiento.map((value){
               if(value.plataforma.abreviacion != null){
                 return Text(value.plataforma.abreviacion);
@@ -389,16 +419,22 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
               ),
             ),
           ),
-          widget.juego.descripcion.length <= 75 ? Text(widget.juego.descripcion,
+          widget.juego.descripcion != null && widget.juego.descripcion.length <= 75 ? Text(widget.juego.descripcion,
             textAlign: TextAlign.justify,
             style: TextStyle(
               fontSize: 15,
               fontFamily: 'OpenSans',
               color: Theme.of(context).textTheme.headline6.color
             ),
-          ) : 
+          ) : widget.juego.descripcion != null && widget.juego.descripcion.length > 75 ?
           ExpandText(
             widget.juego.descripcion,
+            style: TextStyle(
+              fontSize: 15,
+              fontFamily: 'OpenSans',
+              color: Theme.of(context).textTheme.headline6.color,
+            ),
+          ) : Text("No hay una descripción disponible",
             style: TextStyle(
               fontSize: 15,
               fontFamily: 'OpenSans',
@@ -410,15 +446,15 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
     );
   }
 
-  Widget _media(BuildContext context){
+  Widget _mediaImagen(BuildContext context){
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 17),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(bottom: 5),
-            child: Text("Imágenes y vídeos",
+            padding: const EdgeInsets.only(bottom: 15),
+            child: Text("Imágenes",
               style: TextStyle(
                 fontSize: 18,
                 fontFamily: 'OpenSans',
@@ -426,9 +462,126 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
                 fontWeight: FontWeight.bold,
               ),
             ),
+          ),
+          _capturas.length > 0 ? Container(
+            height: MediaQuery.of(context).size.height / 5.5,
+            width: MediaQuery.of(context).size.width - 30,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _capturas.length,
+              itemBuilder: (contex, index){
+                return _imageCard(context, index, _capturas[index]);
+              },
+            ),
+          ) : Container()
+        ],
+      ),
+    );
+  }
+
+  Widget _mediaVideo(BuildContext context){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 17),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Text("Vídeos",
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: 'OpenSans',
+                color: Theme.of(context).textTheme.headline6.color,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          widget.juego.videos.length > 0 ? Container(
+            height: MediaQuery.of(context).size.height / 5.5,
+            width: MediaQuery.of(context).size.width - 30,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.juego.videos.length,
+              itemBuilder: (contex, index){
+                return _videoCard(context, widget.juego.videos[index]);
+              },
+            ),
+          ) : Container()
+        ],
+      ),
+    );
+  }
+
+  Widget _imageCard(BuildContext context, int index, String url){
+    return GestureDetector(
+      child: Hero(
+        tag: url,
+        child: CachedNetworkImage(                  
+          imageUrl: url,
+          errorWidget: (context, url, error) => Icon(Icons.error),
+          imageBuilder: (context, imageProvider) => Container(
+            height: 180,
+            width: 200,
+            margin: EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(20),
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: imageProvider
+              )
+            ),
+          ),
+        ),
+      ),
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (_) => DetallesImagen(index, url)));
+      },
+    );
+  }
+
+  Widget _videoCard(BuildContext context, Video video){
+    return new InkWell(
+      child: new Stack(
+        children: <Widget>[
+          CachedNetworkImage(
+            imageUrl: 'https://img.youtube.com/vi/${video.videoId}/0.jpg',
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            imageBuilder: (context, imageProvider) => Container(
+              height: 180,
+              width: 200,
+              margin: EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: imageProvider
+                )
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 5),
+              height: 50,
+              width: 200,
+              child: Icon(Icons.play_circle_outline, color: Colors.black),
+            ),
           )
         ],
       ),
+      onTap: () async{
+        String url = 'https://youtu.be/${video.videoId}';
+        if(await canLaunch(url)){
+          await launch(url).then((value) => {
+            SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+          });
+        }else{
+          Fluttertoast.showToast(msg: "No se ha podido abrir este vídeo. Vuelva a intentarlo.");
+        }
+      },
     );
   }
 
@@ -437,6 +590,11 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
       if(_fechasLanzamiento[i].plataforma.plataformaId == _plataformaSeleccionada.plataformaId){
         setState(() {
           _fechaSeleccionada = _fechasLanzamiento[i];
+          if(_fechasLanzamiento[i].region == 1){
+            _region = "[🇪🇺]";
+          }else{
+            _region = "[🌎]";
+          }
         });
       }
     }
@@ -472,6 +630,11 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
       setState(() {
         _fechasLanzamiento = tempFechas;
         _fechaSeleccionada = tempFechas.first;
+        if(tempFechas.first.region == 1){
+          _region = "[🇪🇺]";
+        }else{
+          _region = "[🌎]";
+        }
         _selecciones = List.generate(
           tempFechas.length, (int index){
             if(index == 0){
@@ -487,7 +650,7 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
   void _anadirACalendario(){
     final Event event = Event(
       title: 'Lanzamiento '+ widget.juego.nombre,
-      description: '¡Hoy se lanza '+widget.juego.nombre+' al mercado!',
+      description: '¡Hoy se lanza '+widget.juego.nombre+' al mercado! Lo anotaré para no olvidarme...',
       startDate: _fechaSeleccionada.date,
       endDate: _fechaSeleccionada.date,
       allDay: true,
@@ -496,4 +659,191 @@ class VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixi
     Add2Calendar.addEvent2Cal(event);
   }
 
+  void _mostrarWebs(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))
+          ),
+          title: new Text("Más acerca de este juego",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).textTheme.headline6.color,
+            ),
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: widget.juego.websites.length,
+              itemBuilder: (context, index){
+                String nombre, icon;
+                switch(widget.juego.websites[index].categoria){
+                  case 1:
+                    icon = "assets/icon/oficial.png";
+                    nombre = "Web oficial";
+                  break;
+                  case 2:
+                    icon = "assets/icon/wikia.png";
+                    nombre = "Wikia";
+                    break;
+                  case 3:
+                    icon = "assets/icon/wikipedia.png";
+                    nombre = "Wikipedia";
+                    break;
+                  case 4:
+                    icon = "assets/icon/facebook.png";
+                    nombre = "Facebook";
+                    break;
+                  case 5:
+                    icon = "assets/icon/twitter.png";
+                    nombre = "Twitter";
+                    break;
+                  case 6:
+                    icon = "assets/icon/twitch.png";
+                    nombre = "Twitch";
+                    break;
+                  case 8:
+                    icon = "assets/icon/instagram.png";
+                    nombre = "Instagram";
+                    break;
+                  case 9:
+                    icon = "assets/icon/youtube.png";
+                    nombre = "Youtube";
+                    break;
+                  case 10:
+                    icon = "assets/icon/apple.png";
+                    nombre = "App Store (iPhone)";
+                    break;
+                  case 11:
+                    icon = "assets/icon/apple.png";
+                    nombre = "App Store (iPad)";
+                    break;
+                  case 12:
+                    icon = "assets/icon/android.png";
+                    nombre = "Google Play Store";
+                    break;
+                  case 13:
+                    icon = "assets/icon/steam.png";
+                    nombre = "Steam";
+                    break;
+                  case 14:
+                    icon = "assets/icon/reddit.png";
+                    nombre = "Reddit";
+                    break;
+                  case 15:
+                    icon = "assets/icon/itch.png";
+                    nombre = "Itch.io";
+                    break;
+                  case 16:
+                    icon = "assets/icon/epicgames.png";
+                    nombre = "Epic Games Store";
+                    break;
+                  case 17:
+                    icon = "assets/icon/gog.png";
+                    nombre = "GOG";
+                    break;
+                  case 18:
+                    icon = "assets/icon/discord.png";
+                    nombre = "Discord";
+                    break;
+                }
+                return Card(
+                  elevation: 5,
+                  child: ListTile(
+                    leading: Image(
+                      image: AssetImage(icon),
+                      width: 50,
+                      height: 50,
+                    ),
+                    title: Text(nombre,
+                      style: TextStyle(
+                        fontFamily: 'OpenSans',
+                        color: Theme.of(context).textTheme.headline6.color,
+                      ),),
+                    onTap: () async{
+                      if( await canLaunch(widget.juego.websites[index].url)){
+                        await launch(widget.juego.websites[index].url).then((value) => {
+                          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+                        });
+                      }else{
+                        Fluttertoast.showToast(msg: "No se ha podido acceder a esta página. Vuelva a intentarlo.");
+                      }
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: <Widget>[
+            new Row(
+              children: <Widget>[
+                new TextButton(
+                  child: new Text("Cerrar",
+                    style: TextStyle(
+                      color: Theme.of(context).buttonColor,
+                    )
+                  ),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            )
+          ],
+        );
+      }
+    );
+  }
+
+
+}
+
+class DetallesImagen extends StatelessWidget {
+
+  final String url;
+  final int index;
+  DetallesImagen(this.index, this.url);
+
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    return WillPopScope(
+      onWillPop: (){
+        if(MediaQuery.of(context).orientation == Orientation.landscape){
+          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+        }
+        return Future.value(true);
+      },
+      child: Scaffold(
+        body: GestureDetector(
+          child: Center(
+            child: Hero(
+              tag: index,
+              child: CachedNetworkImage(                  
+                imageUrl: url,
+                errorWidget: (context, urlError, error) => Icon(Icons.error),
+                imageBuilder: (context, imageProvider) => Container(
+                  height: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.height : double.infinity,
+                  width: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width : double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider
+                    )
+                  ),
+                ),
+              ),
+            ),
+          ),
+          onTap: () {
+            SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
 }
