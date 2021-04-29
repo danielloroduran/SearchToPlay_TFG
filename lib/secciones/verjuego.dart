@@ -16,6 +16,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:like_button/like_button.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter/services.dart';
+import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VerJuegoPage extends StatefulWidget{
@@ -33,20 +34,27 @@ class VerJuegoPage extends StatefulWidget{
 
 class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixin{
 
-  bool _meGusta, _finalizado, _puntuado;
+  final GoogleTranslator traductor = GoogleTranslator();
+
+  bool _meGusta, _finalizado, _puntuado, _btnSwitch;
   FechaLanzamiento _fechaSeleccionada;
   Plataforma _plataformaSeleccionada;
   List<FechaLanzamiento> _fechasLanzamiento;
   List<bool> _selecciones;
   List<String> _capturas;
-  String _region;
+  String _region, _descripcionGeneral, _descripcionEng, _descripcionEsp;
 
   void initState(){
     super.initState();
     _meGusta = true;
     _finalizado = false;
     _puntuado = false;
+    _btnSwitch = false;
     _region = "";
+    _descripcionEng = widget.juego.descripcion;
+    _descripcionGeneral = widget.juego.descripcion;
+    _descripcionEsp = "No disponible";
+    _traducirDesc();
     _capturas = widget.igdbservice.getScreenshotFromGame(widget.juego);
     _getFechas();
   }
@@ -408,37 +416,67 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 5),
-            child: Text("Descripción",
-              style: TextStyle(
-                fontSize: 18,
-                fontFamily: 'OpenSans',
-                color: Theme.of(context).textTheme.headline6.color,
-                fontWeight: FontWeight.bold,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(width: MediaQuery.of(context).size.width / 2.77),
+              Text("Descripción",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'OpenSans',
+                  color: Theme.of(context).textTheme.headline6.color,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
+              Spacer(flex: 1),
+              Tooltip(
+                message: _btnSwitch ? "Deshacer traducción" : "Traducir",
+                child: Switch(
+                  activeColor: Theme.of(context).buttonColor,
+                  value: _btnSwitch,
+                  onChanged: (newValue){
+                    setState(() {
+                      _btnSwitch = newValue;
+                    });
+                  },
+                ),
+              )
+            ],
           ),
-          widget.juego.descripcion != null && widget.juego.descripcion.length <= 75 ? Text(widget.juego.descripcion,
-            textAlign: TextAlign.justify,
-            style: TextStyle(
-              fontSize: 15,
-              fontFamily: 'OpenSans',
-              color: Theme.of(context).textTheme.headline6.color
-            ),
-          ) : widget.juego.descripcion != null && widget.juego.descripcion.length > 75 ?
-          ExpandText(
-            widget.juego.descripcion,
-            style: TextStyle(
-              fontSize: 15,
-              fontFamily: 'OpenSans',
-              color: Theme.of(context).textTheme.headline6.color,
-            ),
-          ) : Text("No hay una descripción disponible",
-            style: TextStyle(
-              fontSize: 15,
-              fontFamily: 'OpenSans',
-              color: Theme.of(context).textTheme.headline6.color,
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 500),
+            child: _btnSwitch ? Container(
+              key: Key("esp"),
+              child: _descripcionEsp.length <= 75 ? Text(_descripcionEsp,
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontFamily: 'OpenSans',
+                  color: Theme.of(context).textTheme.headline6.color,
+                )
+              ) : ExpandText(_descripcionEsp,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontFamily: 'OpenSans',
+                  color: Theme.of(context).textTheme.headline6.color
+                ),
+              ),
+            ) : Container(
+              key: Key("eng"), 
+              child: _descripcionEng.length <= 75 ? Text(_descripcionEng,
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontFamily: 'OpenSans',
+                  color: Theme.of(context).textTheme.headline6.color,
+                )
+              ) : ExpandText(_descripcionEng,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontFamily: 'OpenSans',
+                  color: Theme.of(context).textTheme.headline6.color
+                ),
+              ),
             ),
           ),
         ],
@@ -659,10 +697,23 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
     Add2Calendar.addEvent2Cal(event);
   }
 
+  void _traducirDesc() async{
+    if(_descripcionEng != null){
+      String tempDesc = (await traductor.translate(_descripcionEng, to: 'es')).toString();
+      setState(() {
+        if(tempDesc != null){
+          _descripcionEsp = tempDesc;
+        }else{
+          _descripcionEsp = "No disponible";
+        }
+      });
+    }
+  }
+
   void _mostrarWebs(BuildContext context){
     showDialog(
       context: context,
-      builder: (BuildContext context){
+      builder: (context){
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20))
@@ -752,27 +803,45 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                     break;
                 }
                 return Card(
-                  elevation: 5,
-                  child: ListTile(
-                    leading: Image(
-                      image: AssetImage(icon),
-                      width: 50,
-                      height: 50,
+                  elevation: 8,
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[600] : Colors.grey[300],
                     ),
-                    title: Text(nombre,
-                      style: TextStyle(
-                        fontFamily: 'OpenSans',
-                        color: Theme.of(context).textTheme.headline6.color,
-                      ),),
-                    onTap: () async{
-                      if( await canLaunch(widget.juego.websites[index].url)){
-                        await launch(widget.juego.websites[index].url).then((value) => {
-                          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-                        });
-                      }else{
-                        Fluttertoast.showToast(msg: "No se ha podido acceder a esta página. Vuelva a intentarlo.");
-                      }
-                    },
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      leading: Container(
+                        padding: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1,
+                              color: Colors.grey
+                            )
+                          )
+                        ),
+                        child: Image(
+                          image: AssetImage(icon),
+                          width: 50,
+                          height: 50,
+                        ),
+                      ),
+                      title: Text(nombre,
+                        style: TextStyle(
+                          fontFamily: 'OpenSans',
+                          color: Theme.of(context).textTheme.headline6.color,
+                        ),),
+                      onTap: () async{
+                        if( await canLaunch(widget.juego.websites[index].url)){
+                          await launch(widget.juego.websites[index].url).then((value) => {
+                            SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+                          });
+                        }else{
+                          Fluttertoast.showToast(msg: "No se ha podido acceder a esta página. Vuelva a intentarlo.");
+                        }
+                      },
+                    ),
                   ),
                 );
               },

@@ -86,6 +86,11 @@ class _LoginPageState extends State<LoginPage>{
                   padding: EdgeInsets.fromLTRB(25, 15, 25, 0),
                   child: TextField(
                     controller: _passwordController,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (value){
+                      _comprobacion();
+                      FocusScope.of(context).unfocus();
+                    },
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.lock),
                       hintText: "CONTRASEÑA",

@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
           buttonColor: HexColor('#4fc522'),
           brightness: Brightness.dark,
           primarySwatch: Colors.lightGreen,
-          backgroundColor: Colors.black54,
+          backgroundColor: Colors.black,
           textTheme: TextTheme(
             headline6: TextStyle(
               color: Colors.white,

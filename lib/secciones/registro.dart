@@ -161,6 +161,11 @@ class _RegistroPageState extends State<RegistroPage>{
               padding: EdgeInsets.fromLTRB(25, 15, 25, 10),
               child: TextField(
                 controller: _secondPasswordController,
+                textInputAction: TextInputAction.done,
+                onSubmitted: (value){
+                  _comprobacion();
+                  FocusScope.of(context).unfocus();
+                },
                 onChanged: (text){
                   if(_passwordController.text.isNotEmpty && text != _passwordController.text){
                     setState(() {
