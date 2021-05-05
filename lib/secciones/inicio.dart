@@ -51,7 +51,7 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
               tooltip: "Perfil",
               icon: Icon(Icons.person_rounded),
               onPressed: (){
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us)));            
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us, widget.igdbservice, widget.fs)));            
               },
             ),
         actions: [
@@ -99,7 +99,7 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25),
+              padding: const EdgeInsets.only(top: 25),
               child: _juegosTop()
             ),
           ],
@@ -110,7 +110,7 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
 
   Widget _juegosMes(){
     return new Container(
-      height: MediaQuery.of(context).size.height / 3.6,
+      height: MediaQuery.of(context).size.height / 3.4,
       child: _listJuegosMes == null ? Center(child: CircularProgressIndicator()) : ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
@@ -124,7 +124,7 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
 
   Widget _juegosTop(){
     return new Container(
-      height: MediaQuery.of(context).size.height / 3.6,
+      height: MediaQuery.of(context).size.height / 3.4,
       child: _listJuegosTop == null ? Center(child: CircularProgressIndicator()) : ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,

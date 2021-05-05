@@ -43,18 +43,15 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin{
     return Scaffold(
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark ? HexColor("#1a1a1a") : HexColor("#f5f2f2"),
-          border: Border(
-            top: BorderSide(color: Colors.grey),
-          )
+          color: Theme.of(context).backgroundColor,
         ),
         child: new TabBar(
           onTap: (value){
             FocusScope.of(context).unfocus();
           },
           indicatorColor: Colors.transparent,
-          labelColor: HexColor('#4fc522'),
-          unselectedLabelColor: HexColor("#858585"),
+          labelColor: Theme.of(context).tabBarTheme.labelColor,
+          unselectedLabelColor: Theme.of(context).tabBarTheme.unselectedLabelColor,
           tabs: <Widget>[
             new Tab(
               icon: Icon(Icons.home),

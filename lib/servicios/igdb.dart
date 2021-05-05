@@ -65,7 +65,7 @@ class IGDBService {
     await _comprobarToken();
     IGDBResponse gamesResponse = await _client.games(new IGDBRequestParameters(
         search: titulo, 
-        fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'], 
+        fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'], 
         limit: 100,
     ));
     if(gamesResponse.isSuccess()){
@@ -78,7 +78,7 @@ class IGDBService {
   Future<List<Juego>> recuperarTop() async{
     await _comprobarToken();
     IGDBResponse gamesResponse = await _client.games(new IGDBRequestParameters(
-      fields: ['name', 'summary', 'aggregated_rating', 'genres.*','involved_companies.company.name', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
+      fields: ['name', 'summary', 'aggregated_rating', 'genres.*','involved_companies.company.name', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
       filters: 'aggregated_rating != null & aggregated_rating_count > 10', 
       order: 'aggregated_rating desc',
       limit: 50,
@@ -97,7 +97,7 @@ class IGDBService {
     //int tiempoPrimerDia = DateTime(anioActual, mesActual, 1, 0, 0).millisecondsSinceEpoch~/1000;
     //int tiempoUltimoDia = DateTime(anioActual, mesActual, Utils.lastDayOfMonth(DateTime(anioActual, mesActual)).day, 23, 59).millisecondsSinceEpoch~/1000;
     IGDBResponse gamesResponse = await _client.games(new IGDBRequestParameters(
-      fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
+      fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
       filters: 'release_dates.m = '+mesActual.toString()+' & release_dates.y = '+anioActual.toString()+' & (release_dates.region = 1 | release_dates.region = 8)', 
       order: 'release_dates.date asc',
       limit: 150,
@@ -179,14 +179,14 @@ class IGDBService {
     if(mes == 0){
       if(generoId == 0){
         busquedaResponse = await _client.games(new IGDBRequestParameters(
-          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'release_dates.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
+          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
           order: order,
           filters: "release_dates.platform = ("+plataformaId.toString()+") & release_dates.y =" + anio.toString() + " & (aggregated_rating >=" + nota.toString() + " | aggregated_rating = null) & (aggregated_rating_count > 5 | aggregated_rating_count = null);",
           limit: 50,
         ));
       }else{
         busquedaResponse = await _client.games(new IGDBRequestParameters(
-          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'release_dates.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
+          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
           order: order,
           filters: "genres = ("+generoId.toString()+ ") & release_dates.platform = ("+plataformaId.toString()+") & release_dates.y =" + anio.toString() + " & (aggregated_rating >=" + nota.toString() + " | aggregated_rating = null) & (aggregated_rating_count > 5 | aggregated_rating_count = null);",
           limit: 50,
@@ -195,14 +195,14 @@ class IGDBService {
     }else{
       if(generoId == 0){
         busquedaResponse = await _client.games(new IGDBRequestParameters(
-          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'release_dates.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
+          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
           order: order,
           filters: "release_dates.platform = ("+plataformaId.toString()+") & release_dates.m ="+ mes.toString() +" & release_dates.y =" + anio.toString() + " & (aggregated_rating >=" + nota.toString() + " | aggregated_rating = null) & (aggregated_rating_count > 5 | aggregated_rating_count = null);",
           limit: 50,
         )); 
       }else{
         busquedaResponse = await _client.games(new IGDBRequestParameters(
-          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'release_dates.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
+          fields: ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
           order: order,
           filters: "genres = ("+generoId.toString()+ ") & release_dates.platform = ("+plataformaId.toString()+") & release_dates.m ="+ mes.toString() +" & release_dates.y =" + anio.toString() + " & (aggregated_rating >=" + nota.toString() + " | aggregated_rating = null) & (aggregated_rating_count > 5 | aggregated_rating_count = null);",
           limit: 50,
@@ -217,12 +217,20 @@ class IGDBService {
     }
   }
 
-  void recuperarID() async{
+  Future<List<Juego>> recuperarID(List<int> idJuego) async{
     await _comprobarToken();
-    var gameIdResponse = await _client.games(new IGDBRequestParameters(
-      ids: [43378, 115276],
-    ));
-    _printResponse(gameIdResponse);
+    if(idJuego.length > 0){
+      IGDBResponse gameIdResponse = await _client.games(new IGDBRequestParameters(
+        fields: ['name', 'summary', 'aggregated_rating', 'genres.*','involved_companies.company.name', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
+        ids: idJuego,
+      ));
+      if (gameIdResponse.isSuccess()){
+        return gameIdResponse.data.map((e) => Juego.fromMap(e)).toList();
+      }
+    }
+
+    return [];
+
   }
   
   void _printResponse(IGDBResponse resp) {

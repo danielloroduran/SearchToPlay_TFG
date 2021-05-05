@@ -39,6 +39,11 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w400,
             )
           ),
+          tabBarTheme: TabBarTheme(
+            labelColor: HexColor('#4fc522'),
+            unselectedLabelColor: HexColor('#858585'),
+            
+          ),
 
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
@@ -59,7 +64,11 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
               fontWeight: FontWeight.w400,
             )
-          )
+          ),
+          tabBarTheme: TabBarTheme(
+            labelColor: HexColor('#4fc522'),
+            unselectedLabelColor: HexColor('#858585'),
+          ),
         ),
         home: new RootPage(us: new UserService()),
       ),

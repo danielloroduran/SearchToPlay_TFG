@@ -369,7 +369,7 @@ class _RegistroPageState extends State<RegistroPage>{
       if(_user != null){
         _user.updateProfile(displayName: _usuarioController.text);
         FirebaseService fs = new FirebaseService(_user.uid);
-        Map<String, dynamic> userMap = {"email" : _user.email};
+        Map<String, dynamic> userMap = {"email" : _user.email, "usuario" : _usuarioController.text};
         fs.addUser(userMap);
         _user.sendEmailVerification();
         _dialogoEmail();

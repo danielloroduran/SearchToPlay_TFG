@@ -1,4 +1,5 @@
 import 'package:SearchToPlay/modelos/juego.dart';
+import 'package:SearchToPlay/secciones/perfil.dart';
 import 'package:SearchToPlay/secciones/verjuego.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
@@ -57,7 +58,7 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
               tooltip: "Perfil",
               icon: Icon(Icons.person_rounded),
               onPressed: (){
-
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us, widget.igdbservice, widget.fs)));
               },
             ),
         actions: [

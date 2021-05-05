@@ -1,6 +1,8 @@
+import 'package:SearchToPlay/secciones/perfil.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TopJugonesPage extends StatefulWidget{
@@ -38,7 +40,7 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
               tooltip: "Perfil",
               icon: Icon(Icons.person_rounded),
               onPressed: (){
-                Navigator.pop(context);
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us, widget.igdbservice, widget.fs)));
               },
             ),
         actions: [

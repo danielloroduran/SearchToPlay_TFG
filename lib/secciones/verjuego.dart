@@ -6,6 +6,7 @@ import 'package:SearchToPlay/modelos/plataforma.dart';
 import 'package:SearchToPlay/modelos/video.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
+import 'package:SearchToPlay/widgets/bottomsheet.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:customtogglebuttons/customtogglebuttons.dart';
@@ -36,23 +37,24 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
 
   final GoogleTranslator traductor = GoogleTranslator();
 
-  bool _meGusta, _finalizado, _puntuado, _btnSwitch;
+  bool _meGusta, _completado, _puntuado, _btnSwitch;
   FechaLanzamiento _fechaSeleccionada;
   Plataforma _plataformaSeleccionada;
   List<FechaLanzamiento> _fechasLanzamiento;
   List<bool> _selecciones;
   List<String> _capturas;
-  String _region, _descripcionGeneral, _descripcionEng, _descripcionEsp;
+  String _region, _descripcionEng, _descripcionEsp;
 
   void initState(){
     super.initState();
-    _meGusta = true;
-    _finalizado = false;
+    _meGusta = false;
+    _completado = false;
     _puntuado = false;
     _btnSwitch = false;
+    _comprobarMeGusta();
+    _comprobarCompletado();
     _region = "";
-    _descripcionEng = widget.juego.descripcion;
-    _descripcionGeneral = widget.juego.descripcion;
+    _descripcionEng = widget.juego.descripcion ?? "No disponible";
     _descripcionEsp = "No disponible";
     _traducirDesc();
     _capturas = widget.igdbservice.getScreenshotFromGame(widget.juego);
@@ -174,11 +176,11 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 12),
-                      child: Text(widget.juego.companias[0],
+                      child: widget.juego.companias != null && widget.juego.companias.length > 0 ? Text(widget.juego.companias[0],
                         style: TextStyle(
                           color: Colors.black54
                         ),
-                      ),
+                      ) : Container(),
                     )
                   ],
                 ),
@@ -270,7 +272,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 dotPrimaryColor: Color(0xffd81b60),
                 dotSecondaryColor: Color(0xfff06292),
               ),
-              onTap: _comprobarMeGusta,
+              onTap: _setMeGusta,
             ),
           ),
           Padding(
@@ -280,7 +282,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               likeBuilder: (isFinish){
                 return Icon(
                   Icons.check,
-                  color: _finalizado ? Colors.green : Colors.grey,
+                  color: _completado ? Colors.green : Colors.grey,
                 );
               },
               circleColor: CircleColor(start: Color(0xff43a047), end: Color(0xff81c784)),
@@ -288,7 +290,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 dotPrimaryColor: Color(0xff43a047),
                 dotSecondaryColor: Color(0xff81c784),
               ),
-              onTap: _comprobarSave,
+              onTap: _setCompletado,
             ),
           ),
           Padding(
@@ -317,7 +319,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
             child: CircularPercentIndicator(
               radius: 70,
               lineWidth: 6.5,
-              percent: 0.8,
+              percent: widget.juego.notaCritica != null ? widget.juego.notaCritica / 100 : 0.0,
               footer: Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: Text("Crítica",
@@ -326,7 +328,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                   ),
                 ),
               ),
-              center: Text("50"),
+              center: Text(widget.juego.notaCritica != null ? widget.juego.notaCritica.toStringAsFixed(2) : "N/A"),
               progressColor: Colors.yellow,
             ),
           ),
@@ -419,7 +421,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(width: MediaQuery.of(context).size.width / 2.77),
+              Container(width: MediaQuery.of(context).size.width / 2.9),
               Text("Descripción",
                 style: TextStyle(
                   fontSize: 18,
@@ -562,7 +564,6 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
             width: 200,
             margin: EdgeInsets.symmetric(horizontal: 5),
             decoration: BoxDecoration(
-              color: Colors.red,
               borderRadius: BorderRadius.circular(20),
               image: DecorationImage(
                 fit: BoxFit.cover,
@@ -590,7 +591,6 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               width: 200,
               margin: EdgeInsets.symmetric(horizontal: 5),
               decoration: BoxDecoration(
-                color: Colors.red,
                 borderRadius: BorderRadius.circular(20),
                 image: DecorationImage(
                   fit: BoxFit.fill,
@@ -638,20 +638,70 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
     }
   }
 
-  Future<bool> _comprobarMeGusta(bool isLiked) async{
-    setState(() {
-      print("Gustado");
-      _meGusta = !_meGusta;
-    });
+  Future<bool> _setMeGusta(bool isLiked) async{
+    if (_meGusta == false){
+      Map<String, String> data = new Map<String, String>();
+
+      data[widget.juego.id.toString()] = widget.juego.nombre;
+
+      int numMeGusta = await widget.fs.addMeGusta(data);
+
+      setState((){
+        _meGusta = !_meGusta;
+      });
+
+      mostrarBottomSheetMG(context, numMeGusta); // BottomSheet.dart
+
+    }else{
+      widget.fs.removeMeGusta(widget.juego.id.toString());
+      setState(() {
+        _meGusta = !_meGusta;
+      });
+    }
+
     return _meGusta;
+
   }
 
-  Future<bool> _comprobarSave(bool isSave) async{
-    setState(() {
-      print("Finalizado");
-      _finalizado = !_finalizado;
+  void _comprobarMeGusta() async{
+    widget.fs.comprobarMeGusta(widget.juego.id.toString()).then((value) {
+      setState((){
+        _meGusta = value;
+      });
     });
-    return _finalizado;
+  }
+
+  Future<bool> _setCompletado(bool isLiked) async{
+    if (_completado == false){
+      Map<String, String> data = new Map<String, String>();
+
+      data[widget.juego.id.toString()] = widget.juego.nombre;
+
+      int numCompletado = await widget.fs.addCompletado(data);
+
+      setState((){
+        _completado = !_completado;
+      });
+
+      mostrarBottomSheetCompletados(context, numCompletado); // BottomSheet.dart
+
+    }else{
+      widget.fs.removeCompletado(widget.juego.id.toString());
+      setState(() {
+        _completado = !_completado;
+      });
+    }
+
+    return _completado;
+
+  }
+
+  void _comprobarCompletado() async{
+    widget.fs.comprobarCompletado(widget.juego.id.toString()).then((value) {
+      setState((){
+        _completado = value;
+      });
+    });
   }
 
   Future<bool> _comprobarPuntuado(bool isEvaluated) async{
@@ -701,11 +751,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
     if(_descripcionEng != null){
       String tempDesc = (await traductor.translate(_descripcionEng, to: 'es')).toString();
       setState(() {
-        if(tempDesc != null){
-          _descripcionEsp = tempDesc;
-        }else{
-          _descripcionEsp = "No disponible";
-        }
+        _descripcionEsp = tempDesc ?? "No disponible";
       });
     }
   }
