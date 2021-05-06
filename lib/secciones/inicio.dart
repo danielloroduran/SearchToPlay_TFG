@@ -43,7 +43,7 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
           fontFamily: 'OpenSans',
           fontWeight: FontWeight.w500,
           fontSize: 30,
-          color: Theme.of(context).textTheme.headline6.color
+          color: Theme.of(context).textTheme.headline1.color
         ),
           ),
         backgroundColor: Theme.of(context).backgroundColor,
@@ -77,7 +77,7 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
                     fontFamily: 'OpenSans',
                     fontWeight: FontWeight.w500,
                     fontSize: 29,
-                    color: Theme.of(context).textTheme.headline6.color
+                    color: Theme.of(context).textTheme.headline1.color
                   ),
                 ),
               ],
@@ -93,7 +93,7 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
                     fontFamily: 'OpenSans',
                     fontWeight: FontWeight.w500,
                     fontSize: 29,
-                    color: Theme.of(context).textTheme.headline6.color
+                    color: Theme.of(context).textTheme.headline1.color
                   ),
                 ),
               ],

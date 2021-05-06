@@ -342,7 +342,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 padding: const EdgeInsets.only(top: 5),
                 child: Text("Usuarios",
                   style: TextStyle(
-                    fontFamily: 'OpenSans'
+                    fontFamily: 'OpenSans',
                   ),
                 ),
               ),
@@ -369,7 +369,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'OpenSans',
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                   ),
                 ) : Text("📅  No disponible"),
               ],
@@ -426,7 +426,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 style: TextStyle(
                   fontSize: 18,
                   fontFamily: 'OpenSans',
-                  color: Theme.of(context).textTheme.headline6.color,
+                  color: Theme.of(context).textTheme.headline1.color,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -454,13 +454,13 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 style: TextStyle(
                   fontSize: 15,
                   fontFamily: 'OpenSans',
-                  color: Theme.of(context).textTheme.headline6.color,
+                  color: Theme.of(context).textTheme.headline1.color,
                 )
               ) : ExpandText(_descripcionEsp,
                 style: TextStyle(
                   fontSize: 15,
                   fontFamily: 'OpenSans',
-                  color: Theme.of(context).textTheme.headline6.color
+                  color: Theme.of(context).textTheme.headline1.color
                 ),
               ),
             ) : Container(
@@ -470,13 +470,13 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 style: TextStyle(
                   fontSize: 15,
                   fontFamily: 'OpenSans',
-                  color: Theme.of(context).textTheme.headline6.color,
+                  color: Theme.of(context).textTheme.headline1.color,
                 )
               ) : ExpandText(_descripcionEng,
                 style: TextStyle(
                   fontSize: 15,
                   fontFamily: 'OpenSans',
-                  color: Theme.of(context).textTheme.headline6.color
+                  color: Theme.of(context).textTheme.headline1.color
                 ),
               ),
             ),
@@ -498,7 +498,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               style: TextStyle(
                 fontSize: 18,
                 fontFamily: 'OpenSans',
-                color: Theme.of(context).textTheme.headline6.color,
+                color: Theme.of(context).textTheme.headline1.color,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -531,7 +531,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               style: TextStyle(
                 fontSize: 18,
                 fontFamily: 'OpenSans',
-                color: Theme.of(context).textTheme.headline6.color,
+                color: Theme.of(context).textTheme.headline1.color,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -767,7 +767,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
           title: new Text("Más acerca de este juego",
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              color: Theme.of(context).textTheme.headline6.color,
+              color: Theme.of(context).textTheme.headline1.color,
             ),
           ),
           content: Container(
@@ -876,7 +876,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                       title: Text(nombre,
                         style: TextStyle(
                           fontFamily: 'OpenSans',
-                          color: Theme.of(context).textTheme.headline6.color,
+                          color: Theme.of(context).textTheme.headline1.color,
                         ),),
                       onTap: () async{
                         if( await canLaunch(widget.juego.websites[index].url)){

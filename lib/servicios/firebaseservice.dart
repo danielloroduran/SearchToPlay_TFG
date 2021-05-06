@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseService{
@@ -65,11 +66,14 @@ class FirebaseService{
   Future<bool> comprobarMeGusta(String idJuego) async{
     DocumentSnapshot tempData = await _refMeGusta.doc(userID).get();
 
-    if(tempData.data().containsKey(idJuego)){
-      return true;
-    }else{
-      return false;
+    if(tempData.data() != null){
+      if(tempData.data().containsKey(idJuego)){
+        return true;
+      }else{
+        return false;
+      }
     }
+    return false;
   }
 
   Future<DocumentSnapshot> getMeGusta() async{
@@ -116,8 +120,44 @@ class FirebaseService{
     return result;
   }
 
-  Future<DocumentSnapshot> getAllCompletado() async{
+  Future<Map> getAllCompletado() async{
+    QuerySnapshot completosDocument = await _refCompletado.get();
+    QuerySnapshot usuariosDocument = await _refUser.get();
+    List<QueryDocumentSnapshot> idUsuarios, idUsuariosCompletados;
+    Map idUsuariosMerge = new Map();
+
+    if(usuariosDocument != null){
+      idUsuarios = usuariosDocument.docs;
+    }
+
+    if(completosDocument != null){
+      idUsuariosCompletados = completosDocument.docs;
+    }
     
+    idUsuariosCompletados.sort((a, b) => a.data().length.compareTo(b.data().length));
+    idUsuariosCompletados = idUsuariosCompletados.reversed.toList();
+
+    for(int i = 0; i < idUsuarios.length; i++){
+      for (int j = 0; j < idUsuariosCompletados.length; j++){
+        if(idUsuariosCompletados[j].id == idUsuarios[i].id){
+          String nombre = idUsuarios[i].data()['usuario'];
+          List idJuego = [];
+          idUsuariosCompletados[j].data().entries.forEach((e){
+            idJuego.add(e.key);
+          });
+          idUsuariosMerge[nombre] = idJuego;
+        }
+      }
+    }
+    
+
+    var mapOrdenado = new SplayTreeMap.from(
+      idUsuariosMerge, (key1, key2) => (idUsuariosMerge[key1].length).compareTo(idUsuariosMerge[key1].length)
+    );
+
+    print(mapOrdenado);
+
+    return idUsuariosMerge;
   }
 
   Future<void> removeCompletado(String idJuego) async{

@@ -53,7 +53,6 @@ class _RegistroPageState extends State<RegistroPage>{
         centerTitle: true,
         title: new Text("Registro",
         style: TextStyle(
-          fontFamily: 'OpenSans',
           fontWeight: FontWeight.w500,
           fontSize: 30,
           color: Theme.of(context).textTheme.headline6.color
@@ -72,6 +71,7 @@ class _RegistroPageState extends State<RegistroPage>{
         padding: EdgeInsets.symmetric(horizontal: 10),
         color: Theme.of(context).backgroundColor,
         child: ListView(
+          reverse: true,
           children: <Widget>[
             Container(
               padding: EdgeInsets.fromLTRB(25, 60, 25, 15),
@@ -245,13 +245,8 @@ class _RegistroPageState extends State<RegistroPage>{
                     child: SignInButton(
                       Buttons.Google, 
                       text: "Iniciar sesión con Google",
-                      onPressed: () async{
-                        await widget.us.signInGoogle().then((value) => {
-                          setState((){
-                            _user = value;
-                          }),
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)))
-                        });
+                      onPressed: () {
+                        _iniciarSesionGoogle();
                       },
                     )
                   )
@@ -283,7 +278,7 @@ class _RegistroPageState extends State<RegistroPage>{
                 ],
               )
             )
-          ],
+          ].reversed.toList(),
         ),
       )
     );
@@ -396,6 +391,26 @@ class _RegistroPageState extends State<RegistroPage>{
           });
       }
     }
+  }
+  
+  void _iniciarSesionGoogle() async{
+
+    FirebaseService _fs;
+    Map<String, dynamic> _userMap;
+
+    await widget.us.signInGoogle().then((value) => {
+      setState((){
+        _user = value;
+      }),
+
+      _fs = new FirebaseService(_user.uid),
+      _userMap = {"email" : value.email, "usuario" : value.displayName},
+      _fs.addUser(_userMap),
+
+    });
+    
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
+
   }
 
   void _dialogoEmail(){

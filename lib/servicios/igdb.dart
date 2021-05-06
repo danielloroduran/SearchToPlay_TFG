@@ -219,7 +219,7 @@ class IGDBService {
 
   Future<List<Juego>> recuperarID(List<int> idJuego) async{
     await _comprobarToken();
-    if(idJuego.length > 0){
+    if(idJuego.isNotEmpty){
       IGDBResponse gameIdResponse = await _client.games(new IGDBRequestParameters(
         fields: ['name', 'summary', 'aggregated_rating', 'genres.*','involved_companies.company.name', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'],
         ids: idJuego,

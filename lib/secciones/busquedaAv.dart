@@ -7,6 +7,7 @@ import 'package:SearchToPlay/servicios/igdb.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class BusquedaAvPage extends StatefulWidget{
@@ -55,7 +56,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
               fontFamily: 'OpenSans',
               fontWeight: FontWeight.w500,
               fontSize: 30,
-              color: Theme.of(context).textTheme.headline6.color
+              color: Theme.of(context).textTheme.headline1.color
             ),
           ),
         backgroundColor: Theme.of(context).backgroundColor,
@@ -94,7 +95,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                           fontFamily: 'OpenSans',
                           fontWeight: FontWeight.w400,
                           fontSize: 25,
-                          color: Theme.of(context).textTheme.headline6.color
+                          color: Theme.of(context).textTheme.headline1.color
                         ),
                       ),
                     ],
@@ -133,7 +134,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                         fontFamily: 'OpenSans',
                         fontWeight: FontWeight.w400,
                         fontSize: 25,
-                        color: Theme.of(context).textTheme.headline6.color
+                        color: Theme.of(context).textTheme.headline1.color
                       ),
                     ),
                   ],
@@ -170,7 +171,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                         fontFamily: 'OpenSans',
                         fontWeight: FontWeight.w400,
                         fontSize: 25,
-                        color: Theme.of(context).textTheme.headline6.color
+                        color: Theme.of(context).textTheme.headline1.color
                       ),
                     ),
                   ],
@@ -208,7 +209,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                         fontFamily: 'OpenSans',
                         fontWeight: FontWeight.w400,
                         fontSize: 25,
-                        color: Theme.of(context).textTheme.headline6.color
+                        color: Theme.of(context).textTheme.headline1.color
                       ),
                     ),
                   ],
@@ -246,7 +247,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                       fontFamily: 'OpenSans',
                       fontWeight: FontWeight.w400,
                       fontSize: 25,
-                      color: Theme.of(context).textTheme.headline6.color
+                      color: Theme.of(context).textTheme.headline1.color
                     ),
                   )
                 ],
@@ -287,7 +288,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                       fontFamily: 'OpenSans',
                       fontWeight: FontWeight.w400,
                       fontSize: 25,
-                      color: Theme.of(context).textTheme.headline6.color
+                      color: Theme.of(context).textTheme.headline1.color
                     ),
                   )
                 ],
@@ -379,9 +380,9 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
     });
 
     if(tempResultados.isNotEmpty){
-      Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultadosPage(widget.us, widget.fs, widget.igdbservice, listResultados: tempResultados)));
+      Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultadosPage(widget.us, widget.fs, widget.igdbservice, "Resultados", tempResultados)));
     }else{
-
+      Fluttertoast.showToast(msg: "No se han encontrado resultados.");
     }
   }
 }

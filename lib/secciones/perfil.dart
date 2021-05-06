@@ -66,7 +66,7 @@ class _PerfilPageState extends State<PerfilPage>{
           body: Column(
             children: <Widget>[
               TabBar(
-                labelColor: Theme.of(context).textTheme.headline6.color,
+                labelColor: Theme.of(context).textTheme.headline1.color,
                 tabs: [
                   Tab(
                     text: _listMeGusta != null ? _listMeGusta.length.toString() : "",
@@ -168,7 +168,7 @@ class _PerfilPageState extends State<PerfilPage>{
             fontFamily: 'OpenSans',
             fontWeight: FontWeight.bold,
             fontSize: 24,
-            color: Theme.of(context).textTheme.headline6.color,
+            color: Theme.of(context).textTheme.headline1.color,
           ),
         ),
         SizedBox(height: 4),

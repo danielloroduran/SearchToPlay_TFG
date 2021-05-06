@@ -11,9 +11,10 @@ class ResultadosPage extends StatefulWidget{
   final UserService us;
   final FirebaseService fs;
   final IGDBService igdbservice;
-  List<Juego> listResultados;
+  final String titulo;
+  final List<Juego> listResultados;
 
-  ResultadosPage(this.us, this.fs, this.igdbservice, {this.listResultados});
+  ResultadosPage(this.us, this.fs, this.igdbservice, this.titulo, this.listResultados);
 
   @override
   _ResultadosPageState createState() => new _ResultadosPageState();
@@ -30,12 +31,11 @@ class _ResultadosPageState extends State<ResultadosPage> {
       appBar: new AppBar(
         elevation: 0,
         centerTitle: true,
-        title: new Text("Resultados",
+        title: new Text(widget.titulo,
           style: TextStyle(
-            fontFamily: 'OpenSans',
             fontWeight: FontWeight.w500,
             fontSize: 30,
-            color: Theme.of(context).textTheme.headline6.color
+            color: Theme.of(context).textTheme.headline1.color
           ),
         ),
         backgroundColor: Theme.of(context).backgroundColor,

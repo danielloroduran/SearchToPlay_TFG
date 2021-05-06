@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.white,
           primarySwatch: Colors.lightGreen,
           textTheme: TextTheme(
-            headline6: TextStyle(
+            headline1: TextStyle(
               color: Colors.black,
             ),
             subtitle1: TextStyle(
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.lightGreen,
           backgroundColor: Colors.black,
           textTheme: TextTheme(
-            headline6: TextStyle(
+            headline1: TextStyle(
               color: Colors.white,
             ),
             subtitle1: TextStyle(

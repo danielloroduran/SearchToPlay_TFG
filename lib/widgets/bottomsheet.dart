@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 // Las imágenes utilizadas como trofeos han sido obtenidas de www.flaticon.com
 
 void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
-    List<String> _randomMensajes = ['Ya has dado $numMeGusta me gusta, ¡sigue así!', '¡Es tu $numMeGusta me gusta!', 'Es tu $numMeGusta me gusta, ¡los ❤️ no paran!'];
+    List<String> _randomMensajes = ['Ya has dado $numMeGusta me gusta, ¡sigue así!', '¡Es tu $numMeGusta me gusta!', 'Es tu $numMeGusta me gusta, ¡los ❤️ no paran!', 'Llegas a tu $numMeGustaº me gusta, ¡vaya papaya!'];
     Random _random = new Random();
     String _mensaje = _randomMensajes[_random.nextInt(_randomMensajes.length)];
     if(numMeGusta == 1){
@@ -31,7 +31,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text("Es tu primer  ❤️, ¡esperemos que no sea el último!",
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -66,7 +66,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text("¡Has llegado a tu 5º ❤️!",
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -101,7 +101,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text(_mensaje,
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -136,7 +136,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text("Es tu me gusta número 20, ¡que no pare la cosa!",
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -171,7 +171,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text("VEINTISIETE",
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -206,7 +206,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text(_mensaje,
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -241,7 +241,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text("¡Has llegado a los 100 ❤️!",
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -276,7 +276,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text(_mensaje,
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -292,7 +292,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
   }
 
   void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
-    List<String> _randomMensajes = ['Ya has completado $numCompletados juegos, ¡sigue así!', '¡Has completado $numCompletados juegos!', 'Es tu $numCompletadosº juego completado, ¡los ❤️ no paran!'];
+    List<String> _randomMensajes = ['Ya has completado $numCompletados juegos, ¡sigue así!', '¡Has completado $numCompletados juegos!', 'Es tu $numCompletadosº juego completado, ¡el mando echa humo!', 'Llegas a tu $numCompletadosº juego completado, ¡vaya papaya!'];
     Random _random = new Random();
     String _mensaje = _randomMensajes[_random.nextInt(_randomMensajes.length)];
 
@@ -319,7 +319,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text("Has completado tu primer juego, ¡esperemos que no sea el último!",
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -354,7 +354,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text("¡Ya has completado 5 juegos!",
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -389,7 +389,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text(_mensaje,
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -424,7 +424,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text("Y ya van 20, ¡que los juegos no paren!",
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -459,7 +459,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text("VEINTISIETE",
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -494,7 +494,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text(_mensaje,
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -529,7 +529,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text("¡Has llegado a los 100 juegos completados!",
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -564,7 +564,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
                 child: Text(_mensaje,
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline6.color,
+                    color: Theme.of(context).textTheme.headline1.color,
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

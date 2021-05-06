@@ -7,7 +7,6 @@ import 'package:SearchToPlay/servicios/igdb.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 class TabPage extends StatefulWidget{
 

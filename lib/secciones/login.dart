@@ -1,5 +1,6 @@
 import 'package:SearchToPlay/secciones/tab.dart';
 import 'package:SearchToPlay/secciones/registro.dart';
+import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -41,173 +42,174 @@ class _LoginPageState extends State<LoginPage>{
   }
 
   Widget build(BuildContext context){
-    return Form(
-      key: _formKey,
-      child: Scaffold(
-        body: new Container(
-          color: Theme.of(context).backgroundColor,
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: ListView(
-              physics: const NeverScrollableScrollPhysics(),
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(left: 15, top: 10, bottom: 0, right: 15),
-                  child: Center(
-                    child: Theme.of(context).brightness == Brightness.light ? Image.asset('assets/launch_image_light.png') : Image.asset('assets/launch_image_dark.png'),
-                  )
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(25, 20, 25, 15),
-                  child: TextField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.email),
-                      hintText: "EMAIL",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.black,
+    return SafeArea(
+      top: true,
+          child: Form(
+        key: _formKey,
+        child: Scaffold(
+          body: new Container(
+            color: Theme.of(context).backgroundColor,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: ListView(
+                reverse: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(left: 15, top: 10, bottom: 0, right: 15),
+                    child: Center(
+                      child: Theme.of(context).brightness == Brightness.light ? Image.asset('assets/launch_image_light.png') : Image.asset('assets/launch_image_dark.png'),
+                    )
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(25, 20, 25, 15),
+                    child: TextField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.email),
+                        hintText: "EMAIL",
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                          ),
+                          borderRadius: BorderRadius.circular(20)
                         ),
-                        borderRadius: BorderRadius.circular(20)
-                      ),
-                      focusColor: Colors.white,
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.red,
+                        focusColor: Colors.white,
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.red,
+                          ),
+                          borderRadius: BorderRadius.circular(20)
                         ),
-                        borderRadius: BorderRadius.circular(20)
+                        errorText: _validateEmail ? _falloEmail : null,
                       ),
-                      errorText: _validateEmail ? _falloEmail : null,
-                    ),
-                  )
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(25, 15, 25, 0),
-                  child: TextField(
-                    controller: _passwordController,
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (value){
-                      _comprobacion();
-                      FocusScope.of(context).unfocus();
-                    },
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.lock),
-                      hintText: "CONTRASEÑA",
-                      suffixIcon: IconButton(
-                        icon: Icon(_passwordVisible == false ? Icons.visibility : Icons.visibility_off),
-                        onPressed: (){
-                          setState((){
-                            _passwordVisible = !_passwordVisible;
-                          });
-                        },
-                      ),
-                      focusColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.red,
-                        ),
-                        borderRadius: BorderRadius.circular(20)
-                      ),
-                      errorText: _validatePassword ? _falloPassword : null
-                    ),
-                    obscureText: _passwordVisible == true ? false : true,
-                  )
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(25, 20, 25, 10),
-                  child: _estaCargando == false ? ConstrainedBox(
-                    constraints: BoxConstraints.tightFor(height: 55),
-                    child: ElevatedButton(
-                      child: Text("Iniciar Sesión",
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Theme.of(context).textTheme.subtitle2.color,
-                        )
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                        primary: HexColor('#4fc522')
-                        
-                      ),
-                      onPressed: (){
+                    )
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(25, 15, 25, 0),
+                    child: TextField(
+                      controller: _passwordController,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (value){
                         _comprobacion();
-                      },                      
-                    ),
-                  ) : Center(child: CircularProgressIndicator(),)
-                ),
-                Center(
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(25, 10, 10, 10),
-                    child: Text("o también puede",
-                      style: Theme.of(context).textTheme.subtitle1
+                        FocusScope.of(context).unfocus();
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.lock),
+                        hintText: "CONTRASEÑA",
+                        suffixIcon: IconButton(
+                          icon: Icon(_passwordVisible == false ? Icons.visibility : Icons.visibility_off),
+                          onPressed: (){
+                            setState((){
+                              _passwordVisible = !_passwordVisible;
+                            });
+                          },
+                        ),
+                        focusColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.red,
+                          ),
+                          borderRadius: BorderRadius.circular(20)
+                        ),
+                        errorText: _validatePassword ? _falloPassword : null
+                      ),
+                      obscureText: _passwordVisible == true ? false : true,
+                    )
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(25, 20, 25, 10),
+                    child: _estaCargando == false ? ConstrainedBox(
+                      constraints: BoxConstraints.tightFor(height: 55),
+                      child: ElevatedButton(
+                        child: Text("Iniciar Sesión",
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: Theme.of(context).textTheme.subtitle2.color,
+                          )
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          primary: HexColor('#4fc522')
+                          
+                        ),
+                        onPressed: (){
+                          FocusScope.of(context).unfocus();
+                          _comprobacion();
+                        },                      
+                      ),
+                    ) : Center(child: CircularProgressIndicator(),)
+                  ),
+                  Center(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(25, 10, 10, 10),
+                      child: Text("o también puede",
+                        style: Theme.of(context).textTheme.subtitle1
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 15),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints.tightFor(height: 55),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Container(
-                        child: SignInButton(
-                          Buttons.Google,
-                          text: "Iniciar sesión con Google",
-                          onPressed: () async {
-                            await widget.us.signInGoogle().then((value) => {
-                              setState((){
-                                _user = value;
-                              })
-                            });
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
-                           }
+                  Padding(
+                    padding: EdgeInsets.only(top: 15),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints.tightFor(height: 55),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Container(
+                          child: SignInButton(
+                            Buttons.Google,
+                            text: "Iniciar sesión con Google",
+                            onPressed: () {
+                              _iniciarSesionGoogle();
+                             }
+                          ),
                         ),
                       ),
+                    )
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 13),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        TextButton(
+                          child: Text("¿Olvidó su contraseña?",
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Theme.of(context).textTheme.subtitle1.color,
+                            )
+                          ),
+                          onPressed: (){
+                            _passwordOlvidada(context);
+                          },
+                        ),
+                        TextButton(
+                          child: Text("Registrarse",
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: HexColor('#4fc522'),
+                            )
+                          ),
+                          onPressed: (){
+                            FocusScope.of(context).unfocus();
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => RegistroPage(widget.us)));
+                          },
+                        ),
+                      ],
                     ),
                   )
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 13),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      TextButton(
-                        child: Text("¿Olvidó su contraseña?",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Theme.of(context).textTheme.subtitle1.color,
-                          )
-                        ),
-                        onPressed: (){
-                          _passwordOlvidada(context);
-                        },
-                      ),
-                      TextButton(
-                        child: Text("Registrarse",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: HexColor('#4fc522'),
-                          )
-                        ),
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegistroPage(widget.us)));
-                        },
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                ].reversed.toList(),
+              )
             )
-          )
-        ),
-      )
+          ),
+        )
+      ),
     );
   }
 
@@ -241,11 +243,11 @@ class _LoginPageState extends State<LoginPage>{
         _falloEmail = "";
         _falloPassword = "";
       });
-      iniciarSesion();
+      _iniciarSesion();
     }
   }
 
-  void iniciarSesion() async {
+  void _iniciarSesion() async {
     final formState = _formKey.currentState;
     if(formState.validate()){
       formState.save();
@@ -290,6 +292,26 @@ class _LoginPageState extends State<LoginPage>{
     }
   }
 
+  void _iniciarSesionGoogle() async{
+
+    FirebaseService _fs;
+    Map<String, dynamic> _userMap;
+
+    await widget.us.signInGoogle().then((value) => {
+      setState((){
+        _user = value;
+      }),
+
+      _fs = new FirebaseService(_user.uid),
+      _userMap = {"email" : value.email, "usuario" : value.displayName},
+      _fs.addUser(_userMap),
+
+    });
+    
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
+
+  }
+
   void _dialogoEmail(){
     showDialog(
       context: context,
@@ -298,12 +320,12 @@ class _LoginPageState extends State<LoginPage>{
           title: new Text("Email sin verificar",
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              color: Theme.of(context).textTheme.headline6.color,
+              color: Theme.of(context).textTheme.headline1.color,
             ),
           ),
           content: new Text("Parece que no ha verificado su email. En caso de no haber recibido el enlace de confirmación, pulse Reenviar",
             style: TextStyle(
-              color: Theme.of(context).textTheme.headline6.color,              
+              color: Theme.of(context).textTheme.headline1.color,              
             )
           ),
           actions: <Widget>[
@@ -349,7 +371,7 @@ class _LoginPageState extends State<LoginPage>{
               title: new Text("Contraseña olvidada",
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).textTheme.headline6.color,
+                  color: Theme.of(context).textTheme.headline1.color,
                 ),
               ),
               content: new Container(
@@ -360,7 +382,7 @@ class _LoginPageState extends State<LoginPage>{
                     SizedBox(height: 4),
                     Text("Introduzca el email al que le será enviado el enlace de recuperación de contraseña",
                       style: TextStyle(
-                        color: Theme.of(context).textTheme.headline6.color,
+                        color: Theme.of(context).textTheme.headline1.color,
                       ),
                     ),
                     SizedBox(height: 4),
@@ -385,7 +407,6 @@ class _LoginPageState extends State<LoginPage>{
                           ),
                           errorText: _validateEmail ? _falloEmail : null,
                         ),
-                        autofocus: true,
                       ),
                     ),
                     Row(

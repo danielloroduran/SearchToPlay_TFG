@@ -50,7 +50,7 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
               fontFamily: 'OpenSans',
               fontWeight: FontWeight.w500,
               fontSize: 30,
-              color: Theme.of(context).textTheme.headline6.color
+              color: Theme.of(context).textTheme.headline1.color
             ),
           ),
         backgroundColor: Theme.of(context).backgroundColor,
