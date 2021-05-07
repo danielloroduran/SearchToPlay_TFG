@@ -4,6 +4,7 @@ import 'package:SearchToPlay/secciones/verjuego.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -137,37 +138,48 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
   }
 
   Widget _juegoCard(Juego juego){
-    return Hero(
-      tag: juego.id.toString(),
+    return GestureDetector(
+      child: Hero(
+        tag: juego.id.toString(),
         child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        width: 150,
-        height: 200,
-        child: GestureDetector(
-          child: juego.cover == null ? Container(
+          height: 150,
+          width: 200,
+          child: juego.cover != null ? CachedNetworkImage(
+            imageUrl: widget.igdbservice.getURLCoverFromGame(juego),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            imageBuilder: (context, imageProvider) => Container(
+              height: 150,
+              width: 200,
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  fit: BoxFit.fitHeight,
+                  image: imageProvider
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).brightness == Brightness.light ? Colors.grey.withOpacity(0.5) : Colors.grey.withOpacity(0.1),
+                    spreadRadius: 3,
+                    blurRadius: 7,
+                    offset: Offset(6, 4),
+                  )
+                ]
+              ),
+            ),
+          ) : 
+          Container(
             alignment: Alignment.center,
             child: Text(juego.nombre +"\n [Imagen no disponible]", textAlign: TextAlign.center,)
-          ) : null,
-          onTap: (){
-            Navigator.push(context, CupertinoPageRoute(builder: (context) => VerJuegoPage(juego, widget.fs, widget.igdbservice)));
-          },
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          image: juego.cover == null ? null : DecorationImage(
-            image: NetworkImage(widget.igdbservice.getURLCoverFromGame(juego)),
-            fit: BoxFit.fitHeight
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).brightness == Brightness.light ? Colors.grey.withOpacity(0.5) : Colors.grey.withOpacity(0.1),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: Offset(6, 4),
-            )
-          ]
-        ),    
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
       ),
+      onTap: (){
+        Navigator.push(context, CupertinoPageRoute(builder: (context) => VerJuegoPage(juego, widget.fs, widget.igdbservice)));
+      },
     );
   }
 

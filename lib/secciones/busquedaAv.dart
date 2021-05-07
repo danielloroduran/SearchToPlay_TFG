@@ -102,8 +102,13 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                   ),
                   Column(
                     children: <Widget>[
-                      DropdownButton(
-                        
+                      TextButton(
+                        child: Text(_ordenSeleccionado ?? "",),
+                        onPressed: (){
+                          _bottomSheetOrden(context);
+                        },
+                      )
+                      /*DropdownButton(
                         value: _ordenSeleccionado,
                         onChanged: (newValue){
                           setState(() {
@@ -116,7 +121,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                             child: Text(valueItem)
                           );
                         }).toList(),
-                      )
+                      )*/
                     ],
                   )
                 ],
@@ -141,7 +146,13 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                 ),
                 Column(
                   children: <Widget>[
-                    DropdownButton(
+                    TextButton(
+                      child: Text(_generoSeleccionado?.nombre ?? ""),
+                      onPressed: (){
+                        _bottomSheetGenero(context);
+                      },
+                    )
+                    /*DropdownButton(
                       value: _generoSeleccionado,
                       onChanged: (newValue){
                         setState(() {
@@ -154,7 +165,8 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                           child: valueItem.nombre.length > 15 ? Text(valueItem.nombre.substring(0, 15) + "...") : Text(valueItem.nombre),
                         );
                       }).toList(),
-                    )],
+                    )*/
+                  ],
                 )
               ],
             ),
@@ -178,7 +190,13 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                 ),
                 Column(
                   children: <Widget>[
-                    DropdownButton(
+                    TextButton(
+                      child: _plataformaSeleccionada != null ? (_plataformaSeleccionada.abreviacion != null ? Text(_plataformaSeleccionada.abreviacion) : _plataformaSeleccionada.nombre.length > 14 ? Text(_plataformaSeleccionada.nombre.substring(0, 14) + "...") : Text(_plataformaSeleccionada.nombre)) : Text(""),
+                      onPressed: (){
+                        _bottomSheetPlataforma(context);
+                      },
+                    )
+                    /*DropdownButton(
                       value: _plataformaSeleccionada,
                       onChanged: (newValue){
                         setState(() {
@@ -191,7 +209,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                           child: valueItem.abreviacion != null ? Text(valueItem.abreviacion) : valueItem.nombre.length > 14 ? Text(valueItem.nombre.substring(0, 14) + "...") : Text(valueItem.nombre),
                         );
                       }).toList(),
-                    )
+                    )*/
                   ],
                 )
               ],
@@ -216,7 +234,13 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                 ),
                 Column(
                   children: <Widget>[
-                    DropdownButton(
+                    TextButton(
+                      child: Text(_listMes[_mesSeleccionado]),
+                      onPressed: () {
+                        _bottomSheetMes(context);
+                      },
+                    )
+                    /*DropdownButton(
                       value: _mesSeleccionado,
                       onChanged: (newValue){
                         setState(() {
@@ -232,7 +256,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                           )
                         );
                       }).values.toList(),
-                    )
+                    )*/
                   ],
                 )
               ],
@@ -384,5 +408,225 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
     }else{
       Fluttertoast.showToast(msg: "No se han encontrado resultados.");
     }
+  }
+
+  void _bottomSheetOrden(BuildContext context){
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      ),
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, StateSetter state) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 30),
+                  child: Text("Ordenar por",
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.headline1.color,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  )
+                ),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.symmetric( horizontal: 10),
+                    child: ListView.builder(
+                      itemCount: _listOrden.length,
+                      itemBuilder: (context, index){
+                        return RadioListTile(
+                          activeColor: Theme.of(context).buttonColor,
+                          title: Text(_listOrden[index]),
+                          value: _listOrden[index],
+                          groupValue: _ordenSeleccionado,
+                          onChanged: (value){
+                            state((){
+                              _ordenSeleccionado = value;
+                            });
+                            setState(() {
+                              _ordenSeleccionado = value;
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  )
+                ),
+              ],
+            );
+          }
+        );
+      }
+    );
+  }
+
+  void _bottomSheetGenero(BuildContext context){
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      ),
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, StateSetter state) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 30),
+                  child: Text("Género",
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.headline1.color,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  )
+                ),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.symmetric( horizontal: 10),
+                    child: ListView.builder(
+                      itemCount: _listGeneros.length,
+                      itemBuilder: (context, index){
+                        return RadioListTile(
+                          activeColor: Theme.of(context).buttonColor,
+                          title: Text(_listGeneros[index].nombre),
+                          value: _listGeneros[index],
+                          groupValue: _generoSeleccionado,
+                          onChanged: (value){
+                            state((){
+                              _generoSeleccionado = value;
+                            });
+                            setState(() {
+                              _generoSeleccionado = value;
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  )
+                ),
+              ],
+            );
+          }
+        );
+      }
+    );
+  }
+
+  void _bottomSheetPlataforma(BuildContext context){
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      ),
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, StateSetter state) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 30),
+                  child: Text("Plataforma",
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.headline1.color,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  )
+                ),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.symmetric( horizontal: 10),
+                    child: ListView.builder(
+                      itemCount: _listPlataformas.length,
+                      itemBuilder: (context, index){
+                        return RadioListTile(
+                          activeColor: Theme.of(context).buttonColor,
+                          title: _listPlataformas[index].abreviacion != null ? Text(_listPlataformas[index].abreviacion) : _listPlataformas[index].nombre.length > 30 ? Text(_listPlataformas[index].nombre.substring(0, 30) + "...") : Text(_listPlataformas[index].nombre),
+                          value: _listPlataformas[index],
+                          groupValue: _plataformaSeleccionada,
+                          onChanged: (value){
+                            state((){
+                              _plataformaSeleccionada = value;
+                            });
+                            setState(() {
+                              _plataformaSeleccionada = value;
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  )
+                ),
+              ],
+            );
+          }
+        );
+      }
+    );
+  }
+
+  void _bottomSheetMes(BuildContext context){
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      ),
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, StateSetter state) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 30),
+                  child: Text("Mes",
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.headline1.color,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  )
+                ),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    child: ListView.builder(
+                      itemCount: _listMes.length,
+                      itemBuilder: (context, index){
+                        int key = _listMes.keys.elementAt(index);
+                        return RadioListTile(
+                          title: Text(_listMes[key]),
+                          value: key,
+                          groupValue: _mesSeleccionado,
+                          onChanged: (value){
+                            state((){
+                              _mesSeleccionado = value;
+                            });
+                            setState(() {
+                              _mesSeleccionado = value;
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  )
+                ),
+              ],
+            );
+          }
+        );
+      }
+    );
   }
 }

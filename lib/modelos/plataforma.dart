@@ -21,7 +21,7 @@ class Plataforma{
 
   static List<Plataforma> listFromMapList(List<dynamic> maps){
     if(maps == null){
-      return new List<Plataforma>();
+      return [];
     }
 
     return maps.map((map) => fromMap(map)).toList();

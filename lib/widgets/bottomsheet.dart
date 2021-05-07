@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 // Las imágenes utilizadas como trofeos han sido obtenidas de www.flaticon.com

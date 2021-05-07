@@ -13,7 +13,7 @@ class UserService{
     return userCredential.user;
   }
 
-  Future signInGoogle() async{
+  Future<User> signInGoogle() async{
 
     final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
@@ -24,8 +24,10 @@ class UserService{
         idToken: googleAuth.idToken,
         accessToken: googleAuth.accessToken,
       );
-      User user = (await _fa.signInWithCredential(credential)).user;
-      return user;
+      UserCredential user = await _fa.signInWithCredential(credential).catchError((error){
+        throw Exception(error);
+      });
+      return user.user;
     }
 
   }

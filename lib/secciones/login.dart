@@ -5,6 +5,7 @@ import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
@@ -297,18 +298,29 @@ class _LoginPageState extends State<LoginPage>{
     FirebaseService _fs;
     Map<String, dynamic> _userMap;
 
-    await widget.us.signInGoogle().then((value) => {
-      setState((){
-        _user = value;
-      }),
+    try{
+      _user = await widget.us.signInGoogle();
 
-      _fs = new FirebaseService(_user.uid),
-      _userMap = {"email" : value.email, "usuario" : value.displayName},
-      _fs.addUser(_userMap),
+      if(_user != null){
+        _fs = new FirebaseService(_user.uid);
+        _userMap = {"email" : _user.email, "usuario" : _user.displayName};
+        _fs.addUser(_userMap);
+      }
 
-    });
-    
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
+    }catch(e){
+      switch(e.message.code){
+        case "account-exists-with-different-credential":
+          Fluttertoast.showToast(msg: "Ya existe una cuenta con estos datos.");
+        break;
+        case "invalid-credential":
+          Fluttertoast.showToast(msg: "Datos inválidos");
+        break;
+        case "user-not-found":
+          Fluttertoast.showToast(msg: "Usuario no encontrado");
+        break;
+      }
+    }
 
   }
 

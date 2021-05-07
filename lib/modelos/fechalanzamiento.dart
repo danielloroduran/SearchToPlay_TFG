@@ -26,7 +26,6 @@ class FechaLanzamiento{
 
   static DateTime dateTimeFromMsecSinceEpoch(int timestamp) {
     if (timestamp == null) {
-      // error?
       return new DateTime.now();
     }
     return new DateTime.fromMillisecondsSinceEpoch(1000*timestamp, isUtc: true);
@@ -34,7 +33,7 @@ class FechaLanzamiento{
 
   static List<FechaLanzamiento> listFromMapList(List<dynamic> mapList) {
     if (mapList == null) {
-      return new List<FechaLanzamiento>();
+      return [];
     }
 
     return mapList.map((m) => fromMap(m)).toList();

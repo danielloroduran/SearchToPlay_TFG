@@ -140,6 +140,41 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
           Hero(
             tag: widget.juego.id.toString(),
             child: Container(
+              height: 190,
+              width: 200,
+              child: widget.juego.cover != null ? CachedNetworkImage(
+                imageUrl: widget.igdbservice.getURLCoverFromGame(widget.juego),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+                imageBuilder: (context, imageProvider) => Container(
+                  height: 190,
+                  width: 200,
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      fit: BoxFit.fitHeight,
+                      image: imageProvider
+                    ),
+                  ),
+                ),
+              ) : 
+              Container(
+                alignment: Alignment.center,
+                child: Text("[Imagen no disponible]", 
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black
+                  ),
+                  )
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),          
+          /*Hero(
+            tag: widget.juego.id.toString(),
+            child: Container(
               width: 180,
               height: 200,
               decoration: BoxDecoration(
@@ -150,7 +185,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 )
               ),
             )
-          ),
+          ),*/
           Padding(
             padding: EdgeInsets.only(top: 30),
             child: Row(

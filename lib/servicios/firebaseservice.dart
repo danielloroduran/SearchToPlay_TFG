@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseService{
@@ -133,9 +132,6 @@ class FirebaseService{
     if(completosDocument != null){
       idUsuariosCompletados = completosDocument.docs;
     }
-    
-    idUsuariosCompletados.sort((a, b) => a.data().length.compareTo(b.data().length));
-    idUsuariosCompletados = idUsuariosCompletados.reversed.toList();
 
     for(int i = 0; i < idUsuarios.length; i++){
       for (int j = 0; j < idUsuariosCompletados.length; j++){
@@ -150,14 +146,12 @@ class FirebaseService{
       }
     }
     
-
-    var mapOrdenado = new SplayTreeMap.from(
-      idUsuariosMerge, (key1, key2) => (idUsuariosMerge[key1].length).compareTo(idUsuariosMerge[key1].length)
-    );
-
-    print(mapOrdenado);
-
-    return idUsuariosMerge;
+    
+  var sortedMap = Map.fromEntries(
+      idUsuariosMerge.entries.toList()
+      ..sort((e1, e2) => (e2.value.length).compareTo(e1.value.length)));
+  
+    return sortedMap;
   }
 
   Future<void> removeCompletado(String idJuego) async{

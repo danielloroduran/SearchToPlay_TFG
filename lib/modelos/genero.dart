@@ -17,7 +17,7 @@ class Genero{
 
   static List<Genero> listFromMapList(List<dynamic> maps){
     if(maps == null){
-      return new List<Genero>();
+      return [];
     }
 
     return maps.map((map) => fromMap(map)).toList();

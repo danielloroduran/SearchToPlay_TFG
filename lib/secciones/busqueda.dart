@@ -4,6 +4,7 @@ import 'package:SearchToPlay/secciones/verjuego.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
@@ -132,9 +133,9 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
         
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 0.80,
+          childAspectRatio: 0.90,
           mainAxisSpacing: 10,
-          crossAxisSpacing: 20,
+          crossAxisSpacing: 10,
         ),
         itemCount: _listResultados.length,
         itemBuilder: (context, index){
@@ -145,37 +146,48 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
   }
 
   Widget _juegoCard(Juego juego){
-    return Hero(
-      tag: juego.id.toString(),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-         width: 150,
-        height: 200,
-        child: GestureDetector(
-          child: juego.cover == null ? Container(
+    return GestureDetector(
+      child: Hero(
+        tag: juego.id.toString(),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 18, vertical: 5),
+          height: 100,
+          width: 150,
+          child: juego.cover != null ? CachedNetworkImage(
+            imageUrl: widget.igdbservice.getURLCoverFromGame(juego),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            imageBuilder: (context, imageProvider) => Container(
+              height: 100,
+              width: 150,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: imageProvider
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).brightness == Brightness.light ? Colors.grey.withOpacity(0.5) : Colors.grey.withOpacity(0.1),
+                    spreadRadius: 3,
+                    blurRadius: 7,
+                    offset: Offset(6, 4),
+                  )
+                ]
+              ),
+            ),
+          ) : 
+          Container(
             alignment: Alignment.center,
-            child: Text(juego.nombre +"\n[Imagen no disponible]", textAlign: TextAlign.center),
-          ) : null,
-          onTap: (){
-            Navigator.push(context, CupertinoPageRoute(builder: (context) => VerJuegoPage(juego, widget.fs, widget.igdbservice)));
-          },
-        ),
-        decoration: BoxDecoration(
-          image: juego.cover != null ? DecorationImage(
-            image: NetworkImage(widget.igdbservice.getURLCoverFromGame(juego)),
-            fit: BoxFit.fitHeight,
-          ) : null,
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).brightness == Brightness.light ? Colors.grey.withOpacity(0.5) : Colors.grey.withOpacity(0.1),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset: Offset(3, 4),
-            )
-          ]        
+            child: Text(juego.nombre +"\n [Imagen no disponible]", textAlign: TextAlign.center,)
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
         ),
       ),
+      onTap: (){
+        Navigator.push(context, CupertinoPageRoute(builder: (context) => VerJuegoPage(juego, widget.fs, widget.igdbservice)));
+      },
     );
   }
 
