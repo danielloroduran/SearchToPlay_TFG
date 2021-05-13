@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-// Las imágenes utilizadas como trofeos han sido obtenidas de www.flaticon.com
+// Algunas de las imágenes utilizadas como trofeos han sido obtenidas de www.flaticon.com
 
 void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
     List<String> _randomMensajes = ['Ya has dado $numMeGusta me gusta, ¡sigue así!', '¡Es tu $numMeGusta me gusta!', 'Es tu $numMeGusta me gusta, ¡los ❤️ no paran!', 'Llegas a tu $numMeGustaº me gusta, ¡vaya papaya!'];
@@ -18,6 +18,16 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
@@ -54,6 +64,16 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
                   image: AssetImage("assets/awards/medal.png"),
@@ -88,6 +108,16 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
@@ -124,6 +154,16 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
                   image: AssetImage("assets/awards/medal2.png"),
@@ -158,6 +198,16 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
@@ -194,6 +244,16 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
                   image: AssetImage("assets/awards/trophy.png"),
@@ -229,6 +289,16 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
                   image: AssetImage("assets/awards/trophy2.png"),
@@ -263,6 +333,16 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
@@ -307,9 +387,19 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
-                  image: AssetImage("assets/awards/diploma.png"),
+                  image: AssetImage("assets/awards/mando_verde_nobg.png"),
                   height: 200,
                   width: 200,
                 ),
@@ -342,9 +432,19 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
-                  image: AssetImage("assets/awards/medal.png"),
+                  image: AssetImage("assets/awards/mando_verde_nobg.png"),
                   height: 200,
                   width: 200,
                 ),
@@ -377,9 +477,19 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
-                  image: AssetImage("assets/awards/medal.png"),
+                  image: AssetImage("assets/awards/mando_verde_nobg.png"),
                   height: 200,
                   width: 200,
                 ),
@@ -412,9 +522,19 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
-                  image: AssetImage("assets/awards/medal2.png"),
+                  image: AssetImage("assets/awards/mando_bronce_nobg.png"),
                   height: 200,
                   width: 200,
                 ),
@@ -447,9 +567,19 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
-                  image: AssetImage("assets/awards/medal2.png"),
+                  image: AssetImage("assets/awards/mando_bronce_nobg.png"),
                   height: 200,
                   width: 200,
                 ),
@@ -482,9 +612,19 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
-                  image: AssetImage("assets/awards/trophy.png"),
+                  image: AssetImage("assets/awards/mando_plata_nobg.png"),
                   height: 200,
                   width: 200,
                 ),
@@ -517,9 +657,19 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
-                  image: AssetImage("assets/awards/trophy2.png"),
+                  image: AssetImage("assets/awards/mando_oro_nobg.png"),
                   height: 200,
                   width: 200,
                 ),
@@ -552,9 +702,19 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 15),
+                height: 5,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              ),
+              Container(
                 margin: EdgeInsets.symmetric(vertical: 30),
                 child: Image(
-                  image: AssetImage("assets/awards/trophy2.png"),
+                  image: AssetImage("assets/awards/mando_oro_nobg.png"),
                   height: 200,
                   width: 200,
                 ),

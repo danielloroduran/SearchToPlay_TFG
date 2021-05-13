@@ -4,6 +4,7 @@ import 'package:SearchToPlay/secciones/inicio.dart';
 import 'package:SearchToPlay/secciones/topjugones.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
+import 'package:SearchToPlay/servicios/storageservice.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,12 +25,14 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin{
   FirebaseService _fs;
   IGDBService _igdbService;
   TabController _tabController;
+  StorageService _ss;
 
   @override
   void initState(){
     super.initState();
     _fs = new FirebaseService(widget.user.uid);
     _igdbService = new IGDBService(_fs);
+    _ss = new StorageService(widget.user.uid);
     _igdbService.recuperarTop();
     _tabController = new TabController(
       length: 4,
@@ -74,7 +77,7 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin{
         
         physics: NeverScrollableScrollPhysics(),
         controller: _tabController,
-        children: <Widget>[InicioPage(widget.us, _fs, _igdbService), BusquedaPage(widget.us, _fs, _igdbService), BusquedaAvPage(widget.us, _fs, _igdbService), TopJugonesPage(widget.us, _fs, _igdbService)],
+        children: <Widget>[InicioPage(widget.us, _fs, _igdbService, _ss), BusquedaPage(widget.us, _fs, _igdbService, _ss), BusquedaAvPage(widget.us, _fs, _igdbService, _ss), TopJugonesPage(widget.us, _fs, _igdbService, _ss)],
       ),
     );
   }

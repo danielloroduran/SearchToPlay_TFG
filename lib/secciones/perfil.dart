@@ -1,21 +1,27 @@
+import 'dart:io';
+
 import 'package:SearchToPlay/modelos/juego.dart';
 import 'package:SearchToPlay/secciones/verjuego.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
+import 'package:SearchToPlay/servicios/storageservice.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 
 class PerfilPage extends StatefulWidget{
 
   final UserService us;
   final IGDBService igdbservice;
   final FirebaseService fs;
+  final StorageService ss;
 
-  PerfilPage(this.us, this.igdbservice, this.fs);
+  PerfilPage(this.us, this.igdbservice, this.fs, this.ss);
 
   @override
   _PerfilPageState createState() => new _PerfilPageState();
@@ -24,13 +30,19 @@ class PerfilPage extends StatefulWidget{
 class _PerfilPageState extends State<PerfilPage>{
 
   User _user;
-  List<Juego> _listMeGusta, _listCompletado;
+  List<Juego> _listMeGusta, _listCompletado, _listValorado;
+  File _cambioFotoPerfil;
+  String _providerUser;
+  bool _haCambiado;
 
   void initState(){
     super.initState();
+    _providerUser = "";
+    _haCambiado = false;
     _usuarioActual();
     _getMeGusta();
     _getCompletado();
+    _getValorado();
   }
 
   Widget build(BuildContext context){
@@ -77,7 +89,7 @@ class _PerfilPageState extends State<PerfilPage>{
                     icon: Icon(Icons.check, color: Colors.green)
                   ),
                   Tab(
-                    text: "8",
+                    text: _listValorado != null ? _listValorado.length.toString() : "",
                     icon: Icon(Icons.star, color: Colors.yellow)
                   ),
                 ],
@@ -89,7 +101,6 @@ class _PerfilPageState extends State<PerfilPage>{
                       child: Center(
                         child: _listMeGusta != null && _listMeGusta.length == 0 ? Text("Parece que aún\n no has dado ningún ❤️",
                             style: TextStyle(
-                              fontFamily: 'OpenSans',
                               fontSize: 18,
                               fontWeight: FontWeight.w400,
                             ),
@@ -101,7 +112,6 @@ class _PerfilPageState extends State<PerfilPage>{
                       child: Center(
                         child: _listCompletado != null && _listCompletado.length == 0 ? Text("Parece que aún\n no has completado ningún juego",
                             style: TextStyle(
-                              fontFamily: 'OpenSans',
                               fontSize: 18,
                               fontWeight: FontWeight.w400,
                             ),
@@ -109,7 +119,17 @@ class _PerfilPageState extends State<PerfilPage>{
                           ) : CircularProgressIndicator(),
                         ),
                       ),
-                    _juegosValorados(context),
+                    _listValorado != null && _listValorado.length > 0 ? _juegosValorados(context) : Container(
+                      child: Center(
+                        child: _listValorado != null && _listValorado.length == 0 ? Text("Parece que aún\n no has valorado ningún juego",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            textAlign: TextAlign.center,
+                          ) : CircularProgressIndicator(),
+                        ),
+                      ),
                   ],
                 )
               )
@@ -130,32 +150,64 @@ class _PerfilPageState extends State<PerfilPage>{
 
   Widget _fotoPerfil(BuildContext context){
     return Center(
-      child: _user?.photoURL != null ? CachedNetworkImage(                  
-        imageUrl: _user.photoURL,
-        errorWidget: (context, url, error) => Icon(Icons.error),
-        imageBuilder: (context, imageProvider) => Container(
-          height: 150,
-          width: 150,
-          margin: EdgeInsets.symmetric(horizontal: 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(75),
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: imageProvider
-            )
+      child: Stack(
+        children: <Widget>[
+          _user?.photoURL != null && _haCambiado == false ? CachedNetworkImage(    
+            imageUrl: _user.photoURL,
+            progressIndicatorBuilder: (context, url, downloadProgress) => Container(
+              height: 150,
+              width: 150,
+              child: Center(
+                child: CircularProgressIndicator(value: downloadProgress.progress),
+              ),
+            ),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            imageBuilder: (context, imageProvider) => Container(
+              height: 150,
+              width: 150,
+              margin: EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(75),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: imageProvider
+                )
+              ),
+            ),
+          ) : Container(
+            height: 150,
+            width: 150,
+            margin: EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(75),
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: _cambioFotoPerfil == null ? AssetImage('assets/user_profile_icon.png') : FileImage(_cambioFotoPerfil),
+              )
+            ),
           ),
-        ),
-      ) : Container(
-        height: 150,
-        width: 150,
-        margin: EdgeInsets.symmetric(horizontal: 5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(75),
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: AssetImage('assets/user_profile_icon.png'),
+          Positioned(
+            child: _providerUser == "password" ? Tooltip(
+              child: InkWell(
+                child: Container(
+                  width: 45,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Theme.of(context).textTheme.headline1.color,
+                  ),
+                  child: Icon(Icons.camera_alt, color: Theme.of(context).backgroundColor,),
+                ),
+                onTap: (){
+                  _fuenteImagen(context);
+                },
+              ),
+              message: "Cambiar foto de perfil",
+            ) : Container(),
+            bottom: 0,
+            right: 0,
           )
-        ),
+        ] 
       ),
     );
   }
@@ -236,12 +288,29 @@ class _PerfilPageState extends State<PerfilPage>{
   }
 
   Widget _juegosValorados(BuildContext context){
-    return GridView.count(
-      padding: EdgeInsets.zero,
-      crossAxisCount: 3,
-      children: Colors.primaries.map((color) {
-        return Container(color: color, height: 150.0);
-      }).toList()
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Column(
+        children: [
+          Expanded(
+            child:  GridView.builder(
+              padding: EdgeInsets.only(top: 20, bottom: 20),
+              physics: ClampingScrollPhysics(),
+              
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.90,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 10,
+              ),
+              itemCount: _listValorado.length,
+              itemBuilder: (context, index){
+                return _juegoCard(_listValorado[index]);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -259,7 +328,6 @@ class _PerfilPageState extends State<PerfilPage>{
             imageBuilder: (context, imageProvider) => Container(
               height: 100,
               width: 150,
-              //margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
@@ -344,13 +412,130 @@ class _PerfilPageState extends State<PerfilPage>{
 
   }
 
+  void _getValorado() async{
+    DocumentSnapshot snapshotId = await widget.fs.getValorado();
+    List<int> tempId = [];
+    List<Juego> tempJuego = [];
+
+    if(snapshotId.data() != null){
+      snapshotId.data().keys.forEach((element) {
+        tempId.add(int.parse(element));
+      });
+
+      tempJuego = await widget.igdbservice.recuperarID(tempId);
+
+      if(tempJuego != null){
+        setState(() {
+          _listValorado = tempJuego;
+        });
+      }
+    }else{
+      setState(() {
+        _listValorado = [];
+      });
+    }
+  }
+
   void _usuarioActual() async{
     User tempUser = await widget.us.getCurrentUser();
 
     if(tempUser != null){
       setState(() {
         _user = tempUser;
+        _providerUser = tempUser.providerData.first.providerId;
       });
     }
   }
+
+  void _fuenteImagen(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: new Text("Cámara o galería",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).textTheme.headline1.color,
+            )),
+          content: new Text("Seleccione desde donde se va a obtener la foto.",
+            style: TextStyle(
+              color: Theme.of(context).textTheme.headline1.color,
+            )
+          ),
+          actions: <Widget>[
+            new Row(
+              children: <Widget>[
+                new TextButton(
+                  child: new Text("Cancelar",
+                    style: TextStyle(
+                      color: Colors.grey
+                    )
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                new TextButton(
+                  child: new Text("Galería",
+                    style: TextStyle(
+                      color: Theme.of(context).buttonColor
+                    )
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _getImagen(false);
+                  },
+                ),
+                new TextButton(
+                  child: new Text("Cámara",
+                    style: TextStyle(
+                      color: Theme.of(context).buttonColor
+                    )
+                  ),
+                  onPressed: (){
+                    Navigator.pop(context);
+                    _getImagen(true);
+                  }
+                )
+              ],
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  Future<void> _getImagen(bool usarCamara) async{
+
+    var imagen;
+    if(usarCamara){
+      imagen = await ImagePicker().getImage(source: ImageSource.camera);
+    }else{
+      imagen = await ImagePicker().getImage(source: ImageSource.gallery);
+    }
+
+    if(imagen != null){
+      setState(() {
+        _cambioFotoPerfil = File(imagen.path);
+        _haCambiado = true;
+      });
+      _actualizarDatos();
+    }
+  }
+
+  void _actualizarDatos() async{
+    String _url;
+    Map<String, dynamic> _userMap = new Map<String, dynamic>();
+
+    if(_user != null){
+      Fluttertoast.showToast(msg: "Actualizando foto...");
+      _url = await widget.ss.subirFotoPerfil(_cambioFotoPerfil);  
+      _user.updateProfile(photoURL : _url);
+      _userMap = {"email" : _user.email, "usuario" : _user.displayName, "fotoperfil" : _url};
+      widget.fs.updateUser(_userMap); 
+
+      Fluttertoast.showToast(msg: "Foto de perfil actualizada con éxito");   
+    }
+  }
+
 }

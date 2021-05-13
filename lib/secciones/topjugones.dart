@@ -1,7 +1,9 @@
+import 'package:SearchToPlay/secciones/informacion.dart';
 import 'package:SearchToPlay/secciones/perfil.dart';
 import 'package:SearchToPlay/secciones/resultados.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
+import 'package:SearchToPlay/servicios/storageservice.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +15,9 @@ class TopJugonesPage extends StatefulWidget{
   final UserService us;
   final FirebaseService fs;
   final IGDBService igdbservice;
+  final StorageService ss;
 
-  TopJugonesPage(this.us, this.fs, this.igdbservice);
+  TopJugonesPage(this.us, this.fs, this.igdbservice, this.ss);
   @override
   _TopJugonesPageState createState() => new _TopJugonesPageState();
 }
@@ -46,7 +49,7 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
               tooltip: "Perfil",
               icon: Icon(Icons.person_rounded),
               onPressed: (){
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us, widget.igdbservice, widget.fs)));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us, widget.igdbservice, widget.fs, widget.ss)));
               },
             ),
         actions: [
@@ -54,7 +57,7 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
             tooltip: "Información",
             icon: Icon(Icons.info),
             onPressed: (){
-
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => InformacionPage()));            
             },
           )
         ],
@@ -65,19 +68,6 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
         child: Column(
           children: [
             _resultadosJugones(context),
-            /*Expanded(
-              child: ListView(
-                children: [
-                _userTileTest("Daniel", 0),
-                _userTileTest("Carlos", 1),
-                _userTileTest("Ana", 2),
-                _userTileTest("Daniel", 0),
-                _userTileTest("Carlos", 1),
-                _userTileTest("Ana", 2),
-                _userTileTest("David", 3),
-                ],
-              ),
-            )*/
           ],
         )
       )
@@ -103,12 +93,10 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
     String _pathImage;
     switch(index){
       case 0:
-        //_backgroundColor = HexColor("#ffd700");
         _backgroundColor = HexColor("#FFE077");
         _pathImage = "assets/awards/mando_oro.png";
         break;
       case 1:
-        //_backgroundColor = HexColor("#b5b5bd");
         _backgroundColor = HexColor("#CCCCD0");
         _pathImage ="assets/awards/mando_plata.png";
         break;
@@ -154,7 +142,6 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
               child: Container(
                 height: 110,
                 width: 110,
-                //padding: EdgeInsets.symmetric(vertical: 16),
                 alignment: FractionalOffset.centerLeft,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(

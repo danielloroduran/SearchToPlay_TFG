@@ -1,8 +1,10 @@
 import 'package:SearchToPlay/modelos/juego.dart';
+import 'package:SearchToPlay/secciones/informacion.dart';
 import 'package:SearchToPlay/secciones/perfil.dart';
 import 'package:SearchToPlay/secciones/verjuego.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
+import 'package:SearchToPlay/servicios/storageservice.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,8 +16,9 @@ class BusquedaPage extends StatefulWidget{
   final UserService us;
   final FirebaseService fs;
   final IGDBService igdbservice;
+  final StorageService ss;
 
-  BusquedaPage(this.us, this.fs, this.igdbservice);
+  BusquedaPage(this.us, this.fs, this.igdbservice, this.ss);
   @override
   _BusquedaPageState createState() => new _BusquedaPageState();
 }
@@ -59,7 +62,7 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
               tooltip: "Perfil",
               icon: Icon(Icons.person_rounded),
               onPressed: (){
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us, widget.igdbservice, widget.fs)));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us, widget.igdbservice, widget.fs, widget.ss)));
               },
             ),
         actions: [
@@ -67,7 +70,7 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
             tooltip: "Información",
             icon: Icon(Icons.info),
             onPressed: (){
-
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => InformacionPage()));            
             },
           )
         ],

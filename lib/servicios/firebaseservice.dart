@@ -5,7 +5,7 @@ class FirebaseService{
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final String userID;
-  CollectionReference _refUser, _refKey, _refToken, _refMeGusta, _refCompletado;
+  CollectionReference _refUser, _refKey, _refToken, _refMeGusta, _refCompletado, _refValorado, _refJuegosValorados;
 
   FirebaseService(this.userID){
     _refUser = _db.collection('usuarios');
@@ -13,10 +13,12 @@ class FirebaseService{
     _refToken = _db.collection("token");
     _refMeGusta = _db.collection("megusta");
     _refCompletado = _db.collection("completado");
+    _refValorado = _db.collection("valorado");
+    _refJuegosValorados = _db.collection("juegosvalorados");
   }
 
-  Future<DocumentSnapshot> getUserById() async {
-    return await _refUser.doc(userID).get();
+  Future<DocumentSnapshot> getUserById(String userId) async {
+    return await _refUser.doc(userId).get();
   }
 
   Future<void> addUser(Map data) async{
@@ -156,6 +158,95 @@ class FirebaseService{
 
   Future<void> removeCompletado(String idJuego) async{
     await _refCompletado.doc(userID).update({idJuego : FieldValue.delete()});
+  }
+
+  ///////////////////////////////////////////////////
+
+  Future<void> addValorado(String idJuego, String nota) async{
+    var exits = await _refValorado.doc(userID).get();
+
+    Map<String, String> dataUser = new Map<String, String>();
+    dataUser[idJuego] = nota;
+
+    if(exits.exists){
+      await _refValorado.doc(userID).update(dataUser);
+    }else{
+      await _refValorado.doc(userID).set(dataUser);     
+    }
+
+    var exitsIdJuego = await _refJuegosValorados.doc(idJuego).get();
+
+    Map<String, String> data = new Map<String, String>();
+    data[userID] = nota;
+
+    if(exitsIdJuego.exists){
+      await _refJuegosValorados.doc(idJuego).update(data);
+    }else{
+      await _refJuegosValorados.doc(idJuego).set(data);
+    }
+  }
+
+  Future<bool> comprobarValorado(String idJuego) async{
+    DocumentSnapshot tempData = await _refValorado.doc(userID).get();
+
+    if(tempData.data() != null){
+      if(tempData.data().containsKey(idJuego)){
+        return true;
+      }else{
+        return false;
+      }
+    }
+    return false;
+  }
+
+  Future<DocumentSnapshot> getValorado() async{
+    DocumentSnapshot result = await _refValorado.doc(userID).get();
+
+    return result;
+  }
+
+  Future<String> getNotaValorado(String id) async{
+    DocumentSnapshot result = await _refValorado.doc(userID).get();
+    if(result.data() != null){
+      return result.data()[id];
+    }
+    return "";
+  }
+
+  Future<double> getMediaValorado(String idJuego) async{
+    DocumentSnapshot result = await _refJuegosValorados.doc(idJuego).get();
+    double nota = 0;
+    if(result.data() != null){
+      result.data().values.forEach((element) {
+        nota += double.parse(element);
+      });
+      return nota / result.data().length;
+    }
+  }
+
+  Future<List<Map<dynamic, dynamic>>> getValoradoId(String idJuego) async{
+    DocumentSnapshot result = await _refJuegosValorados.doc(idJuego).get();
+    DocumentSnapshot userResult;
+    Map<dynamic, dynamic> finalResult = new Map<dynamic, dynamic>();
+    List<Map<dynamic, dynamic>> userNotas = [];
+
+    if(result.data() != null){
+      result.data().forEach((key, value) async{
+        userResult = await _refUser.doc(key).get();
+        if(userResult.data() != null){
+          finalResult = userResult.data();
+          finalResult["nota"] = value;
+        }
+        userNotas.add(finalResult);
+      });
+    }
+
+    return userNotas;
+  }
+
+  Future<void> removeValorado(String idJuego) async{
+    await _refValorado.doc(userID).update({idJuego : FieldValue.delete()});
+    await _refJuegosValorados.doc(idJuego).update({userID : FieldValue.delete()});
   }
 
 }

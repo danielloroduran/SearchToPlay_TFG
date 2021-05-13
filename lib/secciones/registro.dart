@@ -1,12 +1,14 @@
+import 'dart:io';
+
 import 'package:SearchToPlay/secciones/tab.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
+import 'package:SearchToPlay/servicios/storageservice.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/button_view.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RegistroPage extends StatefulWidget{
 
@@ -27,6 +29,7 @@ class _RegistroPageState extends State<RegistroPage>{
   TextEditingController _emailController;
   TextEditingController _passwordController;
   TextEditingController _secondPasswordController;
+  File _fotoPerfil;
 
   void initState(){
     super.initState();
@@ -73,8 +76,47 @@ class _RegistroPageState extends State<RegistroPage>{
         child: ListView(
           reverse: true,
           children: <Widget>[
+            Center(
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    height: 170,
+                    width: 170,
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(75),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: _fotoPerfil != null ? FileImage(_fotoPerfil) : AssetImage('assets/user_profile_icon.png'),
+                      )
+                    ),
+                  ),
+                  Positioned(
+                    child: Tooltip(
+                      child: InkWell(
+                        child: Container(
+                          width: 45,
+                          height: 45,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Theme.of(context).textTheme.headline1.color,
+                          ),
+                          child: Icon(Icons.camera_alt, color: Theme.of(context).backgroundColor,),
+                        ),
+                        onTap: (){
+                          _fuenteImagen(context);
+                        },
+                      ),
+                      message: "Cambiar foto de perfil",
+                    ),
+                    bottom: 0,
+                    right: 0,
+                  )
+                ]
+              ),
+            ), 
             Container(
-              padding: EdgeInsets.fromLTRB(25, 60, 25, 15),
+              padding: EdgeInsets.fromLTRB(25, 20, 25, 15),
               child: TextField(
                 controller: _usuarioController,
                 decoration: InputDecoration(
@@ -227,32 +269,6 @@ class _RegistroPageState extends State<RegistroPage>{
                 )
               ) : Center(child: CircularProgressIndicator()),
             ),
-            Center(
-              child: Container(
-                padding: EdgeInsets.fromLTRB(25, 10, 10, 10),
-                child: Text("o también puede",
-                  style: Theme.of(context).textTheme.subtitle1
-                ),
-              )
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 15),
-              child: ConstrainedBox(
-                constraints: BoxConstraints.tightFor(height: 55),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Container(
-                    child: SignInButton(
-                      Buttons.Google, 
-                      text: "Iniciar sesión con Google",
-                      onPressed: () {
-                        _iniciarSesionGoogle();
-                      },
-                    )
-                  )
-                )
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.only(top: 13),
               child: Row(
@@ -359,12 +375,25 @@ class _RegistroPageState extends State<RegistroPage>{
 
   void _registrarse() async{
 
+    String _url = "";
+
     try{
       _user = await widget.us.createUser(_emailController.text, _passwordController.text);
       if(_user != null){
-        _user.updateProfile(displayName: _usuarioController.text);
+
+        StorageService ss = new StorageService(_user.uid);
         FirebaseService fs = new FirebaseService(_user.uid);
-        Map<String, dynamic> userMap = {"email" : _user.email, "usuario" : _usuarioController.text};
+        Map<String, dynamic> userMap = new Map<String, dynamic>();
+
+        if(_fotoPerfil != null){
+          _url = await ss.subirFotoPerfil(_fotoPerfil);
+          _user.updateProfile(displayName: _usuarioController.text, photoURL: _url);
+          userMap = {"email" : _user.email, "usuario" : _usuarioController.text, "fotoperfil" : _url};
+        }else{
+          _user.updateProfile(displayName: _usuarioController.text);
+          userMap = {"email" : _user.email, "usuario" : _usuarioController.text};
+        }
+
         fs.addUser(userMap);
         _user.sendEmailVerification();
         _dialogoEmail();
@@ -392,44 +421,12 @@ class _RegistroPageState extends State<RegistroPage>{
       }
     }
   }
-  
-  void _iniciarSesionGoogle() async{
-
-    FirebaseService _fs;
-    Map<String, dynamic> _userMap;
-
-    try{
-      _user = await widget.us.signInGoogle();
-
-      if(_user != null){
-        _fs = new FirebaseService(_user.uid);
-        _userMap = {"email" : _user.email, "usuario" : _user.displayName};
-        _fs.addUser(_userMap);
-      }
-
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
-    }catch(e){
-      switch(e.message.code){
-        case "account-exists-with-different-credential":
-          Fluttertoast.showToast(msg: "Ya existe una cuenta con estos datos.");
-        break;
-        case "invalid-credential":
-          Fluttertoast.showToast(msg: "Datos inválidos");
-        break;
-        case "user-not-found":
-          Fluttertoast.showToast(msg: "Usuario no encontrado");
-        break;
-      }
-    }
-
-  }
 
   void _dialogoEmail(){
     showDialog(
       context: context,
       builder: (BuildContext context){
         return AlertDialog(
-          backgroundColor: Theme.of(context).backgroundColor,
           title: new Text("Email de verificación enviado",
             style: TextStyle(
               fontWeight: FontWeight.w500,
@@ -462,6 +459,81 @@ class _RegistroPageState extends State<RegistroPage>{
         );
       }
     );
+  }
+
+  void _fuenteImagen(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: new Text("Cámara o galería",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).textTheme.headline1.color,
+            )),
+          content: new Text("Seleccione desde donde se va a obtener la foto.",
+            style: TextStyle(
+              color: Theme.of(context).textTheme.headline1.color,
+            )
+          ),
+          actions: <Widget>[
+            new Row(
+              children: <Widget>[
+                new TextButton(
+                  child: new Text("Cancelar",
+                    style: TextStyle(
+                      color: Colors.grey
+                    )
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                new TextButton(
+                  child: new Text("Galería",
+                    style: TextStyle(
+                      color: Theme.of(context).buttonColor
+                    )
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _getImagen(false);
+                  },
+                ),
+                new TextButton(
+                  child: new Text("Cámara",
+                    style: TextStyle(
+                      color: Theme.of(context).buttonColor
+                    )
+                  ),
+                  onPressed: (){
+                    Navigator.pop(context);
+                    _getImagen(true);
+                  }
+                )
+              ],
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  Future<void> _getImagen(bool usarCamara) async{
+
+    var imagen;
+
+    if(usarCamara){
+      imagen = await ImagePicker().getImage(source: ImageSource.camera);
+    }else{
+      imagen = await ImagePicker().getImage(source: ImageSource.gallery);
+    }
+
+    if(imagen != null){
+      setState(() {
+        _fotoPerfil = File(imagen.path);
+      });
+    }
   }
 
   

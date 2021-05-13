@@ -1,8 +1,10 @@
 import 'package:SearchToPlay/modelos/juego.dart';
+import 'package:SearchToPlay/secciones/informacion.dart';
 import 'package:SearchToPlay/secciones/perfil.dart';
 import 'package:SearchToPlay/secciones/verjuego.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
+import 'package:SearchToPlay/servicios/storageservice.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,8 +15,9 @@ class InicioPage extends StatefulWidget{
   final UserService us;
   final FirebaseService fs;
   final IGDBService igdbservice;
+  final StorageService ss;
 
-  InicioPage(this.us, this.fs, this.igdbservice);
+  InicioPage(this.us, this.fs, this.igdbservice, this.ss);
 
   @override
   _InicioPageState createState() => new _InicioPageState();
@@ -41,18 +44,17 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
         centerTitle: true,
         title: new Text("Inicio",
         style: TextStyle(
-          fontFamily: 'OpenSans',
-          fontWeight: FontWeight.w500,
-          fontSize: 30,
-          color: Theme.of(context).textTheme.headline1.color
-        ),
+            fontWeight: FontWeight.w500,
+            fontSize: 30,
+            color: Theme.of(context).textTheme.headline1.color
           ),
+        ),
         backgroundColor: Theme.of(context).backgroundColor,
         leading: IconButton(
               tooltip: "Perfil",
               icon: Icon(Icons.person_rounded),
               onPressed: (){
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us, widget.igdbservice, widget.fs)));            
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us, widget.igdbservice, widget.fs, widget.ss)));            
               },
             ),
         actions: [
@@ -60,7 +62,7 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
             tooltip: "Información",
             icon: Icon(Icons.info),
             onPressed: (){
-
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => InformacionPage()));            
             },
           )
         ],

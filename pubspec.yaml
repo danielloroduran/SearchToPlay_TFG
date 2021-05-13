@@ -24,13 +24,14 @@ dependencies:
   flutter:
     sdk: flutter
   cloud_firestore: ^0.16.0+1
-  # image_picker
+  image_picker: ^0.6.7+22
   share: ^2.0.1
   url_launcher: ^6.0.2
   translator: ^0.1.5
   igdb_client: ^0.0.7
   firebase_auth: ^0.20.1
-  flutter_native_splash: ^1.1.5+1
+  flutter_native_splash: ^0.3.2
+  firebase_storage: ^7.0.0
   google_sign_in: ^4.5.9
   hexcolor: ^2.0.3
   flutter_signin_button: ^2.0.0
@@ -42,6 +43,7 @@ dependencies:
   add_2_calendar: ^2.0.2
   customtogglebuttons: ^0.0.5
   cached_network_image: ^2.5.1
+  flutter_rating_bar: ^4.0.0
 
 flutter_native_splash:
   color: "#fdfffc"

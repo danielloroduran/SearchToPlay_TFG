@@ -1,9 +1,11 @@
 import 'package:SearchToPlay/modelos/genero.dart';
 import 'package:SearchToPlay/modelos/plataforma.dart';
+import 'package:SearchToPlay/secciones/informacion.dart';
 import 'package:SearchToPlay/secciones/perfil.dart';
 import 'package:SearchToPlay/secciones/resultados.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
+import 'package:SearchToPlay/servicios/storageservice.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +17,9 @@ class BusquedaAvPage extends StatefulWidget{
   final UserService us;
   final FirebaseService fs;
   final IGDBService igdbservice;
+  final StorageService ss;
 
-  BusquedaAvPage(this.us, this.fs, this.igdbservice);
+  BusquedaAvPage(this.us, this.fs, this.igdbservice, this.ss);
 
   @override
   _BusquedaAvPageState createState() => new _BusquedaAvPageState();
@@ -64,7 +67,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
               tooltip: "Perfil",
               icon: Icon(Icons.person_rounded),
               onPressed: (){
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us, widget.igdbservice, widget.fs)));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => PerfilPage(widget.us, widget.igdbservice, widget.fs, widget.ss)));
               },
             ),
         actions: [
@@ -72,7 +75,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
             tooltip: "Información",
             icon: Icon(Icons.info),
             onPressed: (){
-
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => InformacionPage()));            
             },
           )
         ],
@@ -108,20 +111,6 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                           _bottomSheetOrden(context);
                         },
                       )
-                      /*DropdownButton(
-                        value: _ordenSeleccionado,
-                        onChanged: (newValue){
-                          setState(() {
-                            _ordenSeleccionado = newValue;
-                          });
-                        },
-                        items: _listOrden.map((valueItem){
-                          return DropdownMenuItem(
-                            value: valueItem,
-                            child: Text(valueItem)
-                          );
-                        }).toList(),
-                      )*/
                     ],
                   )
                 ],
@@ -152,20 +141,6 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                         _bottomSheetGenero(context);
                       },
                     )
-                    /*DropdownButton(
-                      value: _generoSeleccionado,
-                      onChanged: (newValue){
-                        setState(() {
-                          _generoSeleccionado = newValue;
-                        });
-                      },
-                      items: _listGeneros == [] ? [] : _listGeneros.map((valueItem) {
-                        return DropdownMenuItem(
-                          value: valueItem,
-                          child: valueItem.nombre.length > 15 ? Text(valueItem.nombre.substring(0, 15) + "...") : Text(valueItem.nombre),
-                        );
-                      }).toList(),
-                    )*/
                   ],
                 )
               ],
@@ -196,20 +171,6 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                         _bottomSheetPlataforma(context);
                       },
                     )
-                    /*DropdownButton(
-                      value: _plataformaSeleccionada,
-                      onChanged: (newValue){
-                        setState(() {
-                          _plataformaSeleccionada = newValue;
-                        });
-                      },
-                      items: _listPlataformas == [] ? [] : _listPlataformas.map((valueItem) {
-                        return DropdownMenuItem(
-                          value: valueItem,
-                          child: valueItem.abreviacion != null ? Text(valueItem.abreviacion) : valueItem.nombre.length > 14 ? Text(valueItem.nombre.substring(0, 14) + "...") : Text(valueItem.nombre),
-                        );
-                      }).toList(),
-                    )*/
                   ],
                 )
               ],
@@ -240,23 +201,6 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                         _bottomSheetMes(context);
                       },
                     )
-                    /*DropdownButton(
-                      value: _mesSeleccionado,
-                      onChanged: (newValue){
-                        setState(() {
-                          _mesSeleccionado = newValue;
-                        });
-                      },
-                      items: _listMes.map((id, nombre) {
-                        return MapEntry(
-                          nombre,
-                          DropdownMenuItem(
-                            value: id,
-                            child: Text(nombre),
-                          )
-                        );
-                      }).values.toList(),
-                    )*/
                   ],
                 )
               ],
@@ -479,6 +423,16 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
+                  margin: EdgeInsets.only(top: 15),
+                  height: 5,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                ),
+                Container(
                   margin: EdgeInsets.symmetric(vertical: 30),
                   child: Text("Género",
                     style: TextStyle(
@@ -534,6 +488,16 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
+                  margin: EdgeInsets.only(top: 15),
+                  height: 5,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                ),
+                Container(
                   margin: EdgeInsets.symmetric(vertical: 30),
                   child: Text("Plataforma",
                     style: TextStyle(
@@ -588,6 +552,16 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 15),
+                  height: 5,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                ),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 30),
                   child: Text("Mes",

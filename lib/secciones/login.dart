@@ -303,7 +303,7 @@ class _LoginPageState extends State<LoginPage>{
 
       if(_user != null){
         _fs = new FirebaseService(_user.uid);
-        _userMap = {"email" : _user.email, "usuario" : _user.displayName};
+        _userMap = {"email" : _user.email, "usuario" : _user.displayName, "fotoperfil" : _user.photoURL};
         _fs.addUser(_userMap);
       }
 
@@ -350,7 +350,6 @@ class _LoginPageState extends State<LoginPage>{
                     )
                   ),
                   onPressed: (){
-                    Navigator.pop(context);
                     Navigator.pop(context);
                   },
                 ),

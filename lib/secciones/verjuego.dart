@@ -4,6 +4,7 @@ import 'package:SearchToPlay/modelos/fechalanzamiento.dart';
 import 'package:SearchToPlay/modelos/juego.dart';
 import 'package:SearchToPlay/modelos/plataforma.dart';
 import 'package:SearchToPlay/modelos/video.dart';
+import 'package:SearchToPlay/secciones/valoraciones.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
 import 'package:SearchToPlay/widgets/bottomsheet.dart';
@@ -11,12 +12,15 @@ import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:customtogglebuttons/customtogglebuttons.dart';
 import 'package:expand_widget/expand_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:like_button/like_button.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter/services.dart';
+import 'package:share/share.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -37,28 +41,32 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
 
   final GoogleTranslator traductor = GoogleTranslator();
 
-  bool _meGusta, _completado, _puntuado, _btnSwitch;
+  bool _meGusta, _completado, _valorado, _btnSwitch;
   FechaLanzamiento _fechaSeleccionada;
   Plataforma _plataformaSeleccionada;
   List<FechaLanzamiento> _fechasLanzamiento;
   List<bool> _selecciones;
   List<String> _capturas;
   String _region, _descripcionEng, _descripcionEsp;
+  double _nota, _notaMedia;
 
   void initState(){
     super.initState();
     _meGusta = false;
     _completado = false;
-    _puntuado = false;
+    _valorado = false;
     _btnSwitch = false;
     _comprobarMeGusta();
     _comprobarCompletado();
+    _comprobarValorado();
     _region = "";
+    _notaMedia = 0.0;
     _descripcionEng = widget.juego.descripcion ?? "No disponible";
     _descripcionEsp = "No disponible";
     _traducirDesc();
     _capturas = widget.igdbservice.getScreenshotFromGame(widget.juego);
     _getFechas();
+    _getMediaValorado();
   }
 
   Widget build(BuildContext context){
@@ -72,6 +80,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
             _buttons(),
             Divider(color: Colors.grey),
             _fechaLanzamiento(),
+            _generos(context),
             _descripcion(context),
             _mediaImagen(context),
             _mediaVideo(context),
@@ -171,21 +180,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-          ),          
-          /*Hero(
-            tag: widget.juego.id.toString(),
-            child: Container(
-              width: 180,
-              height: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: widget.juego.cover == null ? null : DecorationImage(
-                  image: NetworkImage(widget.igdbservice.getURLCoverFromGame(widget.juego)),
-                  fit: BoxFit.fitHeight
-                )
-              ),
-            )
-          ),*/
+          ), 
           Padding(
             padding: EdgeInsets.only(top: 30),
             child: Row(
@@ -276,7 +271,11 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 color: Colors.black87,
               ),
               onPressed: (){
-
+                if(_fechaSeleccionada.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch){
+                  Share.share("Estoy viendo información acerca de "+widget.juego.nombre+" en SearchToPlay, que se lanza el "+_fechaSeleccionada.legible+" en "+_plataformaSeleccionada.abreviacion);
+                }else{
+                  Share.share("Estoy viendo información acerca de "+widget.juego.nombre+" en SearchToPlay, que se lanzó el "+_fechaSeleccionada.legible+" en "+_plataformaSeleccionada.abreviacion);
+                }
               },
               splashColor: Colors.black,
             )
@@ -329,21 +328,26 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(8),
-            child: LikeButton(
-              size: 40,
-              likeBuilder: (isEvaluated){
-                return Icon(
-                  Icons.star,
-                  color: _puntuado ? Colors.yellow : Colors.grey,
-                );
-              },
-              circleColor: CircleColor(start: Color(0xfffdd835), end: Color(0xfffff176)),
-              bubblesColor: BubblesColor(
-                dotPrimaryColor: Color(0xfffdd835),
-                dotSecondaryColor: Color(0xfffff176),
-              ),
-              onTap: _comprobarPuntuado,
+            padding: EdgeInsets.only(top: _nota != null ? 19 : 20, bottom: 8, left: 8, right: 8),
+            child: Column(
+              children: [
+                LikeButton(
+                  size: 40,
+                  likeBuilder: (isEvaluated){
+                    return Icon(
+                      Icons.star,
+                      color: _valorado ? Colors.yellow : Colors.grey,
+                    );
+                  },
+                  circleColor: CircleColor(start: Color(0xfffdd835), end: Color(0xfffff176)),
+                  bubblesColor: BubblesColor(
+                    dotPrimaryColor: Color(0xfffdd835),
+                    dotSecondaryColor: Color(0xfffff176),
+                  ),
+                  onTap: _setValorado,
+                ),
+                Text(_nota != null ? _nota.toString() : ""),
+              ],
             ),
           ),
           Expanded(
@@ -355,34 +359,41 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               radius: 70,
               lineWidth: 6.5,
               percent: widget.juego.notaCritica != null ? widget.juego.notaCritica / 100 : 0.0,
+              circularStrokeCap: CircularStrokeCap.round,
               footer: Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: Text("Crítica",
                   style: TextStyle(
-                    fontFamily: 'OpenSans',
+                    fontWeight: FontWeight.bold
                   ),
                 ),
               ),
-              center: Text(widget.juego.notaCritica != null ? widget.juego.notaCritica.toStringAsFixed(2) : "N/A"),
+              center: Text(widget.juego.notaCritica != null ? (widget.juego.notaCritica / 10).toStringAsFixed(2) : "N/A"),
               progressColor: Colors.yellow,
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: CircularPercentIndicator(
-              radius: 70,
-              lineWidth: 6.5,
-              percent: 0.8,
-              footer: Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text("Usuarios",
-                  style: TextStyle(
-                    fontFamily: 'OpenSans',
+            child: GestureDetector(
+              child: CircularPercentIndicator(
+                radius: 70,
+                lineWidth: 6.5,
+                percent: _notaMedia != null ? _notaMedia / 10 : 0.0,
+                circularStrokeCap: CircularStrokeCap.round,
+                footer: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text("Usuarios",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
+                center: Text(_notaMedia != null ? _notaMedia.toStringAsFixed(2) : "N/A"),
+                progressColor: HexColor("#0638EA"),
               ),
-              center: Text("82"),
-              progressColor: HexColor("#0638EA"),
+              onTap: () {
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => ValoracionesPage(widget.juego.id.toString(), widget.fs)));
+              },
             ),
           )
         ],
@@ -410,37 +421,94 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               ],
             ),
           ),
-          _fechasLanzamiento != null ? CustomToggleButtons(
-            borderColor: Colors.grey[850],
-            selectedBorderColor: HexColor('#4fc522'),
-            children: _fechasLanzamiento.map((value){
-              if(value.plataforma.abreviacion != null){
-                return Text(value.plataforma.abreviacion);
-              }else if(value.plataforma.alternativo != null){
-                return Text(value.plataforma.alternativo);
-              }else{
-                return Text(value.plataforma.nombre);
-              }
-            }).toList(),
-            isSelected: _selecciones,
-            onPressed: (int index){
-              for(int i = 0; i < _selecciones.length; i++){
-                setState(() {
-                  if(i == index){
-                    _selecciones[i] = true;
-                    _plataformaSeleccionada = _fechasLanzamiento[i].plataforma;
-                  }else{
-                    _selecciones[i] = false;
-                  }
-                });
-              }
-              _cambiarFecha();
-            },
+          _fechasLanzamiento != null ? Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: CustomToggleButtons(
+              borderColor: Colors.grey[850],
+              selectedBorderColor: HexColor('#4fc522'),
+              children: _fechasLanzamiento.map((value){
+                if(value.plataforma.abreviacion != null){
+                  return Text(value.plataforma.abreviacion);
+                }else if(value.plataforma.alternativo != null){
+                  return Text(value.plataforma.alternativo);
+                }else{
+                  return Text(value.plataforma.nombre);
+                }
+              }).toList(),
+              isSelected: _selecciones,
+              onPressed: (int index){
+                for(int i = 0; i < _selecciones.length; i++){
+                  setState(() {
+                    if(i == index){
+                      _selecciones[i] = true;
+                      _plataformaSeleccionada = _fechasLanzamiento[i].plataforma;
+                    }else{
+                      _selecciones[i] = false;
+                    }
+                  });
+                }
+                _cambiarFecha();
+              },
+            ),
           ) : Container(
             width: 30,
             height: 30,
             child: CircularProgressIndicator(),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _generos(BuildContext context){
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("Géneros",
+            style: TextStyle(
+              color: Theme.of(context).textTheme.headline1.color,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            height: 30,
+            margin: EdgeInsets.only(top: 20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: widget.juego.generos.length,
+                      itemBuilder: (context, index){
+                        return Container(
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          margin: EdgeInsets.symmetric(horizontal: 5),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            border: Border.all(color: Theme.of(context).textTheme.headline1.color)
+                          ),
+                          child: Text(widget.juego.generos[index].nombre,
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.headline1.color,
+                              fontSize: 12
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -460,24 +528,35 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               Text("Descripción",
                 style: TextStyle(
                   fontSize: 18,
-                  fontFamily: 'OpenSans',
                   color: Theme.of(context).textTheme.headline1.color,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Spacer(flex: 1),
-              Tooltip(
-                message: _btnSwitch ? "Deshacer traducción" : "Traducir",
-                child: Switch(
-                  activeColor: Theme.of(context).buttonColor,
-                  value: _btnSwitch,
-                  onChanged: (newValue){
-                    setState(() {
-                      _btnSwitch = newValue;
-                    });
-                  },
+              AnimatedSwitcher(
+                duration: Duration(milliseconds: 500),
+                child: _btnSwitch ? Tooltip(
+                  message: "Traducir",
+                  child: TextButton(
+                    child: Text("🇺🇸"),
+                    onPressed: (){
+                      setState(() {
+                        _btnSwitch = !_btnSwitch;
+                      });
+                    },
+                  ),
+                ) : Tooltip(
+                  message: "Deshacer traducción",
+                  child: TextButton(
+                    child: Text("🇪🇸"),
+                    onPressed: (){
+                      setState(() {
+                        _btnSwitch = !_btnSwitch;
+                      });
+                    },
+                  ),
                 ),
-              )
+              ),
             ],
           ),
           AnimatedSwitcher(
@@ -548,7 +627,10 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 return _imageCard(context, index, _capturas[index]);
               },
             ),
-          ) : Container()
+          ) : Container(
+            child: Text("No hay imágenes disponibles",
+              textAlign: TextAlign.center),
+          )
         ],
       ),
     );
@@ -581,7 +663,10 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 return _videoCard(context, widget.juego.videos[index]);
               },
             ),
-          ) : Container()
+          ) : Container(
+            child: Text("No hay vídeos disponibles",
+              textAlign: TextAlign.center),
+          )
         ],
       ),
     );
@@ -739,27 +824,55 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
     });
   }
 
-  Future<bool> _comprobarPuntuado(bool isEvaluated) async{
+  Future<bool> _setValorado(bool isEvaluated) async{
+
+    _dialogValorar(context);
+
+    return _valorado;
+
+  }
+
+  void _comprobarValorado() async{
+    bool _tempValorado = await widget.fs.comprobarValorado(widget.juego.id.toString());
+
+    if(_tempValorado){
+      String tempNota = await widget.fs.getNotaValorado(widget.juego.id.toString());
+      if(tempNota != ""){
+        setState(() {
+          _nota = double.parse(tempNota);
+        });
+      }
+    }
     setState(() {
-      _puntuado = !_puntuado;
+      _valorado = _tempValorado;
     });
 
-    return _puntuado;
+  }
+
+  void _getMediaValorado() async{
+    double _tempNota = await widget.fs.getMediaValorado(widget.juego.id.toString());
+
+    if(_tempNota != null){
+      setState(() {
+        _notaMedia = _tempNota;
+      });
+    }
   }
 
   void _getFechas() async{
-    List tempFechas = await widget.igdbservice.recuperarFecha(widget.juego.id.toString());
-    if(tempFechas.isNotEmpty){
+    List _tempFechas = await widget.igdbservice.recuperarFecha(widget.juego.id.toString());
+    if(_tempFechas.isNotEmpty){
       setState(() {
-        _fechasLanzamiento = tempFechas;
-        _fechaSeleccionada = tempFechas.first;
-        if(tempFechas.first.region == 1){
+        _fechasLanzamiento = _tempFechas;
+        _fechaSeleccionada = _tempFechas.first;
+        _plataformaSeleccionada = _tempFechas.first.plataforma;
+        if(_tempFechas.first.region == 1){
           _region = "[🇪🇺]";
         }else{
           _region = "[🌎]";
         }
         _selecciones = List.generate(
-          tempFechas.length, (int index){
+          _tempFechas.length, (int index){
             if(index == 0){
               return true;
             }
@@ -789,6 +902,84 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
         _descripcionEsp = tempDesc ?? "No disponible";
       });
     }
+  }
+
+  void _dialogValorar(BuildContext context){
+    double _tempNotaDialog; 
+
+    showDialog(
+      context: context,
+      builder: (context){
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))
+          ),
+          title: new Text("Tu valoración",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).textTheme.headline1.color,
+            ),
+          ),
+          content: Container(
+            height: 130,
+            child: Column(
+              children: [
+                Text("Añade tu valoración para "+widget.juego.nombre,
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.headline1.color,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: RatingBar.builder(
+                    initialRating: _nota ?? 0,
+                    minRating: 0,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 10,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.videogame_asset,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      _tempNotaDialog = rating;
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text("Cerrar"),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: Text("Enviar valoración"),
+              onPressed: (){
+                widget.fs.addValorado(widget.juego.id.toString(), _tempNotaDialog.toString());
+                setState((){
+                  _nota = _tempNotaDialog;
+                  _valorado = true;
+                });
+                widget.fs.getMediaValorado(widget.juego.id.toString()).then((value) => {
+                  if(value != null){
+                    setState(() {
+                      _notaMedia = value;
+                    })
+                  }
+                });
+
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      }
+    );
   }
 
   void _mostrarWebs(BuildContext context){
