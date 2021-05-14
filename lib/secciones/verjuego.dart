@@ -92,7 +92,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
 
   Widget _header(BuildContext context){
     return new Container(
-      height: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.height - 420 : MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).orientation == Orientation.portrait ? 350 : MediaQuery.of(context).size.height,
       child: new Stack(
         children: <Widget>[
           new Container(
@@ -271,9 +271,9 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               ),
               onPressed: (){
                 if(_fechaSeleccionada.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch){
-                  Share.share("Estoy viendo información acerca de "+widget.juego.nombre+" en SearchToPlay, que se lanza el "+_fechaSeleccionada.legible+" en "+_plataformaSeleccionada.abreviacion);
+                  Share.share("Estoy viendo información acerca de "+widget.juego.nombre+" en SearchToPlay, que se lanza el "+_fechaSeleccionada.legible+" en "+_plataformaSeleccionada.nombre);
                 }else{
-                  Share.share("Estoy viendo información acerca de "+widget.juego.nombre+" en SearchToPlay, que se lanzó el "+_fechaSeleccionada.legible+" en "+_plataformaSeleccionada.abreviacion);
+                  Share.share("Estoy viendo información acerca de "+widget.juego.nombre+" en SearchToPlay, que se lanzó el "+_fechaSeleccionada.legible+" en "+_plataformaSeleccionada.nombre);
                 }
               },
               splashColor: Colors.black,

@@ -81,10 +81,12 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
         ],
       ),
       resizeToAvoidBottomInset: false,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
         color: Theme.of(context).backgroundColor,
-        padding: EdgeInsets.only(left: 27, top: 30, right: 27),
-        child: Column(
+        padding: EdgeInsets.only(left: 27, top: MediaQuery.of(context).size.height / 30, right: 27),
+        child: ListView(
+          shrinkWrap: true,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(bottom: 20),
@@ -518,7 +520,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                       itemBuilder: (context, index){
                         return RadioListTile(
                           activeColor: Theme.of(context).buttonColor,
-                          title: _listPlataformas[index].abreviacion != null ? Text(_listPlataformas[index].abreviacion) : _listPlataformas[index].nombre.length > 30 ? Text(_listPlataformas[index].nombre.substring(0, 30) + "...") : Text(_listPlataformas[index].nombre),
+                          title: _listPlataformas[index].abreviacion != null ? Text(_listPlataformas[index].abreviacion) : Text(_listPlataformas[index].nombre, overflow: TextOverflow.ellipsis),
                           value: _listPlataformas[index],
                           groupValue: _plataformaSeleccionada,
                           onChanged: (value){
