@@ -231,16 +231,15 @@ class FirebaseService{
     List<Map<dynamic, dynamic>> userNotas = [];
 
     if(result.data() != null){
-      result.data().forEach((key, value) async{
-        userResult = await _refUser.doc(key).get();
+      for( var k in result.data().keys){
+        userResult = await _refUser.doc(k).get();
         if(userResult.data() != null){
           finalResult = userResult.data();
-          finalResult["nota"] = value;
+          finalResult["nota"] = result.data()[k];
+          userNotas.add(finalResult);
         }
-        userNotas.add(finalResult);
-      });
+      }
     }
-
     return userNotas;
   }
 

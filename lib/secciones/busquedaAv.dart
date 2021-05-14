@@ -288,25 +288,28 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
             ),
             Container(
               padding: EdgeInsets.fromLTRB(0, 55, 0, 0),
-              child: _estaCargando == false ? ConstrainedBox(
-                constraints: BoxConstraints.tightFor(height: 55, width: 350),
-                child: ElevatedButton(
-                  child: Text("Buscar",
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Theme.of(context).textTheme.subtitle2.color,
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 500),
+                child: _estaCargando == false ? ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(height: 55, width: 350),
+                  child: ElevatedButton(
+                    child: Text("Buscar",
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Theme.of(context).textTheme.subtitle2.color,
+                      ),
+                    ), 
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      primary: HexColor('#4fc522')
                     ),
-                  ), 
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    primary: HexColor('#4fc522')
-                  ),
-                  onPressed: (){
-                    _buscar();
-                  },
-                )
-              ) : Center(
-                child: CircularProgressIndicator(),
+                    onPressed: (){
+                      _buscar();
+                    },
+                  )
+                ) : Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
             ),
           ],

@@ -250,24 +250,27 @@ class _RegistroPageState extends State<RegistroPage>{
             ),
             Container(
               padding: EdgeInsets.fromLTRB(25, 20, 25, 10),
-              child: _estaCargando == false ?ConstrainedBox(
-                constraints: BoxConstraints.tightFor(height: 55),
-                child: ElevatedButton(
-                  child:  Text("Registrarse",
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Theme.of(context).textTheme.subtitle2.color,
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 500),
+                child: _estaCargando == false ? ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(height: 55),
+                  child: ElevatedButton(
+                    child:  Text("Registrarse",
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Theme.of(context).textTheme.subtitle2.color,
+                      ),
                     ),
-                  ),
-                  onPressed: (){
-                    _comprobacion();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    primary: HexColor('#4fc522'),
+                    onPressed: (){
+                      _comprobacion();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      primary: HexColor('#4fc522'),
+                    )
                   )
-                )
-              ) : Center(child: CircularProgressIndicator()),
+                ) : Center(child: CircularProgressIndicator()),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 13),

@@ -127,26 +127,29 @@ class _LoginPageState extends State<LoginPage>{
                   ),
                   Container(
                     padding: EdgeInsets.fromLTRB(25, 20, 25, 10),
-                    child: _estaCargando == false ? ConstrainedBox(
-                      constraints: BoxConstraints.tightFor(height: 55),
-                      child: ElevatedButton(
-                        child: Text("Iniciar Sesión",
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: Theme.of(context).textTheme.subtitle2.color,
-                          )
+                    child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 500),
+                      child: _estaCargando == false ? ConstrainedBox(
+                        constraints: BoxConstraints.tightFor(height: 55),
+                        child: ElevatedButton(
+                          child: Text("Iniciar Sesión",
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Theme.of(context).textTheme.subtitle2.color,
+                            )
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                            primary: HexColor('#4fc522')
+                            
+                          ),
+                          onPressed: (){
+                            FocusScope.of(context).unfocus();
+                            _comprobacion();
+                          },                      
                         ),
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          primary: HexColor('#4fc522')
-                          
-                        ),
-                        onPressed: (){
-                          FocusScope.of(context).unfocus();
-                          _comprobacion();
-                        },                      
-                      ),
-                    ) : Center(child: CircularProgressIndicator(),)
+                      ) : Center(child: CircularProgressIndicator(),),
+                    )
                   ),
                   Center(
                     child: Container(

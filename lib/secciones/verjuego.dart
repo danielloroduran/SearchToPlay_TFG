@@ -60,7 +60,6 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
     _comprobarCompletado();
     _comprobarValorado();
     _region = "";
-    _notaMedia = 0.0;
     _descripcionEng = widget.juego.descripcion ?? "No disponible";
     _descripcionEsp = "No disponible";
     _traducirDesc();
@@ -93,7 +92,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
 
   Widget _header(BuildContext context){
     return new Container(
-      height: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.height - 450 : MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.height - 420 : MediaQuery.of(context).size.height,
       child: new Stack(
         children: <Widget>[
           new Container(
@@ -335,7 +334,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                   size: 40,
                   likeBuilder: (isEvaluated){
                     return Icon(
-                      Icons.star,
+                      Icons.videogame_asset,
                       color: _valorado ? Colors.yellow : Colors.grey,
                     );
                   },
@@ -392,7 +391,11 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 progressColor: HexColor("#0638EA"),
               ),
               onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => ValoracionesPage(widget.juego.id.toString(), widget.fs)));
+                if(_notaMedia != null){
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) => ValoracionesPage(widget.juego.id.toString(), widget.fs)));
+                }else{
+                  Fluttertoast.showToast(msg: "No hay valoraciones disponibles");
+                }
               },
             ),
           )
@@ -421,39 +424,42 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               ],
             ),
           ),
-          _fechasLanzamiento != null ? Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: CustomToggleButtons(
-              borderColor: Colors.grey[850],
-              selectedBorderColor: HexColor('#4fc522'),
-              children: _fechasLanzamiento.map((value){
-                if(value.plataforma.abreviacion != null){
-                  return Text(value.plataforma.abreviacion);
-                }else if(value.plataforma.alternativo != null){
-                  return Text(value.plataforma.alternativo);
-                }else{
-                  return Text(value.plataforma.nombre);
-                }
-              }).toList(),
-              isSelected: _selecciones,
-              onPressed: (int index){
-                for(int i = 0; i < _selecciones.length; i++){
-                  setState(() {
-                    if(i == index){
-                      _selecciones[i] = true;
-                      _plataformaSeleccionada = _fechasLanzamiento[i].plataforma;
-                    }else{
-                      _selecciones[i] = false;
-                    }
-                  });
-                }
-                _cambiarFecha();
-              },
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 500),
+            child: _fechasLanzamiento != null ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: CustomToggleButtons(
+                borderColor: Colors.grey[850],
+                selectedBorderColor: HexColor('#4fc522'),
+                children: _fechasLanzamiento.map((value){
+                  if(value.plataforma.abreviacion != null){
+                    return Text(value.plataforma.abreviacion);
+                  }else if(value.plataforma.alternativo != null){
+                    return Text(value.plataforma.alternativo);
+                  }else{
+                    return Text(value.plataforma.nombre);
+                  }
+                }).toList(),
+                isSelected: _selecciones,
+                onPressed: (int index){
+                  for(int i = 0; i < _selecciones.length; i++){
+                    setState(() {
+                      if(i == index){
+                        _selecciones[i] = true;
+                        _plataformaSeleccionada = _fechasLanzamiento[i].plataforma;
+                      }else{
+                        _selecciones[i] = false;
+                      }
+                    });
+                  }
+                  _cambiarFecha();
+                },
+              ),
+            ) : Container(
+              width: 30,
+              height: 30,
+              child: CircularProgressIndicator(),
             ),
-          ) : Container(
-            width: 30,
-            height: 30,
-            child: CircularProgressIndicator(),
           )
         ],
       ),
@@ -921,10 +927,12 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
             ),
           ),
           content: Container(
-            height: 130,
+            height: 128,
             child: Column(
               children: [
                 Text("Añade tu valoración para "+widget.juego.nombre,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                   style: TextStyle(
                     color: Theme.of(context).textTheme.headline1.color,
                   ),
@@ -932,6 +940,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: RatingBar.builder(
+                    glowColor: Colors.transparent,
                     initialRating: _nota ?? 0,
                     minRating: 0,
                     direction: Axis.horizontal,
@@ -952,13 +961,20 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
           ),
           actions: [
             TextButton(
-              child: Text("Cerrar"),
+              child: Text("Cerrar",
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.subtitle1.color
+                ),),
               onPressed: (){
                 Navigator.pop(context);
               },
             ),
             TextButton(
-              child: Text("Enviar valoración"),
+              child: Text("Enviar valoración",
+                style: TextStyle(
+                  color: Theme.of(context).buttonColor,
+                ),
+              ),
               onPressed: (){
                 widget.fs.addValorado(widget.juego.id.toString(), _tempNotaDialog.toString());
                 setState((){
