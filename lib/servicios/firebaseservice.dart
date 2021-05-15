@@ -245,7 +245,18 @@ class FirebaseService{
 
   Future<void> removeValorado(String idJuego) async{
     await _refValorado.doc(userID).update({idJuego : FieldValue.delete()});
+    
+    DocumentSnapshot resultValorado = await _refValorado.doc(userID).get();
+    if(resultValorado.data().isEmpty){
+      await _refValorado.doc(userID).delete();
+    }
+
     await _refJuegosValorados.doc(idJuego).update({userID : FieldValue.delete()});
+
+    DocumentSnapshot resultJuegoValorado = await _refJuegosValorados.doc(idJuego).get();
+    if(resultJuegoValorado.data().isEmpty){
+      await _refJuegosValorados.doc(idJuego).delete();
+    }
   }
 
 }

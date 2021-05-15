@@ -969,26 +969,42 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 Navigator.pop(context);
               },
             ),
-            TextButton(
-              child: Text("Enviar valoración",
+            _nota != null ? TextButton(
+              child: Text("Borrar",
                 style: TextStyle(
                   color: Theme.of(context).buttonColor,
                 ),
               ),
-              onPressed: (){
-                widget.fs.addValorado(widget.juego.id.toString(), _tempNotaDialog.toString());
+              onPressed: () async{
+                await widget.fs.removeValorado(widget.juego.id.toString());
+                setState(() {
+                  _nota = null;
+                  _valorado = false;
+                });
+                double valueMedia = await widget.fs.getMediaValorado(widget.juego.id.toString());
+                setState(() {
+                  _notaMedia = valueMedia;
+                });
+                Navigator.pop(context);
+                Fluttertoast.showToast(msg: "Valoración borrada");
+              },
+            ) : Container(), 
+            TextButton(
+              child: Text("Enviar",
+                style: TextStyle(
+                  color: Theme.of(context).buttonColor,
+                ),
+              ),
+              onPressed: () async{
+                await widget.fs.addValorado(widget.juego.id.toString(), _tempNotaDialog.toString());
                 setState((){
                   _nota = _tempNotaDialog;
                   _valorado = true;
                 });
-                widget.fs.getMediaValorado(widget.juego.id.toString()).then((value) => {
-                  if(value != null){
-                    setState(() {
-                      _notaMedia = value;
-                    })
-                  }
+                double valueMedia = await widget.fs.getMediaValorado(widget.juego.id.toString());
+                setState(() {
+                  _notaMedia = valueMedia;
                 });
-
                 Navigator.pop(context);
               },
             ),
