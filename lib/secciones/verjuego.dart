@@ -4,6 +4,7 @@ import 'package:SearchToPlay/modelos/fechalanzamiento.dart';
 import 'package:SearchToPlay/modelos/juego.dart';
 import 'package:SearchToPlay/modelos/plataforma.dart';
 import 'package:SearchToPlay/modelos/video.dart';
+import 'package:SearchToPlay/secciones/resultados.dart';
 import 'package:SearchToPlay/secciones/valoraciones.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
@@ -119,18 +120,34 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
           Align(
             alignment: Alignment.bottomRight,
             child: widget.juego.websites != null ?  Container(
-            child: IconButton(
-              tooltip: "Webs relacionadas con este juego",
-              icon: Icon(
-                Icons.add_circle,
-                color: Colors.black87,
-              ),
-              onPressed: (){
-                _mostrarWebs(context);
-              },
-              splashColor: Colors.black,
-            )
-          ) : Container(),
+              child: IconButton(
+                tooltip: "Webs relacionadas con este juego",
+                icon: Icon(
+                  Icons.pageview,
+                  color: Colors.black87,
+                ),
+                onPressed: (){
+                  _mostrarWebs(context);
+                },
+                splashColor: Colors.black,
+              )
+            ) : Container(),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: widget.juego.dlcs != null || widget.juego.juegosExpandidos != null || widget.juego.expansiones != null || widget.juego.ports != null || widget.juego.remakes != null || widget.juego.remasters != null ?  Container(
+              child: IconButton(
+                tooltip: "Versiones de este juego",
+                icon: Icon(
+                  Icons.add_circle,
+                  color: Colors.black87,
+                ),
+                onPressed: (){
+                  _mostrarExpansiones(context);
+                },
+                splashColor: Colors.black,
+              )
+            ) : Container(),
           ),
           _appBar(),
         ],
@@ -150,30 +167,79 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
             child: Container(
               height: 190,
               width: 200,
-              child: widget.juego.cover != null ? CachedNetworkImage(
-                imageUrl: widget.igdbservice.getURLCoverFromGame(widget.juego),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-                imageBuilder: (context, imageProvider) => Container(
-                  height: 190,
-                  width: 200,
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      fit: BoxFit.fitHeight,
-                      image: imageProvider
+              child: Stack(
+                children: [
+                  widget.juego.cover != null ? CachedNetworkImage(
+                    imageUrl: widget.igdbservice.getURLCoverFromGame(widget.juego),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    imageBuilder: (context, imageProvider) => Container(
+                      height: 190,
+                      width: 200,
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          fit: BoxFit.fitHeight,
+                          image: imageProvider
+                        ),
+                      ),
                     ),
+                  ) : 
+                  Container(
+                    alignment: Alignment.center,
+                    child: Text("[Imagen no disponible]", 
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black
+                      ),
+                      )
                   ),
-                ),
-              ) : 
-              Container(
-                alignment: Alignment.center,
-                child: Text("[Imagen no disponible]", 
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black
-                  ),
+                  Positioned(
+                    child: widget.juego.categoria == 1 ? Container(
+                      alignment: Alignment.center,
+                      width: 50,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 10,
+                            offset: Offset(0.0, 10.0)
+                          )
+                        ]
+                      ),
+                      child: Text("DLC",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ) : widget.juego.categoria == 2 ? Container(
+                      alignment: Alignment.center,
+                      width: 80,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 10,
+                            offset: Offset(0.0, 10.0)
+                          )
+                        ]
+                      ),
+                      child: Text("Expansión",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),                    
+                    ) : Container(),
+                    right: 20,
+                    bottom: 0,
                   )
+                ],
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
@@ -197,7 +263,6 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20.0,
-                          fontFamily: 'OpenSans',
                           fontWeight: FontWeight.w500,
                           fontStyle: FontStyle.normal
                         ),
@@ -417,7 +482,6 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 _fechaSeleccionada != null ? Text("📅  "+_fechaSeleccionada.legible + " " +  _region,
                   style: TextStyle(
                     fontSize: 18,
-                    fontFamily: 'OpenSans',
                     color: Theme.of(context).textTheme.headline1.color,
                   ),
                 ) : Text("📅  No disponible"),
@@ -573,13 +637,11 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontSize: 15,
-                  fontFamily: 'OpenSans',
                   color: Theme.of(context).textTheme.headline1.color,
                 )
               ) : ExpandText(_descripcionEsp,
                 style: TextStyle(
                   fontSize: 15,
-                  fontFamily: 'OpenSans',
                   color: Theme.of(context).textTheme.headline1.color
                 ),
               ),
@@ -589,13 +651,11 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontSize: 15,
-                  fontFamily: 'OpenSans',
                   color: Theme.of(context).textTheme.headline1.color,
                 )
               ) : ExpandText(_descripcionEng,
                 style: TextStyle(
                   fontSize: 15,
-                  fontFamily: 'OpenSans',
                   color: Theme.of(context).textTheme.headline1.color
                 ),
               ),
@@ -617,7 +677,6 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
             child: Text("Imágenes",
               style: TextStyle(
                 fontSize: 18,
-                fontFamily: 'OpenSans',
                 color: Theme.of(context).textTheme.headline1.color,
                 fontWeight: FontWeight.bold,
               ),
@@ -649,11 +708,10 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 10, bottom: 5),
             child: Text("Vídeos",
               style: TextStyle(
                 fontSize: 18,
-                fontFamily: 'OpenSans',
                 color: Theme.of(context).textTheme.headline1.color,
                 fontWeight: FontWeight.bold,
               ),
@@ -717,6 +775,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               width: 200,
               margin: EdgeInsets.symmetric(horizontal: 5),
               decoration: BoxDecoration(
+                color: Colors.red,
                 borderRadius: BorderRadius.circular(20),
                 image: DecorationImage(
                   fit: BoxFit.fill,
@@ -1014,6 +1073,274 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
     );
   }
 
+  void _mostrarExpansiones(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (context){
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))
+          ),
+          title: new Text("DLCs, expansiones...",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).textTheme.headline1.color,
+            ),
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              children: <Widget>[
+                widget.juego.dlcs != null ? Card(
+                  elevation: 8,
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[600] : Colors.grey[300],
+                    ),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      leading: Container(
+                        padding: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1,
+                              color: Colors.grey
+                            )
+                          )
+                        ),
+                        child: Image(
+                          image: AssetImage("assets/icon/dlc.png"),
+                          width: 50,
+                          height: 50,
+                        ),
+                      ),
+                      title: Text("DLCs",
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1.color,
+                        ),),
+                      onTap: () {
+                        _getExpansiones(widget.juego.dlcs, "DLCs");
+                      },
+                    ),
+                  ),
+                ) : Container(),
+                widget.juego.juegosExpandidos != null ? Card(
+                  elevation: 8,
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[600] : Colors.grey[300],
+                    ),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      leading: Container(
+                        padding: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1,
+                              color: Colors.grey
+                            )
+                          )
+                        ),
+                        child: Image(
+                          image: AssetImage("assets/icon/expanded_game.png"),
+                          width: 50,
+                          height: 50,
+                        ),
+                      ),
+                      title: Text("Versiones expandidas",
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1.color,
+                        ),),
+                      onTap: () {
+                        _getExpansiones(widget.juego.juegosExpandidos, "Versiones expandidas");
+                      },
+                    ),
+                  ),
+                ) : Container(),
+                widget.juego.expansiones != null ? Card(
+                  elevation: 8,
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[600] : Colors.grey[300],
+                    ),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      leading: Container(
+                        padding: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1,
+                              color: Colors.grey
+                            )
+                          )
+                        ),
+                        child: Image(
+                          image: AssetImage("assets/icon/expansion.png"),
+                          width: 50,
+                          height: 50,
+                        ),
+                      ),
+                      title: Text("Expansiones",
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1.color,
+                        ),),
+                      onTap: () {
+                        _getExpansiones(widget.juego.expansiones, "Expansiones");
+                      },
+                    ),
+                  ),
+                ) : Container(),
+                widget.juego.ports != null ? Card(
+                  elevation: 8,
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[600] : Colors.grey[300],
+                    ),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      leading: Container(
+                        padding: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1,
+                              color: Colors.grey
+                            )
+                          )
+                        ),
+                        child: Image(
+                          image: AssetImage("assets/icon/port.png"),
+                          width: 50,
+                          height: 50,
+                        ),
+                      ),
+                      title: Text("Ports",
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1.color,
+                        ),),
+                      onTap: () {
+                        _getExpansiones(widget.juego.ports, "Ports");
+                      },
+                    ),
+                  ),
+                ) : Container(),
+                widget.juego.remakes != null ? Card(
+                  elevation: 8,
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[600] : Colors.grey[300],
+                    ),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      leading: Container(
+                        padding: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1,
+                              color: Colors.grey
+                            )
+                          )
+                        ),
+                        child: Image(
+                          image: AssetImage("assets/icon/remake.png"),
+                          width: 50,
+                          height: 50,
+                        ),
+                      ),
+                      title: Text("Remakes",
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1.color,
+                        ),),
+                      onTap: () {
+                        _getExpansiones(widget.juego.remakes, "Remakes");
+                      },
+                    ),
+                  ),
+                ) : Container(),
+                widget.juego.remasters != null ? Card(
+                  elevation: 8,
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[600] : Colors.grey[300],
+                    ),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      leading: Container(
+                        padding: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1,
+                              color: Colors.grey
+                            )
+                          )
+                        ),
+                        child: Image(
+                          image: AssetImage("assets/icon/remaster.png"),
+                          width: 50,
+                          height: 50,
+                        ),
+                      ),
+                      title: Text("Remasters",
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1.color,
+                        ),),
+                      onTap: () {
+                        _getExpansiones(widget.juego.remasters, "Remasters");
+                      },
+                    ),
+                  ),
+                ) : Container(),
+              ]
+            ),
+          ),
+          actions: <Widget>[
+            new Row(
+              children: <Widget>[
+                new TextButton(
+                  child: new Text("Cerrar",
+                    style: TextStyle(
+                      color: Theme.of(context).buttonColor,
+                    )
+                  ),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  void _getExpansiones(List<dynamic> list, String titulo) async{
+    List<int> tempId = [];
+    List<Juego> result = [];
+
+    list.forEach((element) {
+      tempId.add(int.parse(element.toString()));
+    });
+
+    result = await widget.igdbservice.recuperarID(tempId);
+
+    Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultadosPage(widget.fs, widget.igdbservice, titulo, result)));
+
+  }
+
   void _mostrarWebs(BuildContext context){
     showDialog(
       context: context,
@@ -1133,7 +1460,6 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                       ),
                       title: Text(nombre,
                         style: TextStyle(
-                          fontFamily: 'OpenSans',
                           color: Theme.of(context).textTheme.headline1.color,
                         ),),
                       onTap: () async{

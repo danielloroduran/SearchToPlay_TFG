@@ -38,7 +38,6 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
         centerTitle: true,
         title: new Text("El Top Jugones",
           style: TextStyle(
-            fontFamily: 'OpenSans',
             fontWeight: FontWeight.w500,
             fontSize: 30,
             color: Theme.of(context).textTheme.headline1.color
@@ -201,7 +200,7 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
     List tempJuegos = await widget.igdbservice.recuperarID(idsInt);
 
     if(tempJuegos.isNotEmpty){
-      Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultadosPage(widget.us, widget.fs, widget.igdbservice, nombre, tempJuegos)));
+      Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultadosPage(widget.fs, widget.igdbservice, nombre, tempJuegos)));
     }else{
       Fluttertoast.showToast(msg: "Se ha producido un error en tu petición");
     }

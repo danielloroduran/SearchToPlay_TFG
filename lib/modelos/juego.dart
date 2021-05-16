@@ -12,13 +12,19 @@ class Juego{
   final List<Genero> generos;
   final int categoria;
   final List<String> companias;
+  final List<dynamic> dlcs;
+  final List<dynamic> juegosExpandidos;
+  final List<dynamic> expansiones;
+  final List<dynamic> ports;
+  final List<dynamic> remakes;
+  final List<dynamic> remasters;
   final List<FechaLanzamiento> fechaLanzamiento;
   final List<Website> websites;
   final List<Imagen> capturas;
   final List<Video> videos;
   final Imagen cover;
   
-  Juego({this.id, this.nombre, this.descripcion, this.notaCritica, this.generos, this.categoria, this.companias, this.fechaLanzamiento, this.websites, this.capturas, this.videos, this.cover});
+  Juego({this.id, this.nombre, this.descripcion, this.notaCritica, this.generos, this.categoria, this.companias, this.dlcs, this.juegosExpandidos, this.expansiones, this.ports, this.remakes, this.remasters, this.fechaLanzamiento, this.websites, this.capturas, this.videos, this.cover});
 
   static Juego fromMap(Map map){
     return new Juego(
@@ -29,6 +35,12 @@ class Juego{
       generos: Genero.listFromMapList(map['genres']),
       categoria: map['category'],
       companias: companiasFromMapList(map['involved_companies']),
+      dlcs: map['dlcs'],
+      juegosExpandidos: map['expanded_games'],
+      expansiones: map['expansions'],
+      ports: map['ports'],
+      remakes: map['remakes'],
+      remasters: map['remasters'],
       fechaLanzamiento: map['release_dates'] is List ? FechaLanzamiento.listFromMapList(map['release_dates']) : null,
       websites: Website.listFromMapList(map['websites']),
       capturas: Imagen.listFromMapList(map['screenshots']),

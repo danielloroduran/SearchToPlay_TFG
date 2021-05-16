@@ -217,7 +217,6 @@ class _PerfilPageState extends State<PerfilPage>{
       children: [
         Text(_user?.displayName ?? "",
           style: TextStyle(
-            fontFamily: 'OpenSans',
             fontWeight: FontWeight.bold,
             fontSize: 24,
             color: Theme.of(context).textTheme.headline1.color,
@@ -355,7 +354,11 @@ class _PerfilPageState extends State<PerfilPage>{
         ),
       ),
       onTap: (){
-        Navigator.push(context, CupertinoPageRoute(builder: (context) => VerJuegoPage(juego, widget.fs, widget.igdbservice)));
+        Navigator.push(context, CupertinoPageRoute(builder: (context) => VerJuegoPage(juego, widget.fs, widget.igdbservice))).then((value) => {
+          _getMeGusta(),
+          _getValorado(),
+          _getCompletado(),
+        });
       },
     );
   }

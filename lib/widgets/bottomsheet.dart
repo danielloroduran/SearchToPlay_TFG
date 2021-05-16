@@ -42,8 +42,8 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/diploma.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -51,7 +51,6 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               child: Text("Es tu primer  ❤️, ¡esperemos que no sea el último!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -97,8 +96,8 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/medal.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -106,7 +105,6 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               child: Text("¡Has llegado a tu 5º ❤️!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -152,8 +150,8 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/medal.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -161,7 +159,6 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               child: Text(_mensaje,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -207,8 +204,8 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/medal2.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -216,7 +213,6 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               child: Text("Es tu me gusta número 20, ¡que no pare la cosa!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -262,8 +258,8 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/medal2.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -271,7 +267,6 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               child: Text("VEINTISIETE",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -317,8 +312,8 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/trophy.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -326,7 +321,6 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               child: Text(_mensaje,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -372,8 +366,8 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/trophy2.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -381,7 +375,6 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               child: Text("¡Has llegado a los 100 ❤️!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -427,8 +420,8 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/trophy2.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -436,7 +429,6 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
               child: Text(_mensaje,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -490,8 +482,8 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/mando_verde_nobg.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -499,7 +491,6 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               child: Text("Has completado tu primer juego, ¡esperemos que no sea el último!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -545,8 +536,8 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/mando_verde_nobg.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -554,7 +545,6 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               child: Text("¡Ya has completado 5 juegos!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -600,8 +590,8 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/mando_verde_nobg.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -609,7 +599,6 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               child: Text(_mensaje,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -655,8 +644,8 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/mando_bronce_nobg.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -664,7 +653,6 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               child: Text("Y ya van 20, ¡que los juegos no paren!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -710,8 +698,8 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/mando_bronce_nobg.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -719,7 +707,6 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               child: Text("VEINTISIETE",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -765,8 +752,8 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/mando_plata_nobg.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -774,7 +761,6 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               child: Text(_mensaje,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -820,8 +806,8 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/mando_oro_nobg.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -829,7 +815,6 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               child: Text("¡Has llegado a los 100 juegos completados!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -875,8 +860,8 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               margin: EdgeInsets.symmetric(vertical: 30),
               child: Image(
                 image: AssetImage("assets/awards/mando_oro_nobg.png"),
-                height: 200,
-                width: 200,
+                height: 150,
+                width: 150,
               ),
             ),
             Container(
@@ -884,7 +869,6 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
               child: Text(_mensaje,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),

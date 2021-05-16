@@ -51,7 +51,6 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
         centerTitle: true,
         title: new Text("Búsqueda",
             style: TextStyle(
-              fontFamily: 'OpenSans',
               fontWeight: FontWeight.w500,
               fontSize: 30,
               color: Theme.of(context).textTheme.headline1.color

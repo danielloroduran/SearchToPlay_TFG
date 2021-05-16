@@ -9,13 +9,12 @@ import 'package:flutter/material.dart';
 
 class ResultadosPage extends StatefulWidget{
 
-  final UserService us;
   final FirebaseService fs;
   final IGDBService igdbservice;
   final String titulo;
   final List<Juego> listResultados;
 
-  ResultadosPage(this.us, this.fs, this.igdbservice, this.titulo, this.listResultados);
+  ResultadosPage(this.fs, this.igdbservice, this.titulo, this.listResultados);
 
   @override
   _ResultadosPageState createState() => new _ResultadosPageState();

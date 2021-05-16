@@ -15,7 +15,7 @@ class IGDBService {
   var _accessToken;
   String _clientId;
   String _clientSecret;
-  List<String> _gameFields = ['name', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'];
+  List<String> _gameFields = ['name', 'category', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'dlcs', 'expanded_games', 'expansions', 'ports', 'remakes', 'remasters', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'];
 
   IGDBService(this._fs);
 

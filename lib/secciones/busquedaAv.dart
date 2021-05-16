@@ -56,7 +56,6 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
         centerTitle: true,
         title: new Text("Búsqueda Avanzada",
             style: TextStyle(
-              fontFamily: 'OpenSans',
               fontWeight: FontWeight.w500,
               fontSize: 30,
               color: Theme.of(context).textTheme.headline1.color
@@ -97,7 +96,6 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                     children: <Widget>[
                       Text("Ordenar por ",
                         style: TextStyle(
-                          fontFamily: 'OpenSans',
                           fontWeight: FontWeight.w400,
                           fontSize: 25,
                           color: Theme.of(context).textTheme.headline1.color
@@ -127,7 +125,6 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                   children: <Widget>[
                     Text("Género ",
                       style: TextStyle(
-                        fontFamily: 'OpenSans',
                         fontWeight: FontWeight.w400,
                         fontSize: 25,
                         color: Theme.of(context).textTheme.headline1.color
@@ -157,7 +154,6 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                   children: <Widget>[
                     Text("Plataforma ",
                       style: TextStyle(
-                        fontFamily: 'OpenSans',
                         fontWeight: FontWeight.w400,
                         fontSize: 25,
                         color: Theme.of(context).textTheme.headline1.color
@@ -187,7 +183,6 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                   children: <Widget>[
                     Text("Mes",
                       style: TextStyle(
-                        fontFamily: 'OpenSans',
                         fontWeight: FontWeight.w400,
                         fontSize: 25,
                         color: Theme.of(context).textTheme.headline1.color
@@ -214,7 +209,6 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                 children: <Widget>[
                   Text("Año de lanzamiento",
                     style: TextStyle(
-                      fontFamily: 'OpenSans',
                       fontWeight: FontWeight.w400,
                       fontSize: 25,
                       color: Theme.of(context).textTheme.headline1.color
@@ -255,7 +249,6 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                 children: <Widget>[
                   Text("Nota mínima de la crítica",
                     style: TextStyle(
-                      fontFamily: 'OpenSans',
                       fontWeight: FontWeight.w400,
                       fontSize: 25,
                       color: Theme.of(context).textTheme.headline1.color
@@ -353,7 +346,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
     });
 
     if(tempResultados.isNotEmpty){
-      Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultadosPage(widget.us, widget.fs, widget.igdbservice, "Resultados", tempResultados)));
+      Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultadosPage(widget.fs, widget.igdbservice, "Resultados", tempResultados)));
     }else{
       Fluttertoast.showToast(msg: "No se han encontrado resultados.");
     }

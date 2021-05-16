@@ -77,7 +77,6 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
               children: <Widget>[
                 Text("Lanzamientos del mes 📅",
                   style: TextStyle(
-                    fontFamily: 'OpenSans',
                     fontWeight: FontWeight.w500,
                     fontSize: 29,
                     color: Theme.of(context).textTheme.headline1.color
@@ -93,7 +92,6 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
               children: [
                 Text("Los más populares 🔥",
                   style: TextStyle(
-                    fontFamily: 'OpenSans',
                     fontWeight: FontWeight.w500,
                     fontSize: 29,
                     color: Theme.of(context).textTheme.headline1.color
