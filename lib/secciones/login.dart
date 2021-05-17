@@ -130,7 +130,7 @@ class _LoginPageState extends State<LoginPage>{
                     child: AnimatedSwitcher(
                       duration: Duration(milliseconds: 500),
                       child: _estaCargando == false ? ConstrainedBox(
-                        constraints: BoxConstraints.tightFor(height: 55),
+                        constraints: BoxConstraints.tightFor(height: 55, width: 350),
                         child: ElevatedButton(
                           child: Text("Iniciar Sesión",
                             style: TextStyle(

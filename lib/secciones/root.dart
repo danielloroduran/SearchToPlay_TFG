@@ -1,13 +1,16 @@
+import 'package:SearchToPlay/secciones/pantalla_introduccion.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:SearchToPlay/secciones/tab.dart';
 import 'package:SearchToPlay/secciones/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthStatus{
   NO_DETERMINADO,
   NO_LOGEADO,
-  LOGEADO
+  LOGEADO,
+  PRIMERA_VEZ,
 }
 
 class RootPage extends StatefulWidget{
@@ -27,13 +30,21 @@ class _RootPageState extends State<RootPage>{
   @override
   void initState(){
     super.initState();
-    widget.us.getCurrentUser().then((user){
-      setState(() {
-        if(user!= null){
-          _user = user;
-        }
-        authStatus = user == null ? AuthStatus.NO_LOGEADO : AuthStatus.LOGEADO; 
-      });
+    checkFirstSeen().then((value){
+      if(value){
+        setState(() {
+          authStatus = AuthStatus.PRIMERA_VEZ;
+        });
+      }else{
+        widget.us.getCurrentUser().then((user){
+          setState(() {
+            if(user!= null){
+              _user = user;
+            }
+            authStatus = user == null ? AuthStatus.NO_LOGEADO : AuthStatus.LOGEADO; 
+          });
+        });
+      }
     });
   }
 
@@ -41,6 +52,9 @@ class _RootPageState extends State<RootPage>{
     switch(authStatus){
       case AuthStatus.NO_DETERMINADO:
         return pantallaCarga();
+        break;
+      case AuthStatus.PRIMERA_VEZ:
+        return new IntroduccionPage();
         break;
       case AuthStatus.NO_LOGEADO:
         return new LoginPage(widget.us);
@@ -65,5 +79,17 @@ class _RootPageState extends State<RootPage>{
         child: CircularProgressIndicator(),
       )
     );
+  }
+
+  Future<bool> checkFirstSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _seen = (prefs.getBool('seen') ?? false);
+
+    if (_seen) {
+      return false;
+    } else {
+      await prefs.setBool('seen', true);
+      return true;
+    }
   }
 }

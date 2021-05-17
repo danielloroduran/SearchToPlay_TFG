@@ -1,14 +1,13 @@
 import 'dart:io';
 
-import 'package:SearchToPlay/secciones/tab.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/storageservice.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegistroPage extends StatefulWidget{
 
@@ -80,8 +79,8 @@ class _RegistroPageState extends State<RegistroPage>{
               child: Stack(
                 children: <Widget>[
                   Container(
-                    height: 170,
-                    width: 170,
+                    height: 170.h,
+                    width: 170.w,
                     margin: EdgeInsets.symmetric(horizontal: 5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(75),
@@ -253,7 +252,7 @@ class _RegistroPageState extends State<RegistroPage>{
               child: AnimatedSwitcher(
                 duration: Duration(milliseconds: 500),
                 child: _estaCargando == false ? ConstrainedBox(
-                  constraints: BoxConstraints.tightFor(height: 55),
+                  constraints: BoxConstraints.tightFor(height: 55, width: 350.w),
                   child: ElevatedButton(
                     child:  Text("Registrarse",
                       style: TextStyle(

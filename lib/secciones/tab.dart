@@ -33,7 +33,6 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin{
     _fs = new FirebaseService(widget.user.uid);
     _igdbService = new IGDBService(_fs);
     _ss = new StorageService(widget.user.uid);
-    _igdbService.recuperarTop();
     _tabController = new TabController(
       length: 4,
       vsync: this,
