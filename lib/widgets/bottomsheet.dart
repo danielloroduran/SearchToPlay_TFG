@@ -38,12 +38,14 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/diploma.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/diploma.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -92,12 +94,14 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/medal.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/medal.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -138,7 +142,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 30),
-              child: Text("Nuevo logro",
+              child: Text("¡Sigue así!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
                   fontWeight: FontWeight.bold,
@@ -146,12 +150,14 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/medal.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/medal.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -200,12 +206,14 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/medal2.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/medal2.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -254,12 +262,14 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/medal2.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/medal2.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -300,7 +310,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 30),
-              child: Text("Nuevo logro",
+              child: Text("¡Sigue así!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
                   fontWeight: FontWeight.bold,
@@ -308,12 +318,14 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/trophy.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/trophy.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -362,12 +374,14 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/trophy2.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/trophy2.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -408,7 +422,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 30),
-              child: Text("Nuevo logro",
+              child: Text("¡Sigue así!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
                   fontWeight: FontWeight.bold,
@@ -416,12 +430,14 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/trophy2.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/trophy2.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -478,12 +494,14 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/mando_verde_nobg.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/mando_verde_nobg.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -532,12 +550,14 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/mando_verde_nobg.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/mando_verde_nobg.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -578,7 +598,7 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 30),
-              child: Text("Nuevo logro",
+              child: Text("¡Sigue así!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
                   fontWeight: FontWeight.bold,
@@ -586,12 +606,14 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/mando_verde_nobg.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/mando_verde_nobg.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -640,12 +662,14 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/mando_bronce_nobg.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/mando_bronce_nobg.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -686,7 +710,7 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 30),
-              child: Text("Nuevo logro",
+              child: Text("VEINTISIETE",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
                   fontWeight: FontWeight.bold,
@@ -694,12 +718,14 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/mando_bronce_nobg.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/mando_bronce_nobg.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -740,7 +766,7 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 30),
-              child: Text("Nuevo logro",
+              child: Text("¡Sigue así!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
                   fontWeight: FontWeight.bold,
@@ -748,12 +774,14 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/mando_plata_nobg.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/mando_plata_nobg.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -802,12 +830,14 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/mando_oro_nobg.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/mando_oro_nobg.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -848,7 +878,7 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 30),
-              child: Text("Nuevo logro",
+              child: Text("¡Sigue así!",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
                   fontWeight: FontWeight.bold,
@@ -856,12 +886,14 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
                 ),
               )
             ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              child: Image(
-                image: AssetImage("assets/awards/mando_oro_nobg.png"),
-                height: 150,
-                width: 150,
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 30),
+                child: Image(
+                  image: AssetImage("assets/awards/mando_oro_nobg.png"),
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             Container(
@@ -880,5 +912,196 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
       }
     );      
   }
+}
+
+void mostrarBottomSheetLogros(BuildContext context, int lengthMG, int lengthCompletado){
+  showModalBottomSheet(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+    ),
+    context: context,
+    builder: (context) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 15),
+            height: 5,
+            width: 100,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(20)
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 30),
+            child: Text("Logros",
+              style: TextStyle(
+                color: Theme.of(context).textTheme.headline1.color,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            )
+          ),
+          Expanded(
+            child: ListView(
+              children: [
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 30),
+                        child: Image(
+                          image: AssetImage("assets/awards/diploma.png"),
+                          color: lengthMG >= 1 ? null : Colors.grey,
+                          colorBlendMode: lengthMG >= 1 ? null : BlendMode.srcATop,
+                          height: 100,
+                          width: 100,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(30))
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 30),
+                        child: Image(
+                          image: AssetImage("assets/awards/medal.png"),
+                          color: lengthMG >= 5 ? null : Colors.grey,
+                          colorBlendMode: lengthMG >= 5 ? null : BlendMode.srcATop,
+                          height: 100,
+                          width: 100,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(30))
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 30),
+                        child: Image(
+                          image: AssetImage("assets/awards/medal2.png"),
+                          color: lengthMG >= 20 ? null : Colors.grey,
+                          colorBlendMode: lengthMG >= 20 ? null : BlendMode.srcATop,
+                          height: 100,
+                          width: 100,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(30))
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 30),
+                        child: Image(
+                          image: AssetImage("assets/awards/trophy.png"),
+                          color: lengthMG >= 50 ? null : Colors.grey,
+                            colorBlendMode: lengthMG >= 50 ? null : BlendMode.srcATop,
+                          height: 100,
+                          width: 100,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(30))
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 30),
+                        child: Image(
+                          image: AssetImage("assets/awards/trophy2.png"),
+                          color: lengthMG >= 100 ? null : Colors.grey,
+                          colorBlendMode: lengthMG >= 100 ? null : BlendMode.srcATop,
+                          height: 100,
+                          width: 100,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(30))
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 30),
+                        child: Image(
+                          image: AssetImage("assets/awards/mando_verde_nobg.png"),
+                          color: lengthCompletado >= 1 ? null : Colors.grey,
+                          colorBlendMode: lengthCompletado >= 1 ? null : BlendMode.srcATop,
+                          height: 100,
+                          width: 100,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(30))
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 30),
+                        child: Image(
+                          image: AssetImage("assets/awards/mando_bronce_nobg.png"),
+                          color: lengthCompletado >= 20 ? null : Colors.grey,
+                            colorBlendMode: lengthCompletado >= 20 ? null : BlendMode.srcATop,
+                          height: 100,
+                          width: 100,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(30))
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 30),
+                        child: Image(
+                          image: AssetImage("assets/awards/mando_plata_nobg.png"),
+                          color: lengthCompletado >= 50 ? null : Colors.grey,
+                          colorBlendMode: lengthCompletado >= 50 ? null : BlendMode.srcATop,
+                          height: 100,
+                          width: 100,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(30))
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 30),
+                        child: Image(
+                          image: AssetImage("assets/awards/mando_oro_nobg.png"),
+                          color: lengthCompletado >= 100 ? null : Colors.grey,
+                          colorBlendMode: lengthCompletado >= 100 ? null : BlendMode.srcATop,
+                          height: 100,
+                          width: 100,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(30))
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+        ],
+      );
+    }
+  );  
 }
 

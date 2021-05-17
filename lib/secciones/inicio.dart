@@ -9,6 +9,7 @@ import 'package:SearchToPlay/servicios/userservice.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class InicioPage extends StatefulWidget{
 
@@ -111,7 +112,7 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
 
   Widget _juegosMes(){
     return new Container(
-      height: MediaQuery.of(context).size.height / 3.4,
+      height: 243.h,
       child: _listJuegosMes == null ? Center(child: CircularProgressIndicator()) : ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
@@ -125,7 +126,7 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
 
   Widget _juegosTop(){
     return new Container(
-      height: MediaQuery.of(context).size.height / 3.4,
+      height: 243.h,
       child: _listJuegosTop == null ? Center(child: CircularProgressIndicator()) : ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,

@@ -24,6 +24,8 @@ import 'package:flutter/services.dart';
 import 'package:share/share.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 
 class VerJuegoPage extends StatefulWidget{
 
@@ -41,6 +43,7 @@ class VerJuegoPage extends StatefulWidget{
 class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMixin{
 
   final GoogleTranslator traductor = GoogleTranslator();
+  
 
   bool _meGusta, _completado, _valorado, _btnSwitch;
   FechaLanzamiento _fechaSeleccionada;
@@ -927,24 +930,27 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
   void _getFechas() async{
     List _tempFechas = await widget.igdbservice.recuperarFecha(widget.juego.id.toString());
     if(_tempFechas.isNotEmpty){
-      setState(() {
-        _fechasLanzamiento = _tempFechas;
-        _fechaSeleccionada = _tempFechas.first;
-        _plataformaSeleccionada = _tempFechas.first.plataforma;
-        if(_tempFechas.first.region == 1){
-          _region = "[🇪🇺]";
-        }else{
-          _region = "[🌎]";
-        }
-        _selecciones = List.generate(
-          _tempFechas.length, (int index){
-            if(index == 0){
-              return true;
-            }
-            return false;
+      if(this.mounted){
+        setState(() {
+          _fechasLanzamiento = _tempFechas;
+          _fechaSeleccionada = _tempFechas.first;
+          _plataformaSeleccionada = _tempFechas.first.plataforma;
+          if(_tempFechas.first.region == 1){
+            _region = "[🇪🇺]";
+          }else{
+            _region = "[🌎]";
           }
-        );
-      });
+          _selecciones = List.generate(
+            _tempFechas.length, (int index){
+              if(index == 0){
+                return true;
+              }
+              return false;
+            }
+          );
+        });
+      }
+
     }
   }
 
@@ -963,9 +969,12 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
   void _traducirDesc() async{
     if(_descripcionEng != null){
       String tempDesc = (await traductor.translate(_descripcionEng, to: 'es')).toString();
-      setState(() {
-        _descripcionEsp = tempDesc ?? "No disponible";
-      });
+      if(this.mounted){
+        setState(() {
+          _descripcionEsp = tempDesc ?? "No disponible";
+        });
+      }
+
     }
   }
 

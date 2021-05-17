@@ -60,6 +60,7 @@ class _RootPageState extends State<RootPage>{
   Widget pantallaCarga(){
     return Scaffold(
       body: Container(
+        color: Theme.of(context).backgroundColor,
         alignment: Alignment.center,
         child: CircularProgressIndicator(),
       )

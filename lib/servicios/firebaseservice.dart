@@ -58,7 +58,7 @@ class FirebaseService{
       DocumentSnapshot tempData = await _refMeGusta.doc(userID).get();
       return tempData.data().length;
     }else{
-      await _refMeGusta.doc(userID).update(data);
+      await _refMeGusta.doc(userID).set(data);
       DocumentSnapshot tempData = await _refMeGusta.doc(userID).get();
       return tempData.data().length;      
     }

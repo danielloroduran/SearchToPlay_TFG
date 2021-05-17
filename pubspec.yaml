@@ -44,6 +44,7 @@ dependencies:
   customtogglebuttons: ^0.0.5
   cached_network_image: ^2.5.1
   flutter_rating_bar: ^4.0.0
+  flutter_screenutil: ^5.0.0+2
 
 flutter_native_splash:
   color: "#fdfffc"

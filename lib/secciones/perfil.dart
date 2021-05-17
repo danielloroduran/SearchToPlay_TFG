@@ -6,6 +6,7 @@ import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
 import 'package:SearchToPlay/servicios/storageservice.dart';
 import 'package:SearchToPlay/servicios/userservice.dart';
+import 'package:SearchToPlay/widgets/bottomsheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,11 +50,25 @@ class _PerfilPageState extends State<PerfilPage>{
     return new Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          tooltip: "Volver atrás",
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            tooltip: "Logros",
+            icon: Icon(Icons.emoji_events),
+            onPressed: (){
+              if(_listMeGusta != null && _listCompletado != null){
+                mostrarBottomSheetLogros(context, _listMeGusta.length, _listCompletado.length);
+              }else{
+                Fluttertoast.showToast(msg: "Espere a que se carguen las listas...");
+              }
+            },
+          )
+        ],
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -240,8 +255,7 @@ class _PerfilPageState extends State<PerfilPage>{
           Expanded(
             child:  GridView.builder(
               padding: EdgeInsets.only(top: 20, bottom: 20),
-              physics: ClampingScrollPhysics(),
-              
+              physics: ClampingScrollPhysics(),              
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 0.90,
@@ -267,8 +281,7 @@ class _PerfilPageState extends State<PerfilPage>{
           Expanded(
             child:  GridView.builder(
               padding: EdgeInsets.only(top: 20, bottom: 20),
-              physics: ClampingScrollPhysics(),
-              
+              physics: ClampingScrollPhysics(),            
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 0.90,
@@ -294,8 +307,7 @@ class _PerfilPageState extends State<PerfilPage>{
           Expanded(
             child:  GridView.builder(
               padding: EdgeInsets.only(top: 20, bottom: 20),
-              physics: ClampingScrollPhysics(),
-              
+              physics: ClampingScrollPhysics(),             
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 0.90,
@@ -376,15 +388,19 @@ class _PerfilPageState extends State<PerfilPage>{
       tempJuego = await widget.igdbservice.recuperarID(tempId);
 
       if(tempJuego != null){
-        setState(() {
-          _listMeGusta = tempJuego;
-        });
+        if(this.mounted){
+          setState(() {
+            _listMeGusta = tempJuego;
+          });
+        }
       }
 
     }else{
-      setState(() {
-        _listMeGusta = [];
-      });
+      if(this.mounted){
+        setState(() {
+          _listMeGusta = [];
+        });
+      }
     }
 
   }
@@ -402,15 +418,19 @@ class _PerfilPageState extends State<PerfilPage>{
       tempJuego = await widget.igdbservice.recuperarID(tempId);
 
       if(tempJuego != null){
-        setState(() {
-          _listCompletado = tempJuego;
-        });
+        if(this.mounted){
+          setState(() {
+            _listCompletado = tempJuego;
+          });
+        }
       }
 
     }else{
-      setState(() {
-        _listCompletado = [];
-      });
+      if(this.mounted){
+        setState(() {
+          _listCompletado = [];
+        });
+      }
     }
 
   }
@@ -428,14 +448,18 @@ class _PerfilPageState extends State<PerfilPage>{
       tempJuego = await widget.igdbservice.recuperarID(tempId);
 
       if(tempJuego != null){
-        setState(() {
-          _listValorado = tempJuego;
-        });
+        if(this.mounted){
+          setState(() {
+            _listValorado = tempJuego;
+          });
+        }
       }
     }else{
-      setState(() {
-        _listValorado = [];
-      });
+      if(this.mounted){
+        setState(() {
+          _listValorado = [];
+        });
+      }
     }
   }
 
@@ -443,10 +467,12 @@ class _PerfilPageState extends State<PerfilPage>{
     User tempUser = await widget.us.getCurrentUser();
 
     if(tempUser != null){
-      setState(() {
-        _user = tempUser;
-        _providerUser = tempUser.providerData.first.providerId;
-      });
+      if(this.mounted){
+        setState(() {
+          _user = tempUser;
+          _providerUser = tempUser.providerData.first.providerId;
+        });
+      }
     }
   }
 
