@@ -69,8 +69,6 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin{
           ],
           controller: _tabController,
         ),
-        //color: Theme.of(context).brightness == Brightness.dark ? HexColor("#1a1a1a") : HexColor("#f5f2f2"),
-        //color: HexColor('#4fc522'),
       ),
       body: new TabBarView(
         

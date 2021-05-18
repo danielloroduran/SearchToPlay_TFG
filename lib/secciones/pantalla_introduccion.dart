@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 
 class IntroduccionPage extends StatefulWidget{
 
@@ -73,28 +75,47 @@ class _IntroduccionPageState extends State<IntroduccionPage>{
         ),
         PageViewModel(
           title: "Logros",
-          body: "Consigue logros, ¡y mantente en lo alto en El Top Jugones!",
+          body: "Consigue logros al hacer tareas básicas en la aplicación",
           image: Container(
-            child: Lottie.asset('assets/lottie/logro.json', repeat: true, reverse: true),
+            width: 270.w,
+            height: 270.h,
+            child: Lottie.asset('assets/lottie/logro.json', repeat: true),
+          ),
+          decoration: pageDecoration
+        ),
+        PageViewModel(
+          title: "El Top Jugones",
+          body: "¡Y no pierdas de vista tu puesto en el top!",
+          image: Container(
+            child: Lottie.asset('assets/lottie/trofeo.json', repeat: true, reverse: true),
           ),
           decoration: pageDecoration
         ),
       ],
       onDone: () => _onIntroEnd(context),
-      onSkip: () => _onIntroEnd(context), // You can override onSkip callback
+      onSkip: () => _onIntroEnd(context),
       showSkipButton: true,
       skipFlex: 0,
       nextFlex: 0,
-      //rtl: true, // Display as right-to-left
-      skip: const Text('Saltar'),
-      next: const Icon(Icons.arrow_forward),
-      done: const Text('¡Listo!', style: TextStyle(fontWeight: FontWeight.w600)),
+      skip: Text('Saltar',
+        style: TextStyle(
+          color: Theme.of(context).textTheme.headline1.color
+        ),
+      ),
+      next: Icon(Icons.arrow_forward, color: Theme.of(context).textTheme.headline1.color,),
+      done: Text('¡Listo!', 
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: Theme.of(context).textTheme.headline1.color
+        )
+      ),
       curve: Curves.fastLinearToSlowEaseIn,
       controlsMargin: const EdgeInsets.all(16),
       controlsPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-      dotsDecorator: const DotsDecorator(
+      dotsDecorator: DotsDecorator(
         size: Size(10.0, 10.0),
         color: Color(0xFFBDBDBD),
+        activeColor: Theme.of(context).accentColor,
         activeSize: Size(22.0, 10.0),
         activeShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0)),

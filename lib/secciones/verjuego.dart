@@ -24,7 +24,6 @@ import 'package:flutter/services.dart';
 import 'package:share/share.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class VerJuegoPage extends StatefulWidget{

@@ -231,12 +231,6 @@ class IGDBService {
     return [];
 
   }
-  
-  void _printResponse(IGDBResponse resp) {
-    print(resp.toMap().length);
-    print(IGDBHelpers.getPrettyStringFromMap(resp.toMap()));
-  }
-
   String getURLCoverFromGame(Juego juego){
     return getImageURL(juego.cover);
   }

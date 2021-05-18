@@ -308,9 +308,10 @@ class _LoginPageState extends State<LoginPage>{
         _fs = new FirebaseService(_user.uid);
         _userMap = {"email" : _user.email, "usuario" : _user.displayName, "fotoperfil" : _user.photoURL};
         _fs.addUser(_userMap);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
+
       }
 
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabPage(_user, widget.us)));
     }catch(e){
       switch(e.message.code){
         case "account-exists-with-different-credential":
@@ -321,6 +322,9 @@ class _LoginPageState extends State<LoginPage>{
         break;
         case "user-not-found":
           Fluttertoast.showToast(msg: "Usuario no encontrado");
+          break;
+        break;
+        default:
         break;
       }
     }
