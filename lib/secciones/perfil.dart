@@ -105,7 +105,7 @@ class _PerfilPageState extends State<PerfilPage>{
                   ),
                   Tab(
                     text: _listValorado != null ? _listValorado.length.toString() : "",
-                    icon: Icon(Icons.star, color: Colors.yellow)
+                    icon: Icon(Icons.videogame_asset, color: Colors.yellow)
                   ),
                 ],
               ),
@@ -153,6 +153,7 @@ class _PerfilPageState extends State<PerfilPage>{
         )
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: "Cerrar sesión",
         backgroundColor: Colors.red,
         child: Icon(Icons.exit_to_app),
         onPressed: (){

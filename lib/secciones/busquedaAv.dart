@@ -578,6 +578,7 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
                       itemBuilder: (context, index){
                         int key = _listMes.keys.elementAt(index);
                         return RadioListTile(
+                          activeColor: Theme.of(context).buttonColor,
                           title: Text(_listMes[key]),
                           value: key,
                           groupValue: _mesSeleccionado,

@@ -50,6 +50,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
   List<FechaLanzamiento> _fechasLanzamiento;
   List<bool> _selecciones;
   List<String> _capturas;
+  List<Juego> _listSimilares;
   String _region, _descripcionEng, _descripcionEsp;
   double _nota, _notaMedia;
 
@@ -69,6 +70,11 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
     _capturas = widget.igdbservice.getScreenshotFromGame(widget.juego);
     _getFechas();
     _getMediaValorado();
+
+    if(widget.juego.similares != null){
+      _getSimilares();
+    }
+
   }
 
   Widget build(BuildContext context){
@@ -86,7 +92,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
             _descripcion(context),
             _mediaImagen(context),
             _mediaVideo(context),
-            //_similares();
+            _similares(context),
           ],
         )
       ),
@@ -272,10 +278,15 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 12),
-                      child: widget.juego.companias != null && widget.juego.companias.length > 0 ? Text(widget.juego.companias[0],
-                        style: TextStyle(
-                          color: Colors.black54
+                      child: widget.juego.companias != null && widget.juego.companias.length > 0 ? GestureDetector(
+                        child: Text(widget.juego.companias[0]['name'],
+                          style: TextStyle(
+                            color: Colors.black54
+                          ),
                         ),
+                        onTap: () {
+                          _getJuegosCompania();
+                        },
                       ) : Container(),
                     )
                   ],
@@ -810,6 +821,108 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
     );
   }
 
+  Widget _similares(BuildContext context){
+    return Container(
+      height: 248,
+      padding: EdgeInsets.symmetric(horizontal: 17, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: Text("Te puede interesar...",
+              style: TextStyle(
+                fontSize: 18,
+                color: Theme.of(context).textTheme.headline1.color,
+                fontWeight: FontWeight.bold
+              ),
+            ),
+          ),
+          new Container(
+            child: widget.juego.similares == null ? Container(
+              child: Text("No se han encontrado resultados",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.headline1.color
+                ),
+              ),
+            ) : _listSimilares == null ? Center(child: CircularProgressIndicator()) : Expanded(
+                          child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: _listSimilares.length,
+                itemBuilder: (context, index){
+                  return _juegoCard(_listSimilares[index]);
+                },
+              ),
+            )
+            /*_listSimilares == null ? Center(child: CircularProgressIndicator()) : _listSimilares.length > 0 ? ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: _listSimilares.length,
+              itemBuilder: (context, index){
+                return _juegoCard(_listSimilares[index]);
+              }  
+            ) : Container(
+              child: Text("No hemos encontrado resultados",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.headline1.color,
+                ),
+              ),
+            ),*/
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _juegoCard(Juego juego){
+    return GestureDetector(
+      child: Hero(
+        tag: juego.id.toString(),
+        child: Container(
+          height: 120,
+          width: 155,
+          child: juego.cover != null ? CachedNetworkImage(
+            imageUrl: widget.igdbservice.getURLCoverFromGame(juego),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            imageBuilder: (context, imageProvider) => Container(
+              height: 120,
+              width: 155,
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  fit: BoxFit.fitHeight,
+                  image: imageProvider
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).brightness == Brightness.light ? Colors.grey.withOpacity(0.5) : Colors.grey.withOpacity(0.1),
+                    spreadRadius: 3,
+                    blurRadius: 7,
+                    offset: Offset(6, 4),
+                  )
+                ]
+              ),
+            ),
+          ) : 
+          Container(
+            alignment: Alignment.center,
+            child: Text(juego.nombre +"\n [Imagen no disponible]", textAlign: TextAlign.center,)
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+      ),
+      onTap: (){
+        Navigator.push(context, CupertinoPageRoute(builder: (context) => VerJuegoPage(juego, widget.fs, widget.igdbservice)));
+      },
+    );
+  }
+
   void _cambiarFecha(){
     for(int i = 0; i < _fechasLanzamiento.length; i++){
       if(_fechasLanzamiento[i].plataforma.plataformaId == _plataformaSeleccionada.plataformaId){
@@ -951,6 +1064,24 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
       }
 
     }
+  }
+
+  void _getSimilares() async{
+    List<int> tempId = [];
+    List<Juego> result = [];
+
+    widget.juego.similares.forEach((element) {
+      tempId.add(int.parse(element.toString()));
+    });
+
+    result = await widget.igdbservice.recuperarID(tempId);
+
+    if(this.mounted){
+      setState(() {
+        _listSimilares = result;
+      });
+    }
+
   }
 
   void _anadirACalendario(){
@@ -1347,6 +1478,16 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
 
     Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultadosPage(widget.fs, widget.igdbservice, titulo, result)));
 
+  }
+
+  void _getJuegosCompania() async{
+    List<Juego> result = await widget.igdbservice.recuperarPorCompania(widget.juego.companias[0]['id']);
+
+    if(result.isNotEmpty){
+      Navigator.push(context, CupertinoPageRoute(builder: (context) => ResultadosPage(widget.fs, widget.igdbservice, widget.juego.companias[0]['name'], result)));
+    }else{
+      Fluttertoast.showToast(msg: "No se han encontrado resultados");
+    }
   }
 
   void _mostrarWebs(BuildContext context){

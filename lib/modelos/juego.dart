@@ -11,20 +11,21 @@ class Juego{
   final double notaCritica;
   final List<Genero> generos;
   final int categoria;
-  final List<String> companias;
+  final List<Map<String, String>> companias;
   final List<dynamic> dlcs;
   final List<dynamic> juegosExpandidos;
   final List<dynamic> expansiones;
   final List<dynamic> ports;
   final List<dynamic> remakes;
   final List<dynamic> remasters;
+  final List<dynamic> similares;
   final List<FechaLanzamiento> fechaLanzamiento;
   final List<Website> websites;
   final List<Imagen> capturas;
   final List<Video> videos;
   final Imagen cover;
   
-  Juego({this.id, this.nombre, this.descripcion, this.notaCritica, this.generos, this.categoria, this.companias, this.dlcs, this.juegosExpandidos, this.expansiones, this.ports, this.remakes, this.remasters, this.fechaLanzamiento, this.websites, this.capturas, this.videos, this.cover});
+  Juego({this.id, this.nombre, this.descripcion, this.notaCritica, this.generos, this.categoria, this.companias, this.dlcs, this.juegosExpandidos, this.expansiones, this.ports, this.remakes, this.remasters, this.similares, this.fechaLanzamiento, this.websites, this.capturas, this.videos, this.cover});
 
   static Juego fromMap(Map map){
     return new Juego(
@@ -41,6 +42,7 @@ class Juego{
       ports: map['ports'],
       remakes: map['remakes'],
       remasters: map['remasters'],
+      similares: map['similar_games'],
       fechaLanzamiento: map['release_dates'] is List ? FechaLanzamiento.listFromMapList(map['release_dates']) : null,
       websites: Website.listFromMapList(map['websites']),
       capturas: Imagen.listFromMapList(map['screenshots']),
@@ -56,20 +58,26 @@ class Juego{
     return maps.map((m) => fromMap(m)).toList();
   }
 
-  static List<String> companiasFromMapList(List<dynamic> maps){
-    List<String> finalList = [];
+  static List<Map<String, String>> companiasFromMapList(List<dynamic> maps){
+    List<Map<String, String>> finalList = [];
+    Map<String, String> companiaMap = new Map<String, String>();
+    
     if(maps == null){
       return finalList;
     }else{
       for(int i = 0; i < maps.length ; i++){
         Map tempMap = maps[i];
         if(tempMap['developer'] == true){
+          companiaMap.clear();
           Map finalMap = tempMap['company'];
-          finalList.add(finalMap['name']);
+          companiaMap['id'] = finalMap['id'].toString();
+          companiaMap['name'] = finalMap['name'].toString();
+          finalList.add(companiaMap);
         }
-
       }
-      finalList.sort((a, b) => a.length.compareTo(b.length));
+
+      finalList.sort((a, b) => a['name'].length.compareTo(b['name'].length));
+      
       return finalList;
     }
   }

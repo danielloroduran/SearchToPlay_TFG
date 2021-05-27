@@ -15,7 +15,7 @@ class IGDBService {
   var _accessToken;
   String _clientId;
   String _clientSecret;
-  List<String> _gameFields = ['name', 'category', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'dlcs', 'expanded_games', 'expansions', 'ports', 'remakes', 'remasters', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'];
+  List<String> _gameFields = ['name', 'category', 'summary', 'aggregated_rating', 'genres.*', 'involved_companies.company.name', 'dlcs', 'expanded_games', 'expansions', 'ports', 'remakes', 'remasters', 'involved_companies.*', 'release_dates.*', 'release_dates.platform.*', 'similar_games', 'websites.category', 'websites.url', 'screenshots.*', 'videos.*', 'cover.*'];
 
   IGDBService(this._fs);
 
@@ -140,7 +140,7 @@ class IGDBService {
     await _comprobarToken();
     IGDBResponse fechasResponse = await _client.releaseDates(new IGDBRequestParameters(
       fields: ['date', 'y', 'm', 'human', 'region', 'platform.*'],
-      filters: 'game = '+id+' & (region = 1 | region = 8)',
+      filters: 'game = $id & (region = 1 | region = 8)',
       order: 'date asc',
     ));
     if(fechasResponse.isSuccess()){
@@ -231,6 +231,22 @@ class IGDBService {
     return [];
 
   }
+
+  Future<List<Juego>> recuperarPorCompania(String idCompania) async{
+    await _comprobarToken();
+    IGDBResponse gameIdResponse = await _client.games(new IGDBRequestParameters(
+      fields: _gameFields,
+      filters: 'involved_companies.company = $idCompania & involved_companies.developer = true',
+      limit: 150,
+    ));
+
+    if(gameIdResponse.isSuccess()){
+      return gameIdResponse.data.map((e) => Juego.fromMap(e)).toList();
+    }
+
+    return [];
+  }
+
   String getURLCoverFromGame(Juego juego){
     return getImageURL(juego.cover);
   }
