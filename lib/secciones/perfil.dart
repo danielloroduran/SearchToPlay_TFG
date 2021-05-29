@@ -177,7 +177,7 @@ class _PerfilPageState extends State<PerfilPage>{
                 child: CircularProgressIndicator(value: downloadProgress.progress),
               ),
             ),
-            errorWidget: (context, url, error) => Icon(Icons.error),
+            errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
             imageBuilder: (context, imageProvider) => Container(
               height: 150,
               width: 150,
@@ -336,7 +336,7 @@ class _PerfilPageState extends State<PerfilPage>{
           width: 150,
           child: juego.cover != null ? CachedNetworkImage(
             imageUrl: widget.igdbservice.getURLCoverFromGame(juego),
-            errorWidget: (context, url, error) => Icon(Icons.error),
+            errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
             imageBuilder: (context, imageProvider) => Container(
               height: 100,
               width: 150,

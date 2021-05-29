@@ -45,7 +45,11 @@ class _ValoracionesPageState extends State<ValoracionesPage>{
       backgroundColor: Theme.of(context).backgroundColor,
       body: AnimatedSwitcher(
         duration: Duration(milliseconds: 500),
-        child: _listValoraciones != null ? _valoraciones(context) 
+        child: _listValoraciones != null ? Column(
+          children: [
+            _valoraciones(context),
+          ],
+        ) 
         : Container(
           child: Center(
             child: 
@@ -57,125 +61,121 @@ class _ValoracionesPageState extends State<ValoracionesPage>{
   }
 
   Widget _valoraciones(BuildContext context){
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: Column(
-        children: [
-          Expanded(
-            child:  GridView.builder(
-              padding: EdgeInsets.only(top: 20, bottom: 20),
-              physics: ClampingScrollPhysics(),
-              
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 0.9,
-                mainAxisSpacing: 25,
-                crossAxisSpacing: 15,
-              ),
-              itemCount: _listValoraciones.length,
-              itemBuilder: (context, index){
-                return _userCard(context, _listValoraciones[index]);
-              },
-            ),
-          ),
-        ],
+    return Expanded(
+      child:  ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: _listValoraciones.length,
+        itemBuilder: (context, index){
+          return _userTile(context, _listValoraciones[index]);
+        },
       ),
     );
   }
 
-  Widget _userCard(BuildContext context, Map<dynamic, dynamic> mapValoraciones){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Stack(
-          children: <Widget>[
-            mapValoraciones.containsKey("fotoperfil") ? CachedNetworkImage(    
-              imageUrl: mapValoraciones["fotoperfil"].toString(),
-              progressIndicatorBuilder: (context, url, downloadProgress) => Container(
-                height: 100,
-                width: 100,
-                child: Center(
-                  child: CircularProgressIndicator(value: downloadProgress.progress),
-                ),
-              ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
-              imageBuilder: (context, imageProvider) => Container(
-                height: 100,
-                width: 100,
-                margin: EdgeInsets.symmetric(horizontal: 5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(75),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: imageProvider
-                  )
-                ),
-              ),
-            ) : Container(
-              height: 100,
-              width: 100,
-              margin: EdgeInsets.symmetric(horizontal: 5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(75),
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage('assets/user_profile_icon.png')
-                )
-              ),
-            ),
-            Positioned(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Container(
-                    width: 70,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).textTheme.headline1.color,
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: Offset(0.0, 10.0)
-                        )
-                      ]
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.videogame_asset,
-                          color: Theme.of(context).backgroundColor,
-                        ),
-                        Text(" "+mapValoraciones["nota"].toString(),
-                          style: TextStyle(
-                            color: Theme.of(context).backgroundColor,
-                          ),)
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              bottom: 0,
-              right: 0,
-            )
-          ] 
+  Widget _userTile(BuildContext context, Map<dynamic, dynamic> mapValoraciones){
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(mapValoraciones["usuario"].toString(),
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Theme.of(context).textTheme.headline1.color,
-                fontSize: 15
+        color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[900] : Colors.grey[50],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: 75,
+                width: 80,
+                child: mapValoraciones.containsKey("fotoperfil") ? CachedNetworkImage(
+                  imageUrl: mapValoraciones["fotoperfil"].toString(),
+                  progressIndicatorBuilder: (context, url, downloadProgress) => Container(
+                    height: 80,
+                    width: 80,
+                    child: Center(
+                      child: CircularProgressIndicator(value: downloadProgress.progress),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
+                  imageBuilder: (context, imageProvider) => Container(
+                    height: 80,
+                    width: 80,
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(75),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: imageProvider
+                      )
+                    ),
+                  ),
+                ) : Container(
+                  height: 80,
+                  width: 80,
+                  margin: EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(75),
+                    image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: AssetImage('assets/user_profile_icon.png')
+                    )
+                  ),
+                ),
               ),
-            ),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(mapValoraciones["usuario"].toString(),
+                      overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1.color,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.videogame_asset,
+                            color: Theme.of(context).textTheme.headline1.color,
+                          ),
+                          Text(" " + mapValoraciones["nota"].toString(),
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.headline1.color,
+                              fontSize: 18
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width - 120,
+                        child: Text(mapValoraciones["comentario"]?.toString()?? "",
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.headline1.color,
+                            fontSize: 18
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 

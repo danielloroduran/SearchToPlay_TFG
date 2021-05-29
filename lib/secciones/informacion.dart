@@ -60,7 +60,7 @@ class InformacionPage extends StatelessWidget{
             ),
           ),
           Container(
-            child: Text("Daniel Loro",
+            child: Text("Daniel Loro Durán",
               style: TextStyle(
                 fontSize: 20,
                 color: Theme.of(context).textTheme.headline1.color,

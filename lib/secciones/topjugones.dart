@@ -61,21 +61,26 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
           )
         ],
       ),
-      body: Container(
-        color: Theme.of(context).backgroundColor,
-        padding: EdgeInsets.only(left: 30, top: 20, right: 30),
-        child: Column(
-          children: [
-            _resultadosJugones(context),
-          ],
-        )
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: AnimatedSwitcher(
+        duration: Duration(milliseconds: 500),
+        child: _mapJugones != null ? Container(
+          padding: EdgeInsets.only(left: 30, top: 20, right: 30),
+          child: Column(
+            children: [
+              _resultadosJugones(context),
+            ],
+          )
+        ) : Center(
+          child: CircularProgressIndicator(),
+        ),
       )
     );
   }
 
   Widget _resultadosJugones(BuildContext context){
     return Expanded(
-      child: _mapJugones == null ? Center(child: CircularProgressIndicator()) : ListView.builder(
+      child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: _mapJugones.length,

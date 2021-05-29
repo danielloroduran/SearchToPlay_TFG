@@ -162,11 +162,16 @@ class FirebaseService{
 
   ///////////////////////////////////////////////////
 
-  Future<void> addValorado(String idJuego, String nota) async{
+  Future<void> addValorado(String idJuego, String nota, String comentario) async{
     var exits = await _refValorado.doc(userID).get();
 
-    Map<String, String> dataUser = new Map<String, String>();
-    dataUser[idJuego] = nota;
+    Map<String, Map<String, String>> dataUser = new Map<String, Map<String, String>>();
+    Map<String, String> valoracionV = new Map<String, String>();
+
+    valoracionV["nota"] = nota;
+    valoracionV["comentario"] = comentario;
+
+    dataUser[idJuego] = valoracionV;
 
     if(exits.exists){
       await _refValorado.doc(userID).update(dataUser);
@@ -176,8 +181,14 @@ class FirebaseService{
 
     var exitsIdJuego = await _refJuegosValorados.doc(idJuego).get();
 
-    Map<String, String> data = new Map<String, String>();
-    data[userID] = nota;
+    Map<String, Map<String, String>> data = new Map<String, Map<String, String>>();
+    Map<String, String> valoracionJV = new Map<String, String>();
+
+    valoracionJV["nota"] = nota;
+    valoracionJV["comentario"] = comentario;
+
+    data[userID] = valoracionJV;
+    
 
     if(exitsIdJuego.exists){
       await _refJuegosValorados.doc(idJuego).update(data);
@@ -205,12 +216,15 @@ class FirebaseService{
     return result;
   }
 
-  Future<String> getNotaValorado(String id) async{
+  Future<List> getNotaValorado(String id) async{
     DocumentSnapshot result = await _refValorado.doc(userID).get();
+    List listResult = [];
     if(result.data() != null){
-      return result.data()[id];
+      listResult.add(result.data()[id]["nota"]);
+      listResult.add(result.data()[id]["comentario"]);
+      return listResult;
     }
-    return "";
+    return [];
   }
 
   Future<double> getMediaValorado(String idJuego) async{
@@ -218,7 +232,7 @@ class FirebaseService{
     double nota = 0;
     if(result.data() != null){
       result.data().values.forEach((element) {
-        nota += double.parse(element);
+        nota += double.parse(element["nota"]);
       });
       return nota / result.data().length;
     }
@@ -235,7 +249,8 @@ class FirebaseService{
         userResult = await _refUser.doc(k).get();
         if(userResult.data() != null){
           finalResult = userResult.data();
-          finalResult["nota"] = result.data()[k];
+          finalResult["nota"] = result.data()[k]["nota"];
+          finalResult["comentario"] = result.data()[k]["comentario"];
           userNotas.add(finalResult);
         }
       }

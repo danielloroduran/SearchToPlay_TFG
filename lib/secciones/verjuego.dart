@@ -51,7 +51,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
   List<bool> _selecciones;
   List<String> _capturas;
   List<Juego> _listSimilares;
-  String _region, _descripcionEng, _descripcionEsp;
+  String _region, _descripcionEng, _descripcionEsp, _comentario;
   double _nota, _notaMedia;
 
   void initState(){
@@ -81,6 +81,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
     return SafeArea(
       top: true,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Theme.of(context).backgroundColor,
         body: ListView(
           children: <Widget>[
@@ -179,7 +180,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 children: [
                   widget.juego.cover != null ? CachedNetworkImage(
                     imageUrl: widget.igdbservice.getURLCoverFromGame(widget.juego),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
                     imageBuilder: (context, imageProvider) => Container(
                       height: 190,
                       width: 200,
@@ -488,9 +489,9 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20, bottom: 15),
+            padding: const EdgeInsets.only(bottom: 15),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 _fechaSeleccionada != null ? Text("📅  "+_fechaSeleccionada.legible + " " +  _region,
                   style: TextStyle(
@@ -755,7 +756,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
         tag: url,
         child: CachedNetworkImage(                  
           imageUrl: url,
-          errorWidget: (context, url, error) => Icon(Icons.error),
+          errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
           imageBuilder: (context, imageProvider) => Container(
             height: 180,
             width: 200,
@@ -777,18 +778,17 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
   }
 
   Widget _videoCard(BuildContext context, Video video){
-    return new InkWell(
+    return GestureDetector(
       child: new Stack(
         children: <Widget>[
           CachedNetworkImage(
             imageUrl: 'https://img.youtube.com/vi/${video.videoId}/0.jpg',
-            errorWidget: (context, url, error) => Icon(Icons.error),
+            errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
             imageBuilder: (context, imageProvider) => Container(
               height: 180,
               width: 200,
               margin: EdgeInsets.symmetric(horizontal: 5),
               decoration: BoxDecoration(
-                color: Colors.red,
                 borderRadius: BorderRadius.circular(20),
                 image: DecorationImage(
                   fit: BoxFit.fill,
@@ -856,21 +856,6 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 },
               ),
             )
-            /*_listSimilares == null ? Center(child: CircularProgressIndicator()) : _listSimilares.length > 0 ? ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: _listSimilares.length,
-              itemBuilder: (context, index){
-                return _juegoCard(_listSimilares[index]);
-              }  
-            ) : Container(
-              child: Text("No hemos encontrado resultados",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Theme.of(context).textTheme.headline1.color,
-                ),
-              ),
-            ),*/
           ),
         ],
       ),
@@ -886,7 +871,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
           width: 155,
           child: juego.cover != null ? CachedNetworkImage(
             imageUrl: widget.igdbservice.getURLCoverFromGame(juego),
-            errorWidget: (context, url, error) => Icon(Icons.error),
+            errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
             imageBuilder: (context, imageProvider) => Container(
               height: 120,
               width: 155,
@@ -1016,10 +1001,11 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
     bool _tempValorado = await widget.fs.comprobarValorado(widget.juego.id.toString());
 
     if(_tempValorado){
-      String tempNota = await widget.fs.getNotaValorado(widget.juego.id.toString());
-      if(tempNota != ""){
+      List tempNota = await widget.fs.getNotaValorado(widget.juego.id.toString());
+      if(tempNota.isNotEmpty){
         setState(() {
-          _nota = double.parse(tempNota);
+          _nota = double.parse(tempNota[0]);
+          _comentario = tempNota[1];
         });
       }
     }
@@ -1109,7 +1095,11 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
   }
 
   void _dialogValorar(BuildContext context){
-    double _tempNotaDialog; 
+    double _tempNotaDialog = _nota?? null;
+    TextEditingController _comentarioController = new TextEditingController();
+    if(_comentario != null && _comentario != ""){
+      _comentarioController.text = _comentario;
+    }
 
     showDialog(
       context: context,
@@ -1125,33 +1115,66 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
             ),
           ),
           content: Container(
-            height: 128,
+            height: 277,
             child: Column(
               children: [
-                Text("Añade tu valoración para "+widget.juego.nombre,
+                Text("Añade tu valoración para " + widget.juego.nombre,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(
                     color: Theme.of(context).textTheme.headline1.color,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: RatingBar.builder(
-                    glowColor: Colors.transparent,
-                    initialRating: _nota ?? 0,
-                    minRating: 0,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 10,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.videogame_asset,
-                      color: Colors.amber,
+                SingleChildScrollView(
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: RatingBar.builder(
+                            glowColor: Colors.transparent,
+                            initialRating: _nota ?? 0,
+                            minRating: 0,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 10,
+                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                            itemBuilder: (context, _) => Icon(
+                              Icons.videogame_asset,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (rating) {
+                              _tempNotaDialog = rating;
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Text("Comentarios",
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.headline1.color,
+                            ),
+                          ),
+                        ),
+                        TextField(
+                          maxLines: 3,
+                          maxLength: 200,
+                          controller: _comentarioController,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.headline1.color
+                          ),
+                          decoration: InputDecoration(
+                            hintText: "Tus comentarios acerca de este juego...",
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            )
+                          ),
+                        )
+                      ],
                     ),
-                    onRatingUpdate: (rating) {
-                      _tempNotaDialog = rating;
-                    },
                   ),
                 )
               ],
@@ -1162,7 +1185,8 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               child: Text("Cerrar",
                 style: TextStyle(
                   color: Theme.of(context).textTheme.subtitle1.color
-                ),),
+                ),
+              ),
               onPressed: (){
                 Navigator.pop(context);
               },
@@ -1177,6 +1201,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 await widget.fs.removeValorado(widget.juego.id.toString());
                 setState(() {
                   _nota = null;
+                  _comentario = null;
                   _valorado = false;
                 });
                 double valueMedia = await widget.fs.getMediaValorado(widget.juego.id.toString());
@@ -1194,8 +1219,9 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 ),
               ),
               onPressed: () async{
-                await widget.fs.addValorado(widget.juego.id.toString(), _tempNotaDialog.toString());
+                await widget.fs.addValorado(widget.juego.id.toString(), _tempNotaDialog.toString(), _comentarioController.text?? "");
                 setState((){
+                  _comentario = _comentarioController.text;
                   _nota = _tempNotaDialog;
                   _valorado = true;
                 });
@@ -1673,7 +1699,7 @@ class DetallesImagen extends StatelessWidget {
               tag: index,
               child: CachedNetworkImage(                  
                 imageUrl: url,
-                errorWidget: (context, urlError, error) => Icon(Icons.error),
+                errorWidget: (context, urlError, error) => Center(child: Icon(Icons.error, color: Colors.red)),
                 imageBuilder: (context, imageProvider) => Container(
                   height: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.height : double.infinity,
                   width: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width : double.infinity,

@@ -88,7 +88,7 @@ class _ResultadosPageState extends State<ResultadosPage> {
           width: 150,
           child: juego.cover != null ? CachedNetworkImage(
             imageUrl: widget.igdbservice.getURLCoverFromGame(juego),
-            errorWidget: (context, url, error) => Icon(Icons.error),
+            errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
             imageBuilder: (context, imageProvider) => Container(
               height: 100,
               width: 150,

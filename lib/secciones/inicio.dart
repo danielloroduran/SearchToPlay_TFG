@@ -147,7 +147,7 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
           width: 200,
           child: juego.cover != null ? CachedNetworkImage(
             imageUrl: widget.igdbservice.getURLCoverFromGame(juego),
-            errorWidget: (context, url, error) => Icon(Icons.error),
+            errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
             imageBuilder: (context, imageProvider) => Container(
               height: 150,
               width: 200,
