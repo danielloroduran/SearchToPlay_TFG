@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class BusquedaAvPage extends StatefulWidget{
 
@@ -54,13 +55,15 @@ class _BusquedaAvPageState extends State<BusquedaAvPage> with AutomaticKeepAlive
       appBar: new AppBar(
         elevation: 0,
         centerTitle: true,
-        title: new Text("Búsqueda Avanzada",
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 30,
-              color: Theme.of(context).textTheme.headline1.color
-            ),
+        title: AutoSizeText(
+          "Búsqueda Avanzada",
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 30,
+            color: Theme.of(context).textTheme.headline1.color,
           ),
+          maxLines: 1,
+        ),
         backgroundColor: Theme.of(context).backgroundColor,
         leading: IconButton(
               tooltip: "Perfil",

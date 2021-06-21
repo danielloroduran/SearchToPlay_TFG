@@ -126,6 +126,14 @@ class _ValoracionesPageState extends State<ValoracionesPage>{
                 ),
               ),
               Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(
+                      width: 1,
+                      color: Colors.grey
+                    )
+                  )
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

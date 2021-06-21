@@ -21,7 +21,7 @@ class InformacionPage extends StatelessWidget{
         backgroundColor: Theme.of(context).backgroundColor,
         leading: IconButton(
           tooltip: "Volver atrás",
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back_ios),
           onPressed: (){
             Navigator.pop(context);
           },

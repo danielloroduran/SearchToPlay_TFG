@@ -21,6 +21,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:like_button/like_button.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter/services.dart';
+import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:share/share.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -277,19 +278,19 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 12),
-                      child: widget.juego.companias != null && widget.juego.companias.length > 0 ? GestureDetector(
-                        child: Text(widget.juego.companias[0]['name'],
-                          style: TextStyle(
-                            color: Colors.black54
-                          ),
+                    widget.juego.companias != null && widget.juego.companias.length > 0 ? OutlinedButton(
+                      child: Text(widget.juego.companias[0]['name'],
+                        style: TextStyle(
+                          color: Colors.black54
                         ),
-                        onTap: () {
-                          _getJuegosCompania();
-                        },
-                      ) : Container(),
-                    )
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(width: 0.5, color: Colors.black54),
+                      ),
+                      onPressed: () {
+                        _getJuegosCompania();
+                      },
+                    ) : Container()
                   ],
                 ),
               ],
@@ -466,7 +467,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                     ),
                   ),
                 ),
-                center: Text(_notaMedia != null ? _notaMedia.toStringAsFixed(2) : "N/A"),
+                center: Text(_notaMedia?.toStringAsFixed(2) ?? "N/A" ),
                 progressColor: HexColor("#0638EA"),
               ),
               onTap: () {
@@ -498,7 +499,12 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                     fontSize: 18,
                     color: Theme.of(context).textTheme.headline1.color,
                   ),
-                ) : Text("📅  No disponible"),
+                ) : Text("📅  No disponible",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).textTheme.headline1.color,
+                  )
+                ),
               ],
             ),
           ),
@@ -1700,15 +1706,12 @@ class DetallesImagen extends StatelessWidget {
               child: CachedNetworkImage(                  
                 imageUrl: url,
                 errorWidget: (context, urlError, error) => Center(child: Icon(Icons.error, color: Colors.red)),
-                imageBuilder: (context, imageProvider) => Container(
-                  height: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.height : double.infinity,
-                  width: MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width : double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: imageProvider
-                    )
-                  ),
-                ),
+                imageBuilder: (context, imageProvider) => PinchZoom(
+                  image: Image(image: imageProvider),
+                  zoomedBackgroundColor: Colors.black.withOpacity(0.5),
+                  resetDuration: const Duration(milliseconds: 100),
+                  maxScale: 2.5,
+                )
               ),
             ),
           ),

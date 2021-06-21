@@ -183,7 +183,7 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
             ),
           ),
           Container(height: 10),
-          Text("¡Ha completado $length juegos!",
+          Text(length == 1 ? "¡Ha completado $length juego" : "¡Ha completado $length juegos!",
             style: TextStyle(
               color: Colors.black87,
               fontWeight: FontWeight.w400,

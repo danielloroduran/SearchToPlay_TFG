@@ -2,6 +2,7 @@ import 'package:SearchToPlay/modelos/juego.dart';
 import 'package:SearchToPlay/secciones/verjuego.dart';
 import 'package:SearchToPlay/servicios/firebaseservice.dart';
 import 'package:SearchToPlay/servicios/igdb.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,12 +31,14 @@ class _ResultadosPageState extends State<ResultadosPage> {
       appBar: new AppBar(
         elevation: 0,
         centerTitle: true,
-        title: new Text(widget.titulo,
+        title: AutoSizeText(
+          widget.titulo,
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 30,
-            color: Theme.of(context).textTheme.headline1.color
+            color: Theme.of(context).textTheme.headline1.color,
           ),
+          maxLines: 1,
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         leading: IconButton(
