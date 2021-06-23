@@ -172,14 +172,14 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Hero(
-            tag: widget.juego.id.toString(),
-            child: Container(
-              height: 190,
-              width: 200,
-              child: Stack(
-                children: [
-                  widget.juego.cover != null ? CachedNetworkImage(
+          Stack(
+            children: [
+              Container(
+                height: 190,
+                width: 200,
+                child: widget.juego.cover != null ? Hero(
+                  tag: widget.juego.id.toString(),
+                  child: CachedNetworkImage(
                     imageUrl: widget.igdbservice.getURLCoverFromGame(widget.juego),
                     errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
                     imageBuilder: (context, imageProvider) => Container(
@@ -194,67 +194,62 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                         ),
                       ),
                     ),
-                  ) : 
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text("[Imagen no disponible]", 
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black
-                      ),
-                      )
                   ),
-                  Positioned(
-                    child: widget.juego.categoria == 1 ? Container(
-                      alignment: Alignment.center,
-                      width: 50,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 10,
-                            offset: Offset(0.0, 10.0)
-                          )
-                        ]
-                      ),
-                      child: Text("DLC",
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                    ) : widget.juego.categoria == 2 ? Container(
-                      alignment: Alignment.center,
-                      width: 80,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 10,
-                            offset: Offset(0.0, 10.0)
-                          )
-                        ]
-                      ),
-                      child: Text("Expansión",
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),                    
-                    ) : Container(),
-                    right: 20,
-                    bottom: 0,
-                  )
-                ],
+                ) : 
+                Container(
+                  alignment: Alignment.center,
+                  child: Icon(Icons.broken_image_rounded, color: Colors.black, size: 35),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
+              Positioned(
+                child: widget.juego.categoria == 1 ? Container(
+                  alignment: Alignment.center,
+                  width: 50,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0.0, 10.0)
+                      )
+                    ]
+                  ),
+                  child: Text("DLC",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ) : widget.juego.categoria == 2 ? Container(
+                  alignment: Alignment.center,
+                  width: 80,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0.0, 10.0)
+                      )
+                    ]
+                  ),
+                  child: Text("Expansión",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),                    
+                ) : Container(),
+                right: 20,
+                bottom: 0,
+              )
+            ],
           ), 
           Padding(
             padding: EdgeInsets.only(top: 30),
@@ -510,7 +505,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
           ),
           AnimatedSwitcher(
             duration: Duration(milliseconds: 500),
-            child: _fechasLanzamiento != null ? Padding(
+            child: _fechasLanzamiento != null && _fechasLanzamiento.length > 0 ? Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: CustomToggleButtons(
                 borderColor: Colors.grey[850],
@@ -539,6 +534,13 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                   _cambiarFecha();
                 },
               ),
+            ) : _fechasLanzamiento != null && _fechasLanzamiento.length == 0 ? Container(
+              child: Text("Plataformas no disponibles",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).textTheme.headline1.color,
+                ),
+              ),
             ) : Container(
               width: 30,
               height: 30,
@@ -563,7 +565,7 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               fontSize: 18,
             ),
           ),
-          Container(
+          widget.juego.generos.length > 0 ? Container(
             alignment: Alignment.center,
             height: 30,
             margin: EdgeInsets.only(top: 20),
@@ -598,6 +600,14 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 )
               ],
             ),
+          ) : Container(
+            padding: EdgeInsets.only(top: 10),
+            child: Text("No se han encontrado géneros",
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).textTheme.headline1.color,
+              ),
+            )
           ),
         ],
       ),
@@ -714,7 +724,11 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
             ),
           ) : Container(
             child: Text("No hay imágenes disponibles",
-              textAlign: TextAlign.center),
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).textTheme.headline1.color,
+              ),
+            ),
           )
         ],
       ),
@@ -748,8 +762,13 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               },
             ),
           ) : Container(
+            padding: EdgeInsets.only(top: 10),
             child: Text("No hay vídeos disponibles",
-              textAlign: TextAlign.center),
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).textTheme.headline1.color,
+              ),
+            ),
           )
         ],
       ),
@@ -870,12 +889,12 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
 
   Widget _juegoCard(Juego juego){
     return GestureDetector(
-      child: Hero(
-        tag: juego.id.toString(),
-        child: Container(
-          height: 120,
-          width: 155,
-          child: juego.cover != null ? CachedNetworkImage(
+      child: Container(
+        height: 120,
+        width: 155,
+        child: juego.cover != null ? Hero(
+          tag: juego.id.toString(),
+          child: CachedNetworkImage(
             imageUrl: widget.igdbservice.getURLCoverFromGame(juego),
             errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
             imageBuilder: (context, imageProvider) => Container(
@@ -898,14 +917,26 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
                 ]
               ),
             ),
-          ) : 
-          Container(
-            alignment: Alignment.center,
-            child: Text(juego.nombre +"\n [Imagen no disponible]", textAlign: TextAlign.center,)
           ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-          ),
+        ) : 
+        Container(
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Icon(Icons.broken_image_rounded, color: Theme.of(context).textTheme.headline1.color),
+              Text(juego.nombre, 
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.headline1.color,
+                ),
+              ),
+            ],
+          )
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
       onTap: (){
@@ -1054,7 +1085,10 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
           );
         });
       }
-
+    }else{
+      setState(() {
+        _fechasLanzamiento = [];
+      });
     }
   }
 
@@ -1120,71 +1154,76 @@ class _VerJuegoPageState extends State<VerJuegoPage> with TickerProviderStateMix
               color: Theme.of(context).textTheme.headline1.color,
             ),
           ),
-          content: Container(
-            height: 277,
-            child: Column(
-              children: [
-                Text("Añade tu valoración para " + widget.juego.nombre,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1.color,
-                  ),
-                ),
-                SingleChildScrollView(
-                  child: Container(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: RatingBar.builder(
-                            glowColor: Colors.transparent,
-                            initialRating: _nota ?? 0,
-                            minRating: 0,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 10,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                            itemBuilder: (context, _) => Icon(
-                              Icons.videogame_asset,
-                              color: Colors.amber,
-                            ),
-                            onRatingUpdate: (rating) {
-                              _tempNotaDialog = rating;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Text("Comentarios",
-                            style: TextStyle(
-                              color: Theme.of(context).textTheme.headline1.color,
-                            ),
-                          ),
-                        ),
-                        TextField(
-                          maxLines: 3,
-                          maxLength: 200,
-                          controller: _comentarioController,
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.headline1.color
-                          ),
-                          decoration: InputDecoration(
-                            hintText: "Tus comentarios acerca de este juego...",
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            )
-                          ),
-                        )
-                      ],
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                //height: 277,
+                child: Column(
+                  children: [
+                    Text("Añade tu valoración para " + widget.juego.nombre,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.headline1.color,
+                      ),
                     ),
-                  ),
-                )
-              ],
-            ),
+                    SingleChildScrollView(
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0),
+                              child: RatingBar.builder(
+                                glowColor: Colors.transparent,
+                                initialRating: _nota ?? 0,
+                                minRating: 0,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 10,
+                                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.videogame_asset,
+                                  color: Colors.amber,
+                                ),
+                                onRatingUpdate: (rating) {
+                                  _tempNotaDialog = rating;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: Text("Comentarios",
+                                style: TextStyle(
+                                  color: Theme.of(context).textTheme.headline1.color,
+                                ),
+                              ),
+                            ),
+                            TextField(
+                              maxLines: 3,
+                              maxLength: 200,
+                              controller: _comentarioController,
+                              style: TextStyle(
+                                color: Theme.of(context).textTheme.headline1.color
+                              ),
+                              decoration: InputDecoration(
+                                hintText: "Tus comentarios acerca de este juego...",
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                )
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(

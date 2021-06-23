@@ -429,6 +429,9 @@ class _RegistroPageState extends State<RegistroPage>{
       context: context,
       builder: (BuildContext context){
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
           title: new Text("Email de verificación enviado",
             style: TextStyle(
               fontWeight: FontWeight.w500,

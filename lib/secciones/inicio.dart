@@ -140,12 +140,12 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
 
   Widget _juegoCard(Juego juego){
     return GestureDetector(
-      child: Hero(
-        tag: juego.id.toString(),
-        child: Container(
-          height: 150,
-          width: 200,
-          child: juego.cover != null ? CachedNetworkImage(
+      child: Container(
+        height: 150,
+        width: 200,
+        child: juego.cover != null ? Hero(
+          tag: juego.id.toString(),
+          child: CachedNetworkImage(
             imageUrl: widget.igdbservice.getURLCoverFromGame(juego),
             errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
             imageBuilder: (context, imageProvider) => Container(
@@ -168,14 +168,29 @@ class _InicioPageState extends State<InicioPage> with AutomaticKeepAliveClientMi
                 ]
               ),
             ),
-          ) : 
-          Container(
-            alignment: Alignment.center,
-            child: Text(juego.nombre +"\n [Imagen no disponible]", textAlign: TextAlign.center,)
+          )
+        ) : 
+        Container(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.broken_image_rounded, color: Theme.of(context).textTheme.headline1.color),
+              SizedBox(height: 10),
+              Text(juego.nombre, 
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Theme.of(context).textTheme.headline1.color,
+                ),
+              ),
+            ],
           ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-          ),
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
       onTap: (){

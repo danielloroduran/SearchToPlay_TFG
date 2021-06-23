@@ -41,11 +41,11 @@ class IGDBService {
   }
 
   void actualizarToken() async {
-    // Nuevo token
+    
     _token = await IGDBClient.getOauthToken(_clientId, _clientSecret);
 
     _accessToken = _token.accessToken;
-    // Guardo el token en Firestore
+
     int _fechaExpiracion = ((DateTime.now().millisecondsSinceEpoch ~/ 1000) + _token.expiresIn);
 
     Map<String, dynamic> _tokentoFS = {

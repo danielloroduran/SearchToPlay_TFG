@@ -149,13 +149,13 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
 
   Widget _juegoCard(Juego juego){
     return GestureDetector(
-      child: Hero(
-        tag: juego.id.toString(),
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 18, vertical: 5),
-          height: 100,
-          width: 150,
-          child: juego.cover != null ? CachedNetworkImage(
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 18, vertical: 5),
+        height: 100,
+        width: 150,
+        child: juego.cover != null ? Hero(
+          tag: juego.id.toString(),
+          child: CachedNetworkImage(
             imageUrl: widget.igdbservice.getURLCoverFromGame(juego),
             errorWidget: (context, url, error) => Center(child: Icon(Icons.error, color: Colors.red)),
             imageBuilder: (context, imageProvider) => Container(
@@ -177,14 +177,28 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
                 ]
               ),
             ),
-          ) : 
-          Container(
-            alignment: Alignment.center,
-            child: Text(juego.nombre +"\n [Imagen no disponible]", textAlign: TextAlign.center,)
           ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+        ) : 
+        Container(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.broken_image_rounded, color: Theme.of(context).textTheme.headline1.color),
+              SizedBox(height: 10),
+              Text(juego.nombre, 
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.headline1.color,
+                ),
+              ),
+            ],
           ),
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
       onTap: (){

@@ -56,7 +56,7 @@ class _IntroduccionPageState extends State<IntroduccionPage>{
         ),
         PageViewModel(
           title: "Busca y encuentra",
-          body: "¿Dudas con datos de algún juego? Aquí lo resolverás",
+          body: "¿Dudas con los datos de algún juego? Aquí lo resolverás",
           image: Container(            
             child: Theme.of(context).brightness == Brightness.dark ? ColorFiltered(
               child: Lottie.asset('assets/lottie/search.json', repeat: true, reverse: true),
@@ -67,7 +67,7 @@ class _IntroduccionPageState extends State<IntroduccionPage>{
         ),
         PageViewModel(
           title: "Guarda y evalúa",
-          body: "Da me gusta, mantén una lista de tus juegos completados y evalúalos",
+          body: "Da me gusta, mantén una lista de tus juegos completados y comparte tu valoración con la comunidad",
           image: Container(
             child: Lottie.asset('assets/lottie/like.json', repeat: true, reverse: true),
           ),
@@ -75,7 +75,7 @@ class _IntroduccionPageState extends State<IntroduccionPage>{
         ),
         PageViewModel(
           title: "Logros",
-          body: "Consigue logros al hacer tareas básicas en la aplicación",
+          body: "Usa la aplicación y rellena tu colección de logros. ¡No te quedes atrás!",
           image: Container(
             width: 270.w,
             height: 270.h,
