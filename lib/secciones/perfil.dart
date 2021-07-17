@@ -159,8 +159,8 @@ class _PerfilPageState extends State<PerfilPage>{
         tooltip: "Cerrar sesión",
         backgroundColor: Colors.red,
         child: Icon(Icons.exit_to_app),
-        onPressed: (){
-          widget.us.cerrarSesion();
+        onPressed: () async{
+          await widget.us.cerrarSesion();
           Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
         },
       ),

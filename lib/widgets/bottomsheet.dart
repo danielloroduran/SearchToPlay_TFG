@@ -16,17 +16,17 @@ Widget _upBar = Container(
 
 Widget _imagen(String imagen) => Expanded(
     child: Container(
-      margin: EdgeInsets.symmetric(vertical: 30),
+      margin: EdgeInsets.symmetric(vertical: 10),
       child: Image(
         image: AssetImage("assets/awards/$imagen.png"),
-        height: 200,
-        width: 200,
+        height: 175,
+        width: 175,
       ),
     ),
   );
 
 Widget _itemMensaje(BuildContext context, String texto) => Container(
-  margin: EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+  margin: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
   child: Text(texto,
     style: TextStyle(
       color: Theme.of(context).textTheme.headline1.color,
@@ -59,13 +59,10 @@ Container _itemTitulo(BuildContext context, String titulo) =>  Container(
     style: TextStyle(
       color: Theme.of(context).textTheme.headline1.color,
       fontWeight: FontWeight.bold,
-      fontSize: 20,
+      fontSize: 25,
     ),
   )
 );
-
-
-
 
 void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
   List<String> _randomMensajes = ['Ya has dado $numMeGusta me gusta, ¡sigue así!', '¡Es tu $numMeGusta me gusta!', 'Es tu $numMeGusta me gusta, ¡los ❤️ no paran!', 'Llegas a tu $numMeGustaº me gusta, ¡vaya papaya!'];
@@ -83,7 +80,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _upBar,
-            _itemTitulo(context, "Nuevo logro"),
+            _itemTitulo(context, "¡Nuevo logro!"),
             _imagen("diploma"),
             _itemMensaje(context, "Es tu primer  ❤️, ¡esperemos que no sea el último!"),
           ],
@@ -102,7 +99,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _upBar,
-            _itemTitulo(context, "Nuevo logro"),
+            _itemTitulo(context, "¡Nuevo logro!"),
             _imagen("medal"),
             _itemMensaje(context, "¡Has llegado a tu 5º ❤️!"),
           ],
@@ -140,7 +137,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _upBar,
-            _itemTitulo(context, "Nuevo logro"),
+            _itemTitulo(context, "¡Nuevo logro!"),
             _imagen("medal2"),
             _itemMensaje(context, "Es tu me gusta número 20, ¡que no pare la cosa!"),
           ],
@@ -197,7 +194,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _upBar,
-            _itemTitulo(context, "Nuevo logro"),
+            _itemTitulo(context, "¡Nuevo logro!"),
             _imagen("trophy2"),
             _itemMensaje(context, "¡Has llegado a los 100 ❤️!"),
           ],
@@ -216,7 +213,7 @@ void mostrarBottomSheetMG(BuildContext context, int numMeGusta){
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _upBar,
-            _itemTitulo(context, "Nuevo logro"),
+            _itemTitulo(context, "¡Nuevo logro!"),
             _imagen("trophy2"),
             _itemMensaje(context, _mensaje),
           ],
@@ -243,7 +240,7 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _upBar,
-            _itemTitulo(context, "Nuevo logro"),
+            _itemTitulo(context, "¡Nuevo logro!"),
             _imagen("mando_verde_nobg"),
             _itemMensaje(context, "Has completado tu primer juego, ¡esperemos que no sea el último!"),
           ],
@@ -262,7 +259,7 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _upBar,
-            _itemTitulo(context, "Nuevo logro"),
+            _itemTitulo(context, "¡Nuevo logro!"),
             _imagen("mando_verde_nobg"),
             _itemMensaje(context, "¡Ya has completado 5 juegos!"),
           ],
@@ -300,7 +297,7 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _upBar,
-            _itemTitulo(context, "Nuevo logro"),
+            _itemTitulo(context, "¡Nuevo logro!"),
             _imagen("mando_bronce_nobg"),
             _itemMensaje(context, "Y ya van 20, ¡que los juegos no paren!"),
           ],
@@ -357,7 +354,7 @@ void mostrarBottomSheetCompletados(BuildContext context, int numCompletados){
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _upBar,
-            _itemTitulo(context, "Nuevo logro"),
+            _itemTitulo(context, "¡Nuevo logro!"),
             _imagen("mando_oro_nobg"),
             _itemMensaje(context, "¡Has llegado a los 100 juegos completados!"),
           ],

@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage>{
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.email),
-                      hintText: "EMAIL",
+                      hintText: "Email",
                       border: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.black,
@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage>{
                     },
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.lock),
-                      hintText: "CONTRASEÑA",
+                      hintText: "Contraseña",
                       suffixIcon: IconButton(
                         icon: Icon(_passwordVisible == false ? Icons.visibility : Icons.visibility_off),
                         onPressed: (){
@@ -416,7 +416,7 @@ class _LoginPageState extends State<LoginPage>{
                           child: new TextField(
                             controller: _emailController,
                             decoration: InputDecoration(
-                              hintText: "EMAIL",
+                              hintText: "Email",
                               prefixIcon: Icon(Icons.email),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(

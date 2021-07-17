@@ -100,7 +100,7 @@ class _BusquedaPageState extends State<BusquedaPage> with AutomaticKeepAliveClie
           FocusScope.of(context).unfocus();
         },
         decoration: InputDecoration(
-          hintText: 'TÍTULO',
+          hintText: 'Título',
           suffixIcon: IconButton(
             icon: Icon(Icons.search),
             onPressed: (){

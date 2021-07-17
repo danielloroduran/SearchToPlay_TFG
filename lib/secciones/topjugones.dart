@@ -174,7 +174,7 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(height: 4),
+          SizedBox(height: 4),
           Text(nombre,
             style: TextStyle(
               color: Colors.black,
@@ -182,7 +182,7 @@ class _TopJugonesPageState extends State<TopJugonesPage> {
               fontSize: 18,
             ),
           ),
-          Container(height: 10),
+          SizedBox(height: 10),
           Text(length == 1 ? "¡Ha completado $length juego" : "¡Ha completado $length juegos!",
             style: TextStyle(
               color: Colors.black87,

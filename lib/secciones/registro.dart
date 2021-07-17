@@ -120,7 +120,7 @@ class _RegistroPageState extends State<RegistroPage>{
                 controller: _usuarioController,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person),
-                  hintText: "USUARIO",
+                  hintText: "Usuario",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.black
@@ -145,7 +145,7 @@ class _RegistroPageState extends State<RegistroPage>{
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.email),
-                  hintText: "EMAIL",
+                  hintText: "Email",
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.black
@@ -169,7 +169,7 @@ class _RegistroPageState extends State<RegistroPage>{
                 controller: _passwordController,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.lock),
-                  hintText: "CONTRASEÑA",
+                  hintText: "Contraseña",
                   suffixIcon: IconButton(
                     icon: Icon(_passwordVisible == false ? Icons.visibility : Icons.visibility_off),
                     onPressed: (){
@@ -220,7 +220,7 @@ class _RegistroPageState extends State<RegistroPage>{
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.lock),
-                  hintText: "REPETIR CONTRASEÑA",
+                  hintText: "Repetir contraseña",
                   suffixIcon: IconButton(
                     icon: Icon(_passwordVisible == false ? Icons.visibility : Icons.visibility_off),
                     onPressed: (){

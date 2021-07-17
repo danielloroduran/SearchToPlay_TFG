@@ -48,9 +48,9 @@ class UserService{
     await _fa.sendPasswordResetEmail(email: email);
   }
 
-  void cerrarSesion(){
-    googleSignIn.signOut();
-    _fa.signOut();
+  Future<void> cerrarSesion() async{
+    await googleSignIn.signOut();
+    await _fa.signOut();
   }
 
   void cerrarSesionGoogle() async{
